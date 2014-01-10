@@ -1,0 +1,25 @@
+Things to Test for:
+Inverser: X||Y start @ 0 && End ? || WORLD_SIZE_X
+		  Y or X Is just One gaint Element
+		  Y becomes full, needs to delete X
+		  	at Start,Middle,End, Repeatdly
+
+		  	
+Find |ADDED THIS WHEN REALLY TIRED,NT SURE IF CORRECT|
+in Node Manipulater
+
+
+can add improper shaped sqaures to table, HashAdder Should do boundary checking
+
+Finish MergeAllX, move it from hash to Nami
+turn nami into an singleton
+
+old code DeleteAllEmptyX was copied from needs to include this new cleanFunc
+
+move retOverlap and compare to nami n overlap table
+subset and overlap splitter also need to come over
+
+
+
+SUBTRACTOR STILL NOT WORKING
+	Loop not entered for Y Sub in YSubtractor method
