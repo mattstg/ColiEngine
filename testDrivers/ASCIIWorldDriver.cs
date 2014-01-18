@@ -13,7 +13,7 @@ namespace ColiSys
 			
 		ASCIIWorldGen World = new ASCIIWorldGen();
 		World.ResetWorld();
-		ShapeGenerator shapeGen = new ShapeGenerator();
+        ShapeGenerator shapeGen = ShapeGenerator.Instance;
 		//NodeManipulator nami = new NodeManipulator();
 		
 		

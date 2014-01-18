@@ -309,7 +309,8 @@ namespace ColiSys
                             TRns.prev.Adj(TRns.next);
                             TRns.cur.ClearLink();
                             TRns.cur = TRns.prev.Adj();
-                            TRns.next = TRns.cur.Adj();
+                            if(TRns.cur != null)
+                               TRns.next = TRns.cur.Adj();
                         }
                              
                         a = a.Adj();

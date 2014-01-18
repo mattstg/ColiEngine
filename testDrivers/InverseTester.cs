@@ -11,8 +11,8 @@ namespace ColiSys
         public static void main(string[] args) {
 		// TODO Auto-generated method stub
 		
-		ShapeGenerator shapeGen = new ShapeGenerator();
-		NodeManipulator nami = new NodeManipulator();
+		ShapeGenerator shapeGen = ShapeGenerator.Instance;
+        NodeManipulator nami = NodeManipulator.Instance;
 		
 		
 		Node hashNode = shapeGen.GenShape(Shape.Square, new S_XY(0,0), new S_XY(1,1));		

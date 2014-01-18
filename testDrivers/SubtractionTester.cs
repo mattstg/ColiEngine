@@ -12,7 +12,7 @@ namespace ColiSys
         public SubtractionTester(){
 		ASCIIWorldGen World = new ASCIIWorldGen();
 		World.ResetWorld();
-		ShapeGenerator shapeGen = new ShapeGenerator();
+        ShapeGenerator shapeGen = ShapeGenerator.Instance;
 		
 		
 		Node hashNode = shapeGen.GenShape(Shape.Square, new S_XY(0,0), new S_XY(15,15));		

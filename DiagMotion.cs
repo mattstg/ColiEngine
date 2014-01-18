@@ -5,7 +5,7 @@ namespace ColiSys
     public class DiagMotion
     { //diagonal motion
         private int x, y;
-        S_Box E;
+        public S_Box E;
         int counter = 0;
         int Rem;
         double dR;

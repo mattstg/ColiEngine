@@ -1,3 +1,7 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 namespace ColiSys
 {
     public class TestDiagMotionDriver
@@ -8,19 +12,19 @@ namespace ColiSys
 		S_Box E = new S_Box(0,0,2,2); //default constructor Entity
 		DiagMotion s = new DiagMotion(1,1,E); //creating a new motion, of velocity [1,1] on object E
 		S_Box ColBox;
-		System.out.println("E's initial attrivutes: " + s.E.toString());
-		System.out.println(s.toString());
+		Console.Out.WriteLine("E's initial attrivutes: " + s.E.GenString());
+		Console.Out.WriteLine(s.GenString());
 		S_Box w = new S_Box();
 		while(w != null){
-			System.out.println("********************************");
+			Console.Out.WriteLine("********************************");
 			w = s.RetNextBox();
 			if(w != null){
-			System.out.println("box to be checked for collision " + w.toString());
+                Console.Out.WriteLine("box to be checked for collision " + w.GenString());
 			}else{
-				System.out.println("s.RetNextBox() returned null. While loop should close...");
+				Console.Out.WriteLine("s.RetNextBox() returned null. While loop should close...");
 			}
 		}
-		System.out.println("While loop terminated.");
+        Console.Out.WriteLine("While loop terminated.");
 	}
     }
 }
