@@ -1,14 +1,10 @@
-using Microsoft.Xna.Framework.Graphics;  
-using Microsoft.Xna.Framework;  
-
 namespace ColiSys
 {
     public class Hashtable
     {
         Node mainNode = null;
-        NodeManipulator nami = NodeManipulator.Instance;
-        SpriteHTable spriteTable;
-        Color color;
+        NodeManipulator nami = new NodeManipulator();
+
         //The overlap table
         OverlapType[,] overlapTable = { { OverlapType.Right, OverlapType.AEO, OverlapType.AEO }, { OverlapType.OEA, OverlapType.Equals, OverlapType.AEO }, { OverlapType.OEA, OverlapType.OEA, OverlapType.Left } };
         /*  compareTable
@@ -20,40 +16,21 @@ namespace ColiSys
 
         public Hashtable(Node hashTreeHead)
         {
-            mainNode = hashTreeHead.CopySelf(copyTypes.copyBoth);
-            spriteTable = new SpriteHTable();
+            mainNode = hashTreeHead;
         }
 
         public Hashtable()
         {
             mainNode = null;
-            spriteTable = new SpriteHTable();
         }
 
 
         public Node RetMainNode()  //Delete this function later, mainNode should stay in hashtable to avoid security/consistency issues
         {
-            if (mainNode != null)
-                return mainNode.CopySelf(copyTypes.copyBoth);
-            else
-                return null;
+            return mainNode;
         }
 
-        public void Draw(SpriteBatch sb)
-        {
-            spriteTable.Draw(sb,mainNode,color);
-        }
 
-        public void LoadTexture(Texture2D texture,Color color)
-        {
-            this.color = color;
-            spriteTable.LoadTexture(texture);
-        }
-
-        public void EmptyTable()
-        {
-            mainNode = null;
-        }
         public string GenString()
         {
             string toRet = "";
@@ -188,109 +165,6 @@ namespace ColiSys
 
         private void YMerger(Node Ox, Node Ax)
         {
-            //Given the two higher scopes to be combined
-            Node O = Ox.Dwn();
-            Node A = Ax.Dwn();
-            Node OLast = null;
-            NodeSpider Ons = new NodeSpider(O);
-            NodeSpider Ans = new NodeSpider(A);
-            //////Console.Out.WriteLine("Enter YMerger");
-
-            while (Ons.cur != null && A != null)
-            {
-
-                OverlapType compared = RetOverlap(O, A, false);
-                //////Console.Out.WriteLine("Start YMergerLoop");
-
-                switch (compared)
-                {
-                    case OverlapType.Equals:
-                        //If identical, no need to merge, increase A
-                        //////Console.Out.WriteLine("YMerger: OverlapType.Equals");
-                        A = A.Adj();
-                        break;
-
-                    case OverlapType.Before:
-                        //////Console.Out.WriteLine("YMerger: OverlapType.Before");
-                        //Should be taken care of already in OverlapType.After below, unless it is the first one
-                        if (Ons.cur == Ox.Dwn())
-                        {
-                            Node newNode = new Node(A);
-                            newNode.Adj(Ox.Dwn());  //new node sets its adj to the it's
-                            Ox.Dwn(newNode);
-                            Ons.SetCur(newNode);
-                            A = A.Adj();
-
-                        }
-                        break;
-
-                    case OverlapType.After:
-                        ////Console.Out.WriteLine("YMerger: OverlapType.After");		
-                        if (Ons.next != null)
-                        {
-                            if (RetOverlap(Ons.next, A, false) == OverlapType.Before)
-                            {
-                                ////Console.Out.WriteLine("YMerge: OverlapType.After-MergeNeghb");
-                                //then insert
-                                Node newNode = new Node(A); //non full copy of node (no dwn should exist)
-                                newNode.Adj(Ons.next);  //new node sets its adj to the it's
-                                Ons.cur.Adj(newNode);
-                                Ons.next = newNode;
-                                A = A.Adj(); //iterate the A
-                                //MergeNeighbour(O);
-                            }
-                            else
-                            {
-                                Ons.It(); ///NEXT HERE
-                            }
-                        }
-                        else
-                        {
-                            OLast = Ons.cur;
-                            Ons.cur = null; //triggers the while to break and case below to add all leftofer As
-
-
-                        }
-
-
-                        break;
-
-                    case OverlapType.Right:
-                    case OverlapType.Left:
-                    case OverlapType.AEO:
-                    case OverlapType.OEA:
-
-                        _MergeNodes(O, A);
-                        A = A.Adj();
-                        //MergeNeighbour(O); //merge with neighbours possibly
-                        break;
-
-                }
-
-            }
-
-            //while(A != null) //if its in here, its because Oit reached null, so just add the rest of the A in
-            //{
-            if (A != null)
-            {
-                Node newNode = A.CopySelf(copyTypes.copyAdj);	//this new node points to remaining list of A				
-                OLast.Adj(newNode);
-                //A = A.Adj();
-                //MergeNeighbour(OLast);
-
-                //O = OLast.Adj();	
-            }
-
-            //}
-
-            _MergeTouchingYs(Ox);
-
-
-        }
-
-        /*  old ymerger, pre SpiderNode
-        private void YMerger2t(Node Ox, Node Ax)
-        {
 
 
 
@@ -339,22 +213,15 @@ namespace ColiSys
                                 newNode.Adj(O.Adj());  //new node sets its adj to the it's
                                 O.Adj(newNode);
                                 A = A.Adj(); //iterate the A
-                                //MergeNeighbour(O);
-                            }
-                            else
-                            {
-                                O = O.Adj(); ///NEXT HERE
+                                MergeNeighbour(O);
                             }
                         }
                         else
                         {
-                            OLast = O;
-                            O = null; //triggers the while to break and case below to add all leftofer As
-
-                           
+                            OLast = O; //save last for second loop
                         }
 
-                        
+                        O = O.Adj();
                         break;
 
                     case OverlapType.Right:
@@ -364,7 +231,7 @@ namespace ColiSys
 
                         _MergeNodes(O, A);
                         A = A.Adj();
-                        //MergeNeighbour(O); //merge with neighbours possibly
+                        MergeNeighbour(O); //merge with neighbours possibly
                         break;
 
                 }
@@ -378,42 +245,12 @@ namespace ColiSys
                 Node newNode = A.CopySelf(copyTypes.copyAdj);	//this new node points to remaining list of A				
                 OLast.Adj(newNode);
                 //A = A.Adj();
-                //MergeNeighbour(OLast);
+                MergeNeighbour(OLast);
 
                 //O = OLast.Adj();	
             }
 
             //}
-
-            _MergeTouchingYs(Ox);
-        }
-        */
-        private void _MergeTouchingYs(Node Ox)
-        {
-            Node o = Ox.Dwn();
-
-            while (o != null && o.Adj() != null)
-            {
-                if (o.Adj() != null)
-                {
-
-                    OverlapType c = RetOverlap(o, o.Adj(), true);
-                    //////Console.Out.WriteLine(O.GenString() + '\n' + O.Adj().GenString() + "  " + c);
-                    if (c != OverlapType.Before && c != OverlapType.After) //should never be OverlapType.After, but just to be sure
-                    {
-                        _MergeNodes(o, o.Adj());
-                        Node toDel = o.Adj();
-                        o.Adj(o.Adj().Adj());
-                        toDel.ClearLink(); //clear links so will be deleted				
-
-                    }
-                    else
-                    {
-                        o = o.Adj();
-                    }
-                }
-                ////Console.Out.WriteLine("DEBUG TEST: " + '\n' + this.GenString() + '\n');
-            }
 
 
         }
@@ -449,22 +286,9 @@ namespace ColiSys
 
         }
 
-
-        public void HashAdder(Hashtable a)
-        {
-            HashAdder(a.RetMainNode());
-        }
         public void HashAdder(Node A)
         {
             //given another hashTable head A, add to current hashtable
-            if (mainNode == null)
-            {
-                mainNode = A.CopySelf(copyTypes.copyBoth);
-                return;
-            }
-
-            if (A == null)
-                return;
 
 
             Node Oit = this.mainNode;
@@ -574,10 +398,7 @@ namespace ColiSys
                         break;
 
                     case OverlapType.AEO:
-                          if (!nami.AlreadyExists(Oit, A))
-                             _SubsetSplitter(Oit, A);
-                          else
-                              A = A.Adj();
+                        _SubsetSplitter(Oit, A);
                         break;
 
                 }
@@ -608,15 +429,11 @@ namespace ColiSys
             }*/
 
 
-           _FinalXMerger();
-
+            _FinalXMerger();
 
         }
 
-        public void HashSubtractor(Hashtable a)
-        {
-            HashSubtractor(a.RetMainNode());
-        }
+
 
         public void HashSubtractor(Node Ax)
         {
@@ -699,7 +516,6 @@ namespace ColiSys
             if (itt == null)
                 return;
 
-            bool again = false;
             Node xit;
             Node xitt;
 
@@ -740,24 +556,15 @@ namespace ColiSys
 
                     if (xit == null && xitt == null) //this should only occur when they exit simotanouesly through all
                     {
-                        
-                        it.Set(itt.Ret(Bounds.u), Bounds.u);
                         it.Adj(itt.Adj()); //overwrite the one in front since its identical
-                        itt.ClearLink();
-                        itt = it.Adj();
-                        again = true;
+                        it.Set(itt.Ret(Bounds.l), Bounds.u);
                     }
 
 
 
                 }
-                if (!again)
-                {
-                    it = it.Adj();
-                    itt = itt.Adj();
-                }
-                else
-                    again = false;
+                it = it.Adj();
+                itt = itt.Adj();
             }
 
 
@@ -795,13 +602,13 @@ namespace ColiSys
         }
         */
 
-
         
+
 
         //Possible Refactor
         private void _SubsetSplitter(Node a, Node b)
         {
-            
+
             //Node B is a subset of node A. A will be the one that always splits
             //Node newNode()
             if (a.Ret(Bounds.l) == b.Ret(Bounds.l))

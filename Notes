@@ -4,8 +4,6 @@ Inverser: X||Y start @ 0 && End ? || WORLD_SIZE_X
 		  Y becomes full, needs to delete X
 		  	at Start,Middle,End, Repeatdly
 
-
-			split the namespaces
 		  	
 Find |ADDED THIS WHEN REALLY TIRED,NT SURE IF CORRECT|
 in Node Manipulater
@@ -21,17 +19,7 @@ old code DeleteAllEmptyX was copied from needs to include this new cleanFunc
 move retOverlap and compare to nami n overlap table
 subset and overlap splitter also need to come over
 
-To Increase runtime, remove instances of .CopyBoth
+
 
 SUBTRACTOR STILL NOT WORKING
 	Loop not entered for Y Sub in YSubtractor method
-
-
-	apparently i was dumb,  AEO means A exists in O,  OEA means O exists in A, which is opp of convention
-
-
-Main Node Has a Negative in it
-omg regenerative levels
-Last Node in Adder(30) has L,U = 0; Shouldnt it have been refined before? does 0,0 cause inf loop?
-
-Frozen bug happens with -6-6, -1-1. Could be in the selecting of nodes, check if it adds weird

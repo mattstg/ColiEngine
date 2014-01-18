@@ -17,28 +17,16 @@ namespace ColiSys
     public class Game1 : Game
     {
         GraphicsDeviceManager graphics;
-        TestContent tc;
-        DebugCheatCodes cheats;
         SpriteBatch spriteBatch;
-        GRAPHICTestWorld world;
-
-
+        SubtractionTester subDriver;
 
         public Game1()
             : base()
         {
             graphics = new GraphicsDeviceManager(this);
-            graphics.PreferredBackBufferHeight = 720;
-
-            graphics.PreferredBackBufferWidth = 1280;
-            Content.RootDirectory = "ColiEngine/Content";
-
-
-            Constants.GRAPHICS_BUFFER_HEIGHT = graphics.PreferredBackBufferHeight;
-            Constants.GRAPHICS_BUFFER_WIDTH = graphics.PreferredBackBufferWidth;
-            Constants.GAME_SCALE = new S_XY(Constants.GRAPHICS_BUFFER_WIDTH / Constants.WORLD_SIZE_X,Constants.GRAPHICS_BUFFER_HEIGHT / Constants.WORLD_SIZE_Y);
-            
+            Content.RootDirectory = "Content";
         }
+
         /// <summary>
         /// Allows the game to perform any initialization it needs to OverlapType.Before starting to run.
         /// This is where it can query for any required services and load any non-graphic
@@ -47,10 +35,8 @@ namespace ColiSys
         /// </summary>
         protected override void Initialize()
         {
-            tc = TestContent.Instance;
-            cheats = DebugCheatCodes.Instance;
-            world = new GRAPHICTestWorld();
-
+            // TODO: Add your initialization logic here
+            subDriver = new SubtractionTester();
             base.Initialize();
         }
 
@@ -62,9 +48,7 @@ namespace ColiSys
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            tc.LoadContent(Content);
-            world.LoadWorldTexture(tc.dirt);
-            
+
             // TODO: use this.Content to load your game content here
         }
 
@@ -84,24 +68,12 @@ namespace ColiSys
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            float rt = gameTime.ElapsedGameTime.Milliseconds;
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-            Input(rt);
 
+            // TODO: Add your update logic here
 
-
-
-            world.Update(rt);
-                       
             base.Update(gameTime);
-           
-        }
-
-        protected void Input(float rt)
-        {
-            world.Input();
-            cheats.Input();
         }
 
         /// <summary>
@@ -111,12 +83,10 @@ namespace ColiSys
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            spriteBatch.Begin();
-            world.Draw(spriteBatch);
+
             // TODO: Add your drawing code here
-            spriteBatch.End();
+
             base.Draw(gameTime);
-            
         }
     }
 }

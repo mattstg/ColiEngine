@@ -15,16 +15,7 @@ namespace ColiSys
         public S_Box() { loc = new S_XY(); size = new S_XY(); }
         public S_Box(S_XY tLoc, S_XY tSize) { loc = tLoc; size = tSize; }
         public S_Box(int locx, int locy, int sizex, int sizey) { loc = new S_XY(locx, locy); size = new S_XY(sizex, sizey); }
-        public S_Box(int locx, int locy, int sizeLocx, int sizeLocy, bool tsize) {
-            if (tsize)
-            {
-                loc = new S_XY(locx, locy); size = new S_XY(sizeLocx, sizeLocy);
-            }
-            else
-            {
-                loc = new S_XY(locx, locy); size = new S_XY(sizeLocx - locx + 1, sizeLocy - locy + 1);
-            }
-        }
+
         public S_Box(S_Box copyMe)
         {
             this.loc = new S_XY(copyMe.loc);

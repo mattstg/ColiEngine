@@ -3,23 +3,7 @@ namespace ColiSys
     public class NodeManipulator
     {
         OverlapType[,] overlapTable = { { OverlapType.Right, OverlapType.AEO, OverlapType.AEO }, { OverlapType.OEA, OverlapType.Equals, OverlapType.AEO }, { OverlapType.OEA, OverlapType.OEA, OverlapType.Left } };
-       
-
-        private static NodeManipulator instance;
-        private NodeManipulator() { }
-        public static NodeManipulator Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    instance = new NodeManipulator();
-                }
-                return instance;
-            }
-        }
-
-
+        public NodeManipulator() { }
 
 
         public Node Inverser(Node n)
@@ -165,92 +149,6 @@ namespace ColiSys
             return -1;
         }
 
-
-
-        public bool AlreadyExists(Node tO, Node tA)
-        {
-            //Checks if b already exists in the node a. Both nodes given at scope up
-            Node o = tO.CopySelf(copyTypes.copyDwn);
-            Node a = tA.CopySelf(copyTypes.copyDwn);
-            o = o.Dwn();
-            a = a.Dwn();
-
-            
-            while (a != null && o != null)
-            {
-
-                switch (RetOverlap(o, a, false))
-                {
-                    case OverlapType.AEO:
-                    case OverlapType.Equals:
-                        a = a.Adj(); //good case, they are equal, inc a
-                        break;
-                    case OverlapType.After:
-                        o = o.Adj(); //acceptable case, need to increment o
-                        break;
-
-                    case OverlapType.OEA:                    
-                    case OverlapType.Before:
-                    case OverlapType.Left:
-                    case OverlapType.Right:
-                        o = null;
-                        break;
-                }
-            }
-            
-            if(a == null)//a has reached its end, awesome, so this means a exists in o,                 
-                return true;
-            
-            //else it exited because o has become null, meaning there is nothing left for a to check against, so obvouisly a does not exist in o
-            return false;
-
-            
-                
-           
-
-
-
-
-
-        }
-
-
-
-        public string GenString(Hashtable a)
-        {
-            return GenString(a.RetMainNode());
-        }
-
-        public string GenString(Node a)
-        {
-            
-                string toRet = "";
-                Node it = a;
-                while (it != null)
-                {
-
-                    Node yit = it.Dwn();
-                    toRet += it.GenString();
-                    toRet += '\n';
-
-                    while (yit != null)
-                    {
-                        toRet += "   " + yit.GenString() + '\n';
-                        yit = yit.Adj();
-
-                    }
-                    it = it.Adj();
-
-                }
-                if (a == null)
-                {
-                    toRet = "Empty Hashtable";
-                }
-
-            return toRet;
-        }
-
-
         private Node _MergeAllX(Node a)
         {
             return null;
@@ -280,79 +178,7 @@ namespace ColiSys
 
         }
 
-
         public Node YSubtractor(Node O, Node a)
-        {
-            Node TRHead = O.CopySelf(copyTypes.copyAdj);
-            //Node TRit = TRHead;
-           // Node TRTrail = TRHead;
-            NodeSpider TRns = new NodeSpider(TRHead);
-
-
-            //Loop not entered for Y Sub
-            while (a != null && TRHead != null && TRns.cur != null)
-            {
-
-
-                switch (RetOverlap(TRns.cur, a, false))
-                {
-                    case OverlapType.Equals:
-
-                        if (TRns.prev == null)
-                        {
-                            TRHead = TRns.next;
-                            TRns.It();
-                            TRns.prev = null;
-                        }
-                        else
-                        {
-                            TRns.prev.Adj(TRns.next);
-                            TRns.cur.ClearLink();
-                            TRns.cur = TRns.prev.Adj();
-                            TRns.next = TRns.cur.Adj();
-                        }
-                             
-                        a = a.Adj();
-                        break;
-
-                    case OverlapType.Before:
-                        //if happens OverlapType.Before, no need to delete
-                        a = a.Adj();
-                        break;
-                    case OverlapType.After:
-
-                        TRns.It();
-
-                        break;
-
-                    case OverlapType.Right:
-                    case OverlapType.Left:
-                        _OverlapSplitter(TRns.cur, a);
-                        TRns.next = TRns.cur.Adj(); //splitter will keep cur at frontmost split
-                        break;
-
-                    case OverlapType.OEA:
-                        _SubsetSplitter(a, TRns.cur);
-                        break;
-
-                    case OverlapType.AEO:
-                        _SubsetSplitter(TRns.cur, a);
-                        TRns.next = TRns.cur.Adj(); //splitter will keep cur at frontmost split
-                        break;
-
-
-
-                }
-            }
-
-            return TRHead;
-        }
-
-
-
-        //Old YSub without spider
-        /*
-        public Node YSubtractor2(Node O, Node a)
         {
             Node TRHead = O.CopySelf(copyTypes.copyAdj);
             Node TRit = TRHead;
@@ -409,9 +235,6 @@ namespace ColiSys
 
             return TRHead;
         }
-        */
-
-
 
         private void _MergeNodes(Node O, Node A)
         {
