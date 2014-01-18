@@ -41,6 +41,11 @@ namespace ColiSys
             dwnNode = null;
         }
 
+        public Node(S_XY lu)
+        {
+            Set(lu.x, lu.y);
+        }
+
         ///////////////replace these with the copy
         /*
         public Node(int l, int u, Node toCopy){ // node constructor.
@@ -272,6 +277,12 @@ namespace ColiSys
 
         public void Set(int a, int b)
         {
+            if (a > b)
+            {
+                int t = b;
+                b = a;
+                a = t;
+            }
             l = a;
             u = b;
         }
