@@ -9,23 +9,15 @@ namespace ColiSys
     public class MattDriver
     {
 
-        public static void main(string[] args) {
+        public MattDriver() {
 		// TODO Auto-generated method stub
 
-		Node Oy21 = new Node(4,4,null,null);
-		Node Oy20 = new Node (1,2,Oy21,null);
-		Node Ox2 = new Node(3,3,null,Oy20);
-		
-		Node Oy10 = new Node(3,4,null,null);
-		Node Ox1 = new Node(2,2,Ox2,Oy10);
-		
-		Node Oy00 = new Node(4,4,null,null);
-		Node Ox0 = new Node(0,0,Ox1,Oy00);
-		
-		
+        ShapeGenerator sg = ShapeGenerator.Instance;
+       // Node o = sg.GenShape(Shape.ConsoleIn, new S_XY(), new S_XY());
+        Node o = sg.GenShape(Shape.Square, new S_XY(100,100), new S_XY(1,1));	
 		S_Box box = new S_Box(0,1,2,2);
 		
-		Hashtable table = new Hashtable(Ox0);
+		Hashtable table = new Hashtable(o);
 		
 		//Console.Out.Write(table.Coli(box));
 		//coli test of static?
@@ -34,14 +26,14 @@ namespace ColiSys
 		//Console.Out.Write(table.Coli(box));
 		
 		
-		DiagMotion mov1 = new DiagMotion(2,0,box);
+		DiagMotion mov1 = new DiagMotion(1,0,box);
 		
 		S_Box s = new S_Box();
 		int counter = 0;
 		while(s != null)
 		{
 			
-			s = mov1.RetNextBox();
+            s = mov1.RetNextBox();
 			//Console.Out.WriteLine(mov1.E.GenString());
 		
 			

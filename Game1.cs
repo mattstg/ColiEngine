@@ -50,6 +50,7 @@ namespace ColiSys
             tc = TestContent.Instance;
             cheats = DebugCheatCodes.Instance;
             world = new GRAPHICTestWorld();
+            MattDriver d = new MattDriver();
 
             base.Initialize();
         }

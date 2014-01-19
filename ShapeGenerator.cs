@@ -27,8 +27,8 @@ namespace ColiSys
                 return instance;
             }
         }
-        
 
+      
         public Node GenShape(Shape shape, S_XY loc, S_XY size)
         {
             Node toRet = new Node(); //Dud node to make compiler happy..

@@ -40,7 +40,7 @@ namespace ColiSys
             }
             else
             {
-                t = (Math.Abs(x) > Math.Abs(y)) ? Math.Abs(y) : Math.Abs(x);
+                t = (Math.Abs(x) > Math.Abs(y)) ? Math.Abs(x) : Math.Abs(y);
             }
         }
         public DiagMotion()
