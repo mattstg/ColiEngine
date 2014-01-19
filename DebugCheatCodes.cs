@@ -44,12 +44,12 @@ namespace ColiSys
                 Console.Out.Write(mouse.ScrollWheelValue + "vs" + scrollValue);
                 if (scrollValue < mouse.ScrollWheelValue)
                 {
-                    if (Constants.BRUSH_SIZE < 10)
+                    if (Constants.BRUSH_SIZE <= Constants.BRUSH_MAX_SIZE)
                         Constants.BRUSH_SIZE++;
                 }
                 else
                 {
-                    if (Constants.BRUSH_SIZE > 1)
+                    if (Constants.BRUSH_SIZE > Constants.BRUSH_MIN_SIZE)
                         Constants.BRUSH_SIZE--;
 
                 }

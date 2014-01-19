@@ -35,3 +35,7 @@ omg regenerative levels
 Last Node in Adder(30) has L,U = 0; Shouldnt it have been refined before? does 0,0 cause inf loop?
 
 Frozen bug happens with -6-6, -1-1. Could be in the selecting of nodes, check if it adds weird
+
+
+out of order
+first node 37, second node broken (once 3rd node)
