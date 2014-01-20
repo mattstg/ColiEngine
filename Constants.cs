@@ -1,3 +1,5 @@
+using Structs;
+
 namespace ColiSys{
 public class Constants {
 
@@ -13,6 +15,6 @@ public class Constants {
   
     public static int BRUSH_SIZE = 1;
     public const int BRUSH_MIN_SIZE = 1;
-    public const int BRUSH_MAX_SIZE = 20;
+    public const int BRUSH_MAX_SIZE = 60;
 }
 }

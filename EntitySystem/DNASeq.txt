@@ -1,0 +1,11 @@
+﻿ size x
+ size y
+ loc x
+ loc y
+
+
+
+
+
+
+

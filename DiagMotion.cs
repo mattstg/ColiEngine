@@ -1,4 +1,6 @@
 using System;
+using NodeEnum;
+using Structs;
 
 namespace ColiSys
 {

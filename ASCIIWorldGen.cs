@@ -1,4 +1,5 @@
-
+using NodeEnum;
+using Structs;
 namespace ColiSys{
 public class ASCIIWorldGen {
 

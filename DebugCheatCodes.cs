@@ -10,6 +10,7 @@ namespace ColiSys
     {
 
         int scrollValue = 0;
+        
 
         private static DebugCheatCodes instance;
         private DebugCheatCodes() { }
@@ -60,7 +61,11 @@ namespace ColiSys
 
         private void _InputKeyboard(KeyboardState keys)
         {
+            if (keys.IsKeyDown(Keys.I))
+            {
+                
 
+            }
         }
 
 

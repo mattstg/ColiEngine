@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;   //   for Texture2D
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input; 
+using Microsoft.Xna.Framework.Input;
+using NodeEnum;
+using Structs;
 //Next version of graphic world needs to take into account zooming in and out and the not drawing of things outside
 namespace ColiSys
 {
@@ -61,6 +63,7 @@ namespace ColiSys
         if (inputTimer <= 0)
         {
             MouseState mouse = Mouse.GetState();
+            KeyboardState keys = Keyboard.GetState();
             if (mouse.LeftButton == ButtonState.Pressed)
             {
                 int m = (mouse.X / Constants.GAME_SCALE.x)-Constants.BRUSH_SIZE;
@@ -93,7 +96,7 @@ namespace ColiSys
                 Console.Out.WriteLine("////////////////////////// vvv Result vvv//////////////////////////");
                 Console.Out.WriteLine(nami.GenString(table));
             }
-            if (mouse.MiddleButton == ButtonState.Pressed)
+            if (mouse.MiddleButton == ButtonState.Pressed || keys.IsKeyDown(Keys.A))
             {
                 Console.Out.WriteLine("///////////////////////////////////////////////////////////////////");
                 Console.Out.WriteLine("///////////////////////////////HASH ADDER//////////////////////////");
@@ -107,6 +110,17 @@ namespace ColiSys
 
                 Console.Out.WriteLine("////////////////////////// vvv Result vvv//////////////////////////");
                 Console.Out.WriteLine(nami.GenString(table));
+
+            }
+            if (keys.IsKeyDown(Keys.I))
+            {
+                Console.Out.WriteLine("////////////////////////// vvv Before Inverse vvv//////////////////////////");
+                Console.Out.WriteLine(nami.GenString(table));
+                Node temp = nami.Inverser(table.RetMainNode());
+                table.ResetMainNode(temp);
+                Console.Out.WriteLine("////////////////////////// vv After Inverse vvv//////////////////////////");
+                Console.Out.WriteLine(nami.GenString(table));
+                
 
             }
             inputTimer = inputRefreshTimer;

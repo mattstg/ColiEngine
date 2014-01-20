@@ -2,36 +2,45 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ColiSys;  
+using Structs;
+using NodeEnum;
 
-namespace EntitySys
+namespace EntSys
 {
     class Entity
     {
         S_XY size;
         S_XY loc;
-        Node sizeLoc;
+        ColiSys.Node sizeLoc;
+
+        public Entity() { }
+        public Entity(DNA dna) { ForceCnstr(dna); }
 
 
-        public Entity(S_XY tloc,S_XY tsize) { ForceCnstr(tloc,tsize); }
-
-
-        public void ForceCnstr(S_XY tloc,S_XY tsize)
+        protected void ForceCnstr(DNA dna)
         {
-            size = tsize;
-            loc = tloc;
+            //size = tsize;
+            //loc = tloc;
+            _DNACopier(dna);
             _SetSizeInNodeForm();
+        }
+
+        private void _DNACopier(DNA dna)
+        {
+            //Need DNA copier
+
         }
 
         private void _SetSizeInNodeForm()
         {
-            Node temp = new Node(loc.x, loc.x + size.x);
-            temp.Dwn(new Node(loc.y - size.y, loc.y));
+            ColiSys.Node temp = new ColiSys.Node(loc.x, loc.x + size.x);
+            temp.Dwn(new ColiSys.Node(loc.y - size.y, loc.y));
             sizeLoc = temp;
         }
 
-        public Node RetSizeLocCopy()
+        public ColiSys.Node RetSizeLocCopy()
         {
+            _SetSizeInNodeForm();
             return sizeLoc.CopySelf(copyTypes.copyDwn);
         }
 

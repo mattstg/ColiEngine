@@ -1,3 +1,7 @@
+using NodeEnum;
+using Structs;
+
+
 namespace ColiSys
 {
     public class NodeManipulator
@@ -321,8 +325,11 @@ namespace ColiSys
                         a = a.Adj();
                         break;
                     case OverlapType.After:
-
-                        TRns.It();
+                        if (TRns.next == null) //at end of list, just null
+                            a = null;
+                        else
+                            TRns.It();
+                        
 
                         break;
 

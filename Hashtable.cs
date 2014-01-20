@@ -1,5 +1,7 @@
 using Microsoft.Xna.Framework.Graphics;  
-using Microsoft.Xna.Framework;  
+using Microsoft.Xna.Framework;
+using NodeEnum;
+using Structs;
 
 namespace ColiSys
 {
@@ -54,6 +56,14 @@ namespace ColiSys
         {
             mainNode = null;
         }
+
+        public void ResetMainNode(Node n)
+        {
+            EmptyTable();
+            mainNode = n.CopySelf(copyTypes.copyBoth);
+        }
+
+
         public string GenString()
         {
             string toRet = "";
@@ -903,7 +913,11 @@ namespace ColiSys
 
         }
 
+        public void InverseTable()
+        {
+            nami.Inverser(mainNode);
 
+        }
 
 
 
