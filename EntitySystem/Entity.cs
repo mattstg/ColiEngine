@@ -9,9 +9,11 @@ namespace EntSys
 {
     class Entity
     {
-        S_XY size;
-        S_XY loc;
-        ColiSys.Node sizeLoc;
+
+        protected S_XY size;
+        protected S_XY loc;
+        protected ColiSys.Node sizeLocSquare;
+        protected ColiSys.Node bodyShape;
 
         public Entity() { }
         public Entity(DNA dna) { ForceCnstr(dna); }
@@ -28,20 +30,61 @@ namespace EntSys
         private void _DNACopier(DNA dna)
         {
             //Need DNA copier
-
+            if (dna != null)
+            {
+                loc = dna.dDNA[0];
+                size = dna.dDNA[1];
+            }
+            else
+            {
+                loc = new S_XY(0, 0);
+                size = new S_XY(1, 1);
+            }
         }
 
         private void _SetSizeInNodeForm()
         {
             ColiSys.Node temp = new ColiSys.Node(loc.x, loc.x + size.x);
             temp.Dwn(new ColiSys.Node(loc.y - size.y, loc.y));
-            sizeLoc = temp;
+            sizeLocSquare = temp;
         }
 
         public ColiSys.Node RetSizeLocCopy()
         {
             _SetSizeInNodeForm();
-            return sizeLoc.CopySelf(copyTypes.copyDwn);
+            return sizeLocSquare.CopySelf(copyTypes.copyDwn);
+        }
+
+        protected void setColiBox()
+        {
+            ColiSys.Node x = bodyShape;
+            ColiSys.Node y = x.Dwn();
+            S_XY yRange = new S_XY(int.MaxValue,0);            
+            S_XY xRange = new S_XY(bodyShape.Ret(Bounds.l),0);
+
+
+            while (x != null)
+            {
+                y = x.Dwn();
+                while (y != null)
+                {
+                    if (y.Ret(Bounds.l) < yRange.x)
+                        yRange.x = y.Ret(Bounds.l);
+
+                    if (y.Ret(Bounds.u) > yRange.y)
+                        yRange.y = y.Ret(Bounds.u);
+
+                    y = y.Adj();
+
+                }
+                if (x.Ret(Bounds.u) > xRange.y)
+                    xRange.y = x.Ret(Bounds.u);
+                x = x.Adj();
+            }
+
+            sizeLocSquare = new ColiSys.Node(xRange);
+            sizeLocSquare.Dwn(new ColiSys.Node(yRange));
+            
         }
 
     }

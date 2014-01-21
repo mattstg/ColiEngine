@@ -1,7 +1,6 @@
-﻿ size x
- size y
- loc x
- loc y
+﻿ EntDNA::
+ S_XY loc
+ S_XY size
 
 
 

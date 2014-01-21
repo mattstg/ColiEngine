@@ -16,6 +16,11 @@
                 x = copyMe.x;
                 y = copyMe.y;
             }
+            public static S_XY operator +(S_XY s1, S_XY s2)
+            {
+                return new S_XY(s1.x + s2.x, s1.y + s2.y);
+
+            }
 
             public string GenString()
             {

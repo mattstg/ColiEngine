@@ -8,6 +8,8 @@ namespace EntSys
 {
     class BodyMechanics:Body
     {
+        protected S_XY curForce = new S_XY(); //0,0
+
         public BodyMechanics() { }
         public BodyMechanics(DNA EntDNA, DNA SprDNA, DNA BodDNA, DNA dna)
         {
@@ -23,14 +25,25 @@ namespace EntSys
 
         }
 
+        public void ModForce(S_XY mag)
+        {
+            curForce += mag;
+
+        }
+
         protected void ForceCnstr(DNA EntDNA, DNA SprDNA, DNA BodDNA, DNA dna)
         {
-
-
             base.ForceCnstr(EntDNA,SprDNA,BodDNA);
             _DNACopier(dna);
         }
 
+        public void Update(float rt)
+        {
+
+            //do all calcs with force
+            curForce = new S_XY(); //reset 0,0
+
+        }
 
 
     }

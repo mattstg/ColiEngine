@@ -23,7 +23,8 @@ subset and overlap splitter also need to come over
 
 To Increase runtime, remove instances of .CopyBoth
 
-
+add to nami adding, sub nodes, getting last or first nodes etc
+compare two node tables, with an offset applied to both S_XY
 //
 
 SUBTRACTOR STILL NOT WORKING

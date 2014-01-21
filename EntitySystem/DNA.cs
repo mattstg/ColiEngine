@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Structs;
 
 namespace EntSys
 {
-    struct DNA
+    class DNA
     {
-        bool[] Ent;          
+        public S_XY[] dDNA;
+
+        public DNA() { }
     }
 }

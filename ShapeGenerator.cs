@@ -31,7 +31,18 @@ namespace ColiSys
                 return instance;
             }
         }
+        public Node GenShape(Shape shape)
+        {
+            if (shape != Shape.ConsoleIn)
+                return GenShape(shape, new S_XY(10, 10), new S_XY(5, 5));
+            else
+                return _MakeConsoleIn();
+                
+            
 
+
+
+        }
       
         public Node GenShape(Shape shape, S_XY loc, S_XY size)
         {
@@ -48,6 +59,9 @@ namespace ColiSys
                 case Shape.ConsoleIn:
                     toRet = _MakeConsoleIn();
                     break;
+                case Shape.Human:
+                    toRet = _MakeHuman(loc, size);
+                    break;
 
                 default:
                     break;
@@ -60,8 +74,23 @@ namespace ColiSys
 
             return toRet;
         }
-        
 
+        private Node _MakeHuman(S_XY loc, S_XY size)
+        {
+            Node toRet = _MakeSquare(loc,new S_XY(size.x,size.y /2));
+            Node EndNode = null;
+
+            for (Node x = toRet; x != null; x = x.Adj())
+            {
+                if (x.Adj() == null) //last x
+                {
+                    EndNode = x;
+                }
+            }
+
+            EndNode.Adj(_MakeSquare(new S_XY((int)(loc.x+(size.x/2)+.5), loc.y), new S_XY(1, size.y)));
+            return toRet;
+        }
 
         //Need to complete 
         private Node _MakeCircle(S_XY loc, S_XY size)
@@ -88,10 +117,10 @@ namespace ColiSys
             Node ity;
             bool addAdj = false;
             bool XScope = true;
-            Console.Out.WriteLine("Please create a shape by entering the l,u bounds. After entering an X, you will be prompted to enter a Y. enter -1 to upscope, upscoping in the X plane will end the shape");
+            Console.Out.WriteLine("Please create a shape by entering the l,u bounds. After entering an X, you will be prompted to enter a Y. enter -1 to upscope, upscoping in the X plane will end the shape" + '\n');
             int l = 0;
             int u = 0;
-
+            
             Console.Out.Write("L: ");
             String input = Console.In.ReadLine();
             l = Convert.ToInt16(input);
@@ -105,7 +134,7 @@ namespace ColiSys
             ity = null;
 
             bool quit = false;
-
+            XScope = false;
 
 
             while(!quit)
@@ -117,7 +146,7 @@ namespace ColiSys
               l = Convert.ToInt16(input);
 
               if(!XScope)
-              Console.Out.Write("  ");
+                 Console.Out.Write("  ");
               Console.Out.Write("U: ");
               input = Console.In.ReadLine();
               u = Convert.ToInt16(input);

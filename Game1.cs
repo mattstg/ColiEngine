@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Storage;
 using Microsoft.Xna.Framework.GamerServices;
 using NodeEnum;
 using Structs;
+using EntSys;
 #endregion
 
 namespace ColiSys
@@ -23,6 +24,11 @@ namespace ColiSys
         DebugCheatCodes cheats;
         SpriteBatch spriteBatch;
         GRAPHICTestWorld world;
+        DNABuilder dnaBuilder;
+        HumanPlayer human;
+        ShapeGenerator shapeGen;
+        
+
 
 
 
@@ -53,6 +59,9 @@ namespace ColiSys
             cheats = DebugCheatCodes.Instance;
             world = new GRAPHICTestWorld();
             MattDriver d = new MattDriver();
+            dnaBuilder = new DNABuilder();
+            shapeGen = ShapeGenerator.Instance;
+            human = new HumanPlayer(dnaBuilder.buildEntDNA(new S_XY(300, 360), new S_XY(50, 50)), null, null, null, null);
 
             base.Initialize();
         }
@@ -67,7 +76,9 @@ namespace ColiSys
             spriteBatch = new SpriteBatch(GraphicsDevice);
             tc.LoadContent(Content);
             world.LoadWorldTexture(tc.dirt);
-            
+            Console.Out.WriteLine("Lets make a temp human, lets make his hashtable!");
+            human.DebugLoadSprite(tc.dirt, shapeGen.GenShape(Shape.Human,new S_XY(10,10),new S_XY(3,6)),Color.Blue);
+            //human.DebugLoadSprite(tc.dirt, shapeGen.GenShape(Shape.Square, new S_XY(10, 10), new S_XY(3, 6)), Color.Blue);
             // TODO: use this.Content to load your game content here
         }
 
@@ -116,6 +127,7 @@ namespace ColiSys
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin();
             world.Draw(spriteBatch);
+            human.Draw(spriteBatch);
             // TODO: Add your drawing code here
             spriteBatch.End();
             base.Draw(gameTime);

@@ -8,12 +8,19 @@ namespace EntSys
 {
     class DNABuilder
     {
-        DNA toBuild;
+        
         public DNABuilder(){}
-        public void buildEntDNA()
-        {
-            
 
+        public DNA buildEntDNA(S_XY loc, S_XY size)
+        {
+            DNA toBuild = new DNA();
+            toBuild.dDNA = new S_XY[] { loc,size };
+            return toBuild;
+        }
+
+        public DNA createEmptyDNA()
+        {
+            return null;
         }
     }
 }
