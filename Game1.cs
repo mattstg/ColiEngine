@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Storage;
 using Microsoft.Xna.Framework.GamerServices;
 using NodeEnum;
+using EntStructEnum;
 using Structs;
 using EntSys;
 #endregion
@@ -105,7 +106,7 @@ namespace ColiSys
 
 
 
-
+            human.Update(rt);
             world.Update(rt);
                        
             base.Update(gameTime);
@@ -116,6 +117,7 @@ namespace ColiSys
         {
             world.Input();
             cheats.Input();
+            human.Input();
         }
 
         /// <summary>

@@ -12,6 +12,7 @@ namespace EntSys
 
         protected S_XY size;
         protected S_XY loc;
+        protected S_XY offset;
         protected ColiSys.Node sizeLocSquare;
         protected ColiSys.Node bodyShape;
 
@@ -53,6 +54,11 @@ namespace EntSys
         {
             _SetSizeInNodeForm();
             return sizeLocSquare.CopySelf(copyTypes.copyDwn);
+        }
+
+        public void Update(float rt)
+        {
+
         }
 
         protected void setColiBox()

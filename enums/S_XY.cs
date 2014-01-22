@@ -27,5 +27,11 @@
                 return "x: " + x + " y: " + y;
             }
 
+            public static S_XY operator /(S_XY s1, float s2)
+            {
+                return new S_XY((int)(s1.x / s2),(int)( s1.y / s2));
+
+            }
+
         }
     }

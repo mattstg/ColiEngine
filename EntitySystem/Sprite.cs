@@ -45,6 +45,11 @@ namespace EntSys
             _DNACopier(dna);
         }
 
+        public void Update(float rt)
+        {
+            base.Update(rt);
+        }
+
         public void Draw(SpriteBatch sb)
         {
             if (bodyShape != null)

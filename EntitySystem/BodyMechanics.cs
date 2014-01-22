@@ -9,6 +9,7 @@ namespace EntSys
     class BodyMechanics:Body
     {
         protected S_XY curForce = new S_XY(); //0,0
+        protected S_XY velo = new S_XY(); //0,0
 
         public BodyMechanics() { }
         public BodyMechanics(DNA EntDNA, DNA SprDNA, DNA BodDNA, DNA dna)
@@ -25,7 +26,7 @@ namespace EntSys
 
         }
 
-        public void ModForce(S_XY mag)
+        public void ApplyForce(S_XY mag)
         {
             curForce += mag;
 
@@ -42,9 +43,18 @@ namespace EntSys
 
             //do all calcs with force
             curForce = new S_XY(); //reset 0,0
-
+            base.Update(rt);
         }
 
+        private void _MoveUpdate()
+        {
+            //eventaully connect with weight and such
+            //F=MA UP IN HERE
+            velo += (curForce / mass);
+            //Then coli check to see if should move
+            offset += velo;
+            //NEXT STEP IS TO INCOPORATE OFFSET  PROPERLY!!
+        }
 
     }
 }

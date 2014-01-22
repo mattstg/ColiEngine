@@ -3,11 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Structs;
+using EntStructEnum;
 
 namespace EntSys
 {
     class Body : Sprite
     {
+        protected Timers UniResponseT = new Timers();//this way until dna
+        
+        //body vars
+        protected int moveForce;
+        protected int mass;
+
+
         public Body() { }
         public Body(DNA EntDNA,DNA SprDNA, DNA dna)
         {
@@ -20,7 +28,8 @@ namespace EntSys
         private void _DNACopier(DNA dna)
         {
             //Need DNA copier
-
+            moveForce = 5;
+            mass = 1;
         }
 
         protected void ForceCnstr(DNA EntDNA, DNA SprDNA, DNA dna)
@@ -29,6 +38,12 @@ namespace EntSys
 
             base.ForceCnstr(EntDNA,SprDNA);
             _DNACopier(dna);
+        }
+
+        public void Update(float rt)
+        {
+
+            base.Update(rt);
         }
 
 
