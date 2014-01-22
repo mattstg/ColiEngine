@@ -1,4 +1,4 @@
-using NodeEnum;
+using Enums.Node;
 using Structs;
 
 
@@ -46,7 +46,7 @@ namespace ColiSys
             if (ox.Ret(Bounds.l) > 0)
             {
                 TRHead = new Node(0, ox.Ret(Bounds.l) - 1, null, null);
-                TRHead.Dwn(new Node(0, Constants.WORLD_SIZE_Y));
+                TRHead.Dwn(new Node(0, Consts.TopScope.WORLD_SIZE_Y));
                 TRx = TRHead;
 
             }
@@ -62,16 +62,16 @@ namespace ColiSys
                     {
                         TRHead.Adj(_Gap(TRHead, ox));
                         TRx = TRHead.Adj();
-                        TRx.Dwn(new Node(0, Constants.WORLD_SIZE_Y, null, null));
+                        TRx.Dwn(new Node(0, Consts.TopScope.WORLD_SIZE_Y, null, null));
                     }
                 }
                 else
                 {
-                    if (TRHead.Ret(Bounds.u) < Constants.WORLD_SIZE_X) //case that list is one element big, and does not strecth to end
+                    if (TRHead.Ret(Bounds.u) < Consts.TopScope.WORLD_SIZE_X) //case that list is one element big, and does not strecth to end
                     {
-                        TRHead.Adj(new Node(TRHead.Ret(Bounds.u), Constants.WORLD_SIZE_X, null, null));
+                        TRHead.Adj(new Node(TRHead.Ret(Bounds.u), Consts.TopScope.WORLD_SIZE_X, null, null));
                         TRx = TRHead.Adj();
-                        TRx.Dwn(new Node(0, Constants.WORLD_SIZE_Y, null, null));
+                        TRx.Dwn(new Node(0, Consts.TopScope.WORLD_SIZE_Y, null, null));
                     } //if it is one element big starting from 0 and strecthing to end, then the inverse above already took care of it
 
                 }
@@ -92,7 +92,7 @@ namespace ColiSys
                 {
                     TRx.Adj(_Gap(TRx, ox));
                     TRx = TRx.Adj();
-                    TRx.Dwn(new Node(0, Constants.WORLD_SIZE_Y, null, null));
+                    TRx.Dwn(new Node(0, Consts.TopScope.WORLD_SIZE_Y, null, null));
                 }
 
 
@@ -100,12 +100,12 @@ namespace ColiSys
 
             //done, check for upper bound to end
 
-            if (TRx.Ret(Bounds.u) < Constants.WORLD_SIZE_X)
+            if (TRx.Ret(Bounds.u) < Consts.TopScope.WORLD_SIZE_X)
             {
 
-                TRx.Adj(new Node(TRx.Ret(Bounds.u) + 1, Constants.WORLD_SIZE_X, null, null));
+                TRx.Adj(new Node(TRx.Ret(Bounds.u) + 1, Consts.TopScope.WORLD_SIZE_X, null, null));
                 TRx = TRx.Adj();
-                TRx.Dwn(new Node(0, Constants.WORLD_SIZE_Y, null, null));
+                TRx.Dwn(new Node(0, Consts.TopScope.WORLD_SIZE_Y, null, null));
             }
 
             //Check through for nodes to be deleted//////////////////////////////////
@@ -545,7 +545,7 @@ namespace ColiSys
             Node Oit = O;
 
             //Dont forget full case!!!
-            if (O.Ret(Bounds.l) == 0 && O.Ret(Bounds.u) == Constants.WORLD_SIZE_Y)
+            if (O.Ret(Bounds.l) == 0 && O.Ret(Bounds.u) == Consts.TopScope.WORLD_SIZE_Y)
             {
                 //this means the inverse should cause the scope above (x) to be deleted. 
                 TRHead = new Node(-1, 0, null, null);
@@ -563,7 +563,7 @@ namespace ColiSys
                 if (Oit.Adj() != null)
                     TRHead = _Gap(Oit, Oit.Adj());
                 else
-                    TRHead = new Node(Oit.Ret(Bounds.u) + 1, Constants.WORLD_SIZE_Y, null, null);
+                    TRHead = new Node(Oit.Ret(Bounds.u) + 1, Consts.TopScope.WORLD_SIZE_Y, null, null);
                 Oit = Oit.Adj();
             }
 
@@ -587,9 +587,9 @@ namespace ColiSys
                 }
                 //check if last one has reached end
 
-                if (Oit.Ret(Bounds.u) < Constants.WORLD_SIZE_Y) //then there is a gap
+                if (Oit.Ret(Bounds.u) < Consts.TopScope.WORLD_SIZE_Y) //then there is a gap
                 {
-                    Node temp = new Node(Oit.Ret(Bounds.u) + 1, Constants.WORLD_SIZE_Y, null, null);
+                    Node temp = new Node(Oit.Ret(Bounds.u) + 1, Consts.TopScope.WORLD_SIZE_Y, null, null);
                     TRit.Adj(temp);
 
                 }

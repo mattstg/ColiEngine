@@ -1,5 +1,5 @@
 using System;
-using NodeEnum;
+using Enums.Node;
 using Structs;
 
 namespace ColiSys

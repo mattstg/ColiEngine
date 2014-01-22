@@ -3,8 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+namespace Enums
+{
+    namespace Force
+    {
+        enum ForceTypes{Internal,NaturalLaw}
 
-    namespace NodeEnum
+
+
+    }
+
+     namespace Node
     {
         public enum Bounds { l, u };
         public enum ENode { adj, dwn };
@@ -13,3 +22,15 @@ using System.Text;
         public enum Shape { Circle, Square, ConsoleIn, Human };
 
     }
+
+     namespace ColiObjTypes
+     {
+         
+         public enum ColiTypes { Ground, Magic};
+         public enum Ground { Dirt, Stone };
+         public enum Magic { Fire, Stone };
+
+     }
+
+
+}

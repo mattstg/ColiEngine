@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Structs;
-
+using Microsoft.Xna.Framework;
 namespace EntSys
 {
     class BodyMechanics:Body
     {
-        protected S_XY curForce = new S_XY(); //0,0
-        protected S_XY velo = new S_XY(); //0,0
+        protected Vector2 curForce;
+        protected Vector2 velo;
+        private PhysSys.Physics phys = PhysSys.Physics.Instance;
 
         public BodyMechanics() { }
         public BodyMechanics(DNA EntDNA, DNA SprDNA, DNA BodDNA, DNA dna)
@@ -26,8 +27,9 @@ namespace EntSys
 
         }
 
-        public void ApplyForce(S_XY mag)
+        public void ApplyForce(Enums.Force.ForceTypes forceType,Vector2 mag)
         {
+            //force type can be reacted differently depending on body stats or(both) states
             curForce += mag;
 
         }
@@ -40,26 +42,76 @@ namespace EntSys
 
         public void Update(float rt)
         {
+            //things that apply force
+            phys.applyNaturalLaws(this); //applys force
+            _ApplyForceToVelo();
 
+            //things that mod velo
+            _CheckAllColi(); //check last cause ground coli can affect differntly.. dounoo still working on how to handle that           
             _MoveUpdate();
 
+
+            PlaceInBounds();
             //do all calcs with force
-            curForce = new S_XY(); //reset 0,0
+            curForce = new Vector2(0,0); //reset 0,0
+            
             base.Update(rt);
         }
 
-        private void _MoveUpdate()
+        private void _ApplyForceToVelo()
         {
             //eventaully connect with weight and such
             //F=MA UP IN HERE
             velo += (curForce / mass);
-            //Then coli check to see if should move
+
+        }
+
+        private void _MoveUpdate()
+        {
             
-            offset = offset + velo;
+            //Then coli check to see if should move         
+            rawOffSet += velo;
+            offset = new S_XY((int)rawOffSet.X, (int)rawOffSet.Y);
 
            
             //NEXT STEP IS TO INCOPORATE OFFSET  PROPERLY!!
             //nami check
+        }
+
+        private void _CheckAllColi()
+        {
+            ColiSys.DiagMotion mov1 = new ColiSys.DiagMotion((int)velo.X, (int)velo.Y, RetSizeLocCopyBox());
+            Structs.S_Box movingEnt = new Structs.S_Box(2,1,3,4);
+            bool quit = false;
+
+            foreach (List<ColiSys.Hashtable> topList in Collidables)
+                foreach (ColiSys.Hashtable hashTable in topList)
+                {
+                    movingEnt = mov1.RetNextBox();
+                    while (movingEnt != null && !quit)
+                    {//since do while a 0,0 ret box or first null box can occur!
+                        //possibly have some sort of connector, including the type your comparing..
+                        //this just sorts through all of them, removes the checking by the need for check by cat then.. unless given type?
+                        if (hashTable.Coli(movingEnt))
+                            quit = _ColiWithGround(); //so type of coli will trigger the apprioate reaction, then, you check a dif hashtable
+                        Console.Out.WriteLine(movingEnt.GenString());
+                        movingEnt = mov1.RetNextBox();
+                        
+                    }
+                   
+
+                }
+
+        }
+
+
+        private bool _ColiWithGround() //maybe can be overwritten by human or such for special reactions? or by body type makes more sense..ya
+        {
+            //spouse to destroy the ground, then alter the Y velocity by a certain amount, would like to use force, but unsure how atm
+            Console.Out.WriteLine("COLI!");
+            if(velo.Y >= 0)
+                velo.Y = 0;
+            return true; //shortcut trick
         }
 
     }

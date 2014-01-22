@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using NodeEnum;
+using Enums.Node;
 using Structs;
 
 
@@ -315,7 +315,7 @@ namespace ColiSys
         public static Node operator +(Node s1,S_XY s2)
         {
             Node toRet = s1.CopySelf(copyTypes.copyBoth);
-            toRet.Set(s1.Ret(Bounds.l) + s2.x, s1.Ret(Bounds.u) + s2.y);
+            toRet.Set(s1.Ret(Bounds.l) + (int)s2.x, s1.Ret(Bounds.u) + (int)s2.y);
             return toRet;
 
         }

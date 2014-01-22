@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using NodeEnum;
+using Enums.Node;
 using Structs;
 
 
@@ -27,7 +27,7 @@ namespace ColiSys
 		
 		//Console.Out.Write(table.Coli(box));
 		
-		
+		/*
 		DiagMotion mov1 = new DiagMotion(1,0,box);
 		
 		S_Box s = new S_Box();
@@ -50,7 +50,7 @@ namespace ColiSys
 		
 		//Always read A is *** of O
 		//Console.Out.Write(table.RetOverlap(OX,AX,false).GenString());
-
+            */
 		
 		
 		

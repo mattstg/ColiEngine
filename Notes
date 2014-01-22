@@ -43,3 +43,7 @@ Frozen bug happens with -6-6, -1-1. Could be in the selecting of nodes, check if
 
 out of order
 first node 37, second node broken (once 3rd node)
+
+USING ENTITY OLD SET TO NODEW FUNCS WILL RPOB RETURN FALSE THINGS! FIX OR DNT USE
+
+fix colitypes enum, find a trick

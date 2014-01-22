@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Storage;
 using Microsoft.Xna.Framework.GamerServices;
-using NodeEnum;
+using Enums.Node;
 using EntStructEnum;
 using Structs;
 using EntSys;
@@ -43,9 +43,9 @@ namespace ColiSys
             Content.RootDirectory = "ColiEngine/Content";
 
 
-            Constants.GRAPHICS_BUFFER_HEIGHT = graphics.PreferredBackBufferHeight;
-            Constants.GRAPHICS_BUFFER_WIDTH = graphics.PreferredBackBufferWidth;
-            Constants.GAME_SCALE = new S_XY(Constants.GRAPHICS_BUFFER_WIDTH / Constants.WORLD_SIZE_X,Constants.GRAPHICS_BUFFER_HEIGHT / Constants.WORLD_SIZE_Y);
+            Consts.TopScope.GRAPHICS_BUFFER_HEIGHT = graphics.PreferredBackBufferHeight;
+            Consts.TopScope.GRAPHICS_BUFFER_WIDTH = graphics.PreferredBackBufferWidth;
+            Consts.TopScope.GAME_SCALE = new S_XY(Consts.TopScope.GRAPHICS_BUFFER_WIDTH / Consts.TopScope.WORLD_SIZE_X,Consts.TopScope.GRAPHICS_BUFFER_HEIGHT / Consts.TopScope.WORLD_SIZE_Y);
             
         }
         /// <summary>
@@ -59,11 +59,12 @@ namespace ColiSys
             tc = TestContent.Instance;
             cheats = DebugCheatCodes.Instance;
             world = new GRAPHICTestWorld();
+            
             MattDriver d = new MattDriver();
             dnaBuilder = new DNABuilder();
             shapeGen = ShapeGenerator.Instance;
             human = new HumanPlayer(dnaBuilder.buildEntDNA(new S_XY(300, 360), new S_XY(50, 50)), null, null, null, null);
-
+            world.LinkColiLists(human); //link human to world! Very important!
             base.Initialize();
         }
 
@@ -78,7 +79,7 @@ namespace ColiSys
             tc.LoadContent(Content);
             world.LoadWorldTexture(tc.dirt);
             
-            human.DebugLoadSprite(tc.dirt, shapeGen.GenShape(Shape.Human,new S_XY(), new S_XY(5,10)),new S_XY(1,1),Color.Blue);
+            human.DebugLoadSprite(tc.dirt, shapeGen.GenShape(Shape.Human,new S_XY(), new S_XY(5,10)),new S_XY(0,0),Color.Blue);
             //human.DebugLoadSprite(tc.dirt, shapeGen.GenShape(Shape.Square, new S_XY(10, 10), new S_XY(3, 6)), Color.Blue);
             // TODO: use this.Content to load your game content here
         }

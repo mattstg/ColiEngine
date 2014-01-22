@@ -45,13 +45,13 @@ namespace ColiSys
                 Console.Out.Write(mouse.ScrollWheelValue + "vs" + scrollValue);
                 if (scrollValue < mouse.ScrollWheelValue)
                 {
-                    if (Constants.BRUSH_SIZE <= Constants.BRUSH_MAX_SIZE)
-                        Constants.BRUSH_SIZE++;
+                    if (Consts.TopScope.BRUSH_SIZE <= Consts.TopScope.BRUSH_MAX_SIZE)
+                        Consts.TopScope.BRUSH_SIZE++;
                 }
                 else
                 {
-                    if (Constants.BRUSH_SIZE > Constants.BRUSH_MIN_SIZE)
-                        Constants.BRUSH_SIZE--;
+                    if (Consts.TopScope.BRUSH_SIZE > Consts.TopScope.BRUSH_MIN_SIZE)
+                        Consts.TopScope.BRUSH_SIZE--;
 
                 }
                 scrollValue = mouse.ScrollWheelValue;
@@ -67,6 +67,8 @@ namespace ColiSys
 
             }
         }
+
+        
 
 
 

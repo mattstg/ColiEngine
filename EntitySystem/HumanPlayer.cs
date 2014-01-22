@@ -13,10 +13,10 @@ namespace EntSys
 {
     class HumanPlayer : BodyMechanics
     {
+        ColiSys.NodeManipulator nami = ColiSys.NodeManipulator.Instance;
         Timers UniResponseT = null;
         keyMap keymap;
-
-        
+           
 
 
         public HumanPlayer() { }
@@ -33,6 +33,8 @@ namespace EntSys
             //Hardcoded DNA for now
             UniResponseT = new Timers(0, 250, 251);
         }
+
+        
 
         protected void ForceCnstr(DNA EntDNA, DNA SprDNA, DNA BodDNA, DNA MekDNA, DNA dna)
         {
@@ -52,13 +54,13 @@ namespace EntSys
             {
                 
                 if (keys.IsKeyDown(keymap.left))
-                    ApplyForce(new S_XY(-moveForce, 0));
+                    ApplyForce(Enums.Force.ForceTypes.Internal,new Vector2(-moveForce, 0));
                 if (keys.IsKeyDown(keymap.right))
-                    ApplyForce(new S_XY(moveForce, 0));
+                    ApplyForce(Enums.Force.ForceTypes.Internal, new Vector2(moveForce, 0));
                 if (keys.IsKeyDown(keymap.up))
-                    ApplyForce(new S_XY(0,-moveForce));
+                    ApplyForce(Enums.Force.ForceTypes.Internal, new Vector2(0, -moveForce));
                 if (keys.IsKeyDown(keymap.down))
-                    ApplyForce(new S_XY(0,moveForce));
+                    ApplyForce(Enums.Force.ForceTypes.Internal, new Vector2(0, moveForce));
 
 
                 UniResponseT.Dec(true);
@@ -73,6 +75,8 @@ namespace EntSys
 
 
         }
+
+        
 
         private void _UpdateAllTimers(float rt)
         {
@@ -90,6 +94,11 @@ namespace EntSys
             keymap.up = Keys.Up;
         }
 
+
+        public void SetCollidables(List<List<ColiSys.Hashtable>> tCollidables)
+        {
+            Collidables = tCollidables;
+        }
 
     }
 }

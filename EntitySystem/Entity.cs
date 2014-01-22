@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Structs;
-using NodeEnum;
+using Enums.Node;
+using Microsoft.Xna.Framework;
 
 namespace EntSys
 {
@@ -13,7 +14,9 @@ namespace EntSys
         protected S_XY size;
         protected S_XY loc;
         private S_XY _offset = new S_XY();
-        protected S_XY offset { set { _offset.x = (_offset.x < 0) ? 0 : value.x; _offset.y = (_offset.y < 0) ? 0 : value.y; } get { return _offset; } }
+        //This boundary trick no longer works, was worth a shot tho
+        protected S_XY offset { set { _offset.x = (_offset.x < 0) ? 0 : value.x; _offset.y = (_offset.y < 0) ? 0 : value.y; } get { return new S_XY((int)_offset.x,(int)_offset.y); } }
+        protected Vector2 rawOffSet = new Vector2(0,0);
         //protected S_XY offset = new S_XY();
         protected ColiSys.Node sizeLocSquare;
         protected ColiSys.Node bodyShape;
@@ -58,6 +61,41 @@ namespace EntSys
             return sizeLocSquare.CopySelf(copyTypes.copyDwn);
         }
 
+        protected void PlaceInBounds()
+        {
+            if (offset.x < 0)
+            {
+                offset.x = 0;
+                rawOffSet.X = 0;
+            }
+            
+            if(offset.y < 0)
+            { 
+                offset.y = 0;
+                rawOffSet.X = 0;
+            }
+
+
+            if (offset.x > Consts.TopScope.WORLD_SIZE_X)
+            {
+                offset.x = Consts.TopScope.WORLD_SIZE_X;
+                rawOffSet.X = Consts.TopScope.WORLD_SIZE_X;
+            }
+
+            if (offset.y > Consts.TopScope.WORLD_SIZE_Y)
+            {
+                offset.y = Consts.TopScope.WORLD_SIZE_Y;
+                rawOffSet.X = Consts.TopScope.WORLD_SIZE_Y;
+            }
+
+        }
+
+        public Structs.S_Box RetSizeLocCopyBox()
+        {
+            setColiBox(); //to preset the sizeLoc
+            return new S_Box(offset.x, offset.y, sizeLocSquare.Ret(Bounds.u) - sizeLocSquare.Ret(Bounds.l), sizeLocSquare.Dwn().Ret(Bounds.u) - sizeLocSquare.Dwn().Ret(Bounds.l));
+        }
+
         public void Update(float rt)
         {
 
@@ -93,7 +131,6 @@ namespace EntSys
             sizeLocSquare = new ColiSys.Node(xRange) + offset.x;
             sizeLocSquare.Dwn(new ColiSys.Node(yRange) + offset.y);
 
-            Console.Out.WriteLine("Calculated Coli Box" +'\n' + sizeLocSquare.GenString() + '\n' + "   " + sizeLocSquare.Dwn().GenString());
         }
 
     }

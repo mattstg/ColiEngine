@@ -5,7 +5,7 @@ using System.Text;
 using Structs;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using NodeEnum;
+using Enums.Node;
 
 
 namespace EntSys
@@ -36,6 +36,7 @@ namespace EntSys
             bodyShape = tBodyShape;
             setColiBox();
             offset = tOffset;
+            rawOffSet = new Vector2(tOffset.x,tOffset.y);
 
         }
 
@@ -65,7 +66,7 @@ namespace EntSys
                     hty = htx.Dwn();
                     while (hty != null)
                     {
-                        range = new S_Box((htx.Ret(Bounds.l) + offset.x) * ColiSys.Constants.GAME_SCALE.x, (hty.Ret(Bounds.l) + offset.y) * ColiSys.Constants.GAME_SCALE.y, (htx.Ret(Bounds.u) + 1 + offset.x) * ColiSys.Constants.GAME_SCALE.x, (hty.Ret(Bounds.u) + 1 + +offset.y) * ColiSys.Constants.GAME_SCALE.y, false); //guess i could just make it straigh to rectangle eh?
+                        range = new S_Box((htx.Ret(Bounds.l) + offset.x) * Consts.TopScope.GAME_SCALE.x, (hty.Ret(Bounds.l) + offset.y) * Consts.TopScope.GAME_SCALE.y, (htx.Ret(Bounds.u) + 1 + offset.x) * Consts.TopScope.GAME_SCALE.x, (hty.Ret(Bounds.u) + 1 + +offset.y) * Consts.TopScope.GAME_SCALE.y, false); //guess i could just make it straigh to rectangle eh?
                         sb.Draw(t, ColiSys.Converter.SBox2Rect(range), color);
                         //sb.Draw(t, new Rectangle(0,0,100,100), Color.White);
                         hty = hty.Adj();

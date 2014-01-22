@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework.Graphics;  
 using Microsoft.Xna.Framework;
-using NodeEnum;
+using Enums.Node;
 using Structs;
 
 namespace ColiSys
