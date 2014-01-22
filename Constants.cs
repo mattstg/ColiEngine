@@ -3,8 +3,8 @@ using Structs;
 namespace ColiSys{
 public class Constants {
 
-	public const int WORLD_SIZE_X = 64;  //but world is 0-31? careful double check this
-	public const int WORLD_SIZE_Y = 36; //important to note the world goes from 0 to size-1. in the hash table, it will be 0-24 ex, subject to change? not sure see where conveince goes
+	public const int WORLD_SIZE_X = 640;  //but world is 0-31? careful double check this
+	public const int WORLD_SIZE_Y = 360; //important to note the world goes from 0 to size-1. in the hash table, it will be 0-24 ex, subject to change? not sure see where conveince goes
     
     
     //Statics, should they be ina  static file?

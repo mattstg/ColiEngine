@@ -31,7 +31,7 @@ namespace EntSys
         private void _DNACopier(DNA dna)
         {
             //Hardcoded DNA for now
-            UniResponseT = new Timers(0, 2500, 3000);
+            UniResponseT = new Timers(0, 250, 251);
         }
 
         protected void ForceCnstr(DNA EntDNA, DNA SprDNA, DNA BodDNA, DNA MekDNA, DNA dna)
@@ -47,21 +47,22 @@ namespace EntSys
 
         public void Input()
         {
-            
-            if (UniResponseT.ready)
+            KeyboardState keys = Keyboard.GetState();
+            if (UniResponseT.ready && keys.GetPressedKeys().Length != 0)
             {
-                KeyboardState keys = Keyboard.GetState();
+                
                 if (keys.IsKeyDown(keymap.left))
                     ApplyForce(new S_XY(-moveForce, 0));
                 if (keys.IsKeyDown(keymap.right))
                     ApplyForce(new S_XY(moveForce, 0));
                 if (keys.IsKeyDown(keymap.up))
-                    ApplyForce(new S_XY(0,moveForce));
+                    ApplyForce(new S_XY(0,-moveForce));
                 if (keys.IsKeyDown(keymap.down))
                     ApplyForce(new S_XY(0,moveForce));
 
 
                 UniResponseT.Dec(true);
+                setColiBox();
             }
         }
 

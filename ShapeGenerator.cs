@@ -36,9 +36,7 @@ namespace ColiSys
             if (shape != Shape.ConsoleIn)
                 return GenShape(shape, new S_XY(10, 10), new S_XY(5, 5));
             else
-                return _MakeConsoleIn();
-                
-            
+                return _MakeConsoleIn();           
 
 
 
@@ -60,7 +58,7 @@ namespace ColiSys
                     toRet = _MakeConsoleIn();
                     break;
                 case Shape.Human:
-                    toRet = _MakeHuman(loc, size);
+                    toRet = _MakeHuman(size);
                     break;
 
                 default:
@@ -75,9 +73,9 @@ namespace ColiSys
             return toRet;
         }
 
-        private Node _MakeHuman(S_XY loc, S_XY size)
+        private Node _MakeHuman(S_XY size)
         {
-            Node toRet = _MakeSquare(loc,new S_XY(size.x,size.y /2));
+            Node toRet = _MakeSquare(new S_XY(0,0),new S_XY(size.x,size.y /2));
             Node EndNode = null;
 
             for (Node x = toRet; x != null; x = x.Adj())
@@ -88,7 +86,7 @@ namespace ColiSys
                 }
             }
 
-            EndNode.Adj(_MakeSquare(new S_XY((int)(loc.x+(size.x/2)+.5), loc.y), new S_XY(1, size.y)));
+            EndNode.Adj(_MakeSquare(new S_XY((int)((size.x/2)+.5), 0), new S_XY(1, size.y)));
             return toRet;
         }
 

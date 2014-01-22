@@ -12,7 +12,9 @@ namespace EntSys
 
         protected S_XY size;
         protected S_XY loc;
-        protected S_XY offset;
+        private S_XY _offset = new S_XY();
+        protected S_XY offset { set { _offset.x = (_offset.x < 0) ? 0 : value.x; _offset.y = (_offset.y < 0) ? 0 : value.y; } get { return _offset; } }
+        //protected S_XY offset = new S_XY();
         protected ColiSys.Node sizeLocSquare;
         protected ColiSys.Node bodyShape;
 
@@ -88,9 +90,10 @@ namespace EntSys
                 x = x.Adj();
             }
 
-            sizeLocSquare = new ColiSys.Node(xRange);
-            sizeLocSquare.Dwn(new ColiSys.Node(yRange));
-            
+            sizeLocSquare = new ColiSys.Node(xRange) + offset.x;
+            sizeLocSquare.Dwn(new ColiSys.Node(yRange) + offset.y);
+
+            Console.Out.WriteLine("Calculated Coli Box" +'\n' + sizeLocSquare.GenString() + '\n' + "   " + sizeLocSquare.Dwn().GenString());
         }
 
     }

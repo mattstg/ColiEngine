@@ -41,6 +41,8 @@ namespace EntSys
         public void Update(float rt)
         {
 
+            _MoveUpdate();
+
             //do all calcs with force
             curForce = new S_XY(); //reset 0,0
             base.Update(rt);
@@ -52,8 +54,12 @@ namespace EntSys
             //F=MA UP IN HERE
             velo += (curForce / mass);
             //Then coli check to see if should move
-            offset += velo;
+            
+            offset = offset + velo;
+
+           
             //NEXT STEP IS TO INCOPORATE OFFSET  PROPERLY!!
+            //nami check
         }
 
     }

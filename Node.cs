@@ -312,6 +312,22 @@ namespace ColiSys
             adjNode = n;
         }
 
+        public static Node operator +(Node s1,S_XY s2)
+        {
+            Node toRet = s1.CopySelf(copyTypes.copyBoth);
+            toRet.Set(s1.Ret(Bounds.l) + s2.x, s1.Ret(Bounds.u) + s2.y);
+            return toRet;
+
+        }
+
+        public static Node operator +(Node s1, int s2)
+        {
+            Node toRet = s1.CopySelf(copyTypes.copyBoth);
+            toRet.Set(s1.Ret(Bounds.l) + s2, s1.Ret(Bounds.u) + s2);
+            return toRet;
+
+        }
+
 
     }
 }

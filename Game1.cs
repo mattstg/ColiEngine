@@ -77,8 +77,8 @@ namespace ColiSys
             spriteBatch = new SpriteBatch(GraphicsDevice);
             tc.LoadContent(Content);
             world.LoadWorldTexture(tc.dirt);
-            Console.Out.WriteLine("Lets make a temp human, lets make his hashtable!");
-            human.DebugLoadSprite(tc.dirt, shapeGen.GenShape(Shape.Human,new S_XY(10,10),new S_XY(3,6)),Color.Blue);
+            
+            human.DebugLoadSprite(tc.dirt, shapeGen.GenShape(Shape.Human,new S_XY(), new S_XY(5,10)),new S_XY(1,1),Color.Blue);
             //human.DebugLoadSprite(tc.dirt, shapeGen.GenShape(Shape.Square, new S_XY(10, 10), new S_XY(3, 6)), Color.Blue);
             // TODO: use this.Content to load your game content here
         }
