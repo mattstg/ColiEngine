@@ -84,16 +84,37 @@ namespace EntSys
             Structs.S_Box movingEnt = new Structs.S_Box(2,1,3,4);
             bool quit = false;
 
-            foreach (List<ColiSys.Hashtable> topList in Collidables)
-                foreach (ColiSys.Hashtable hashTable in topList)
+
+            Enums.ColiObjTypes.ColiTypes coliOccur = Enums.ColiObjTypes.ColiTypes.None;
+
+                foreach (Structs.ColiListConnector connecter in Collidables)
                 {
                     movingEnt = mov1.RetNextBox();
-                    while (movingEnt != null && !quit)
+                    while (movingEnt != null && coliOccur == Enums.ColiObjTypes.ColiTypes.None)
                     {//since do while a 0,0 ret box or first null box can occur!
                         //possibly have some sort of connector, including the type your comparing..
                         //this just sorts through all of them, removes the checking by the need for check by cat then.. unless given type?
-                        if (hashTable.Coli(movingEnt))
-                            quit = _ColiWithGround(); //so type of coli will trigger the apprioate reaction, then, you check a dif hashtable
+                        if (connecter.hashTable.Coli(movingEnt))
+                        {
+                            coliOccur = connecter.coliType;
+                            switch (coliOccur)
+                            {
+                                case Enums.ColiObjTypes.ColiTypes.Magic:
+                                    break;
+
+                                case Enums.ColiObjTypes.ColiTypes.Dirt:
+                                    _ColiWithGround();
+                                    break;
+
+                                default:
+                                    Console.Out.WriteLine("You hit default case in checking connector type in colision!");
+                                    break;
+
+
+                            }
+                        }
+
+                        
                         Console.Out.WriteLine(movingEnt.GenString());
                         movingEnt = mov1.RetNextBox();
                         

@@ -127,7 +127,7 @@ namespace ColiSys
             return toRet;
         }
 
-        private bool Coli(Node a, Node b)
+        private bool _GetColiBool(Node a, Node b)
         {
             if (RetOverlap(a, b, false) == OverlapType.After || RetOverlap(a, b, false) == OverlapType.Before)
             {
@@ -136,6 +136,11 @@ namespace ColiSys
             return true;
 
 
+        }
+
+        private OverlapType _GetColiType(Node a, Node b)
+        {           
+                return RetOverlap(a, b, false) ;
         }
 
         public bool Coli(S_Box box)
@@ -154,8 +159,13 @@ namespace ColiSys
 
         }
 
+        private OverlapType _Coli(Node hashTree)
+        {
 
-        private bool Coli(Node hashTree)  //WORKS UNDER ASSUMPTION THAT hashTree CONTAINS 1 x and 1 y!!!!!, please grow algo if needed
+            return OverlapType.AEO;
+        }
+
+        public bool Coli(Node hashTree)  //WORKS UNDER ASSUMPTION THAT hashTree CONTAINS 1 x and 1 y!!!!!, please grow algo if needed
         {
             Node mainITX = mainNode;  //Iterator to main node in x plane
 
@@ -165,7 +175,7 @@ namespace ColiSys
                 //////Console.Out.WriteLine("hashTree" + hashTree.GenString());
 
 
-                if (Coli(mainITX, hashTree)) //if coli in x
+                if (_GetColiBool(mainITX, hashTree)) //if coli in x
                 {
 
                     //an overlap of a kind has occured, now loop through for the y laps
@@ -176,7 +186,7 @@ namespace ColiSys
                         //////Console.Out.WriteLine("hashTree.dwn" + hashTree.Dwn().GenString());
                         //////Console.Out.WriteLine("main.y" + mainITY.GenString());
 
-                        if (Coli(mainITY, hashTree.Dwn())) //if a coli occurs between the y from local hash and y from given tree			
+                        if (_GetColiBool(mainITY, hashTree.Dwn())) //if a coli occurs between the y from local hash and y from given tree			
                         {
                             //////Console.Out.WriteLine("The main: " + '\n' + mainITY.GenString() + '\n' + "Moving object: " + '\n' +  hashTree.Dwn().GenString());
                             return true;//A coli has occured, this means there is a colision between these two trees

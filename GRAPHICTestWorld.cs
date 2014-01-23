@@ -28,6 +28,7 @@ namespace ColiSys
             shapeGen = ShapeGenerator.Instance;
             dirtTable = new Hashtable(shapeGen.GenShape(Shape.Square, new S_XY(0, Consts.TopScope.WORLD_SIZE_Y / 2), new S_XY(Consts.TopScope.WORLD_SIZE_X, Consts.TopScope.WORLD_SIZE_Y / 2)));
             toAdd = new Hashtable();
+
 	    }
 	
 	public void ResetWorld()
@@ -140,15 +141,13 @@ namespace ColiSys
     public void LinkColiLists(EntSys.HumanPlayer human)
     {
         //create head list of list ptr
-        List<List<Hashtable>> toRet = new List<List<Hashtable>>();
+        List<ColiListConnector> toRet = new List<ColiListConnector>();
         
 
-        //create list of dirt
-          List<Hashtable> GroundList = new List<Hashtable>();
-        //add all kinds of ground objs table
-        GroundList.Add(dirtTable);
+         
+        //add all kinds of table types
+        ColiListConnector GroundList = new ColiListConnector(dirtTable,Enums.ColiObjTypes.ColiTypes.Dirt);
         
-
 
 
 
@@ -157,6 +156,22 @@ namespace ColiSys
         human.SetCollidables(toRet);
 
      }
+
+    public void LinkColiLists(EntSys.Rock rock)
+    {
+        //create head list of list ptr
+        List<ColiListConnector> toRet = new List<ColiListConnector>();
+
+
+
+        //add all kinds of table types
+        ColiListConnector GroundList = new ColiListConnector(dirtTable, Enums.ColiObjTypes.ColiTypes.Dirt);
+
+
+        //add all lists
+        toRet.Add(GroundList);
+        rock.SetCollidables(toRet);
+    }
 
 
 

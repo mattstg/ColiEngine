@@ -87,11 +87,14 @@ namespace Structs
     {
         
 
-        List<ColiSys.Hashtable> hashTable;
-        Enums.ColiObjTypes.ColiTypes scope;
-        Enums.ColiObjTypes.Ground type;
+        public ColiSys.Hashtable hashTable;
+        public Enums.ColiObjTypes.ColiTypes coliType;
 
-
+        public ColiListConnector(ColiSys.Hashtable ptable, Enums.ColiObjTypes.ColiTypes pcoliType)
+        {
+            hashTable = ptable;
+            coliType = pcoliType;
+        }
     }
 
 }

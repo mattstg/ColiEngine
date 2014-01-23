@@ -95,7 +95,7 @@ namespace EntSys
         }
 
 
-        public void SetCollidables(List<List<ColiSys.Hashtable>> tCollidables)
+        public void SetCollidables(List<ColiListConnector> tCollidables)
         {
             Collidables = tCollidables;
         }

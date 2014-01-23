@@ -26,7 +26,7 @@ namespace Enums
      namespace ColiObjTypes
      {
          
-         public enum ColiTypes { Ground, Magic};
+         public enum ColiTypes {None, Dirt, Magic};
          public enum Ground { Dirt, Stone };
          public enum Magic { Fire, Stone };
 

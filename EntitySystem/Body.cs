@@ -10,7 +10,7 @@ namespace EntSys
     class Body : Sprite
     {
         protected Timers UniResponseT = new Timers();//this way until dna
-        protected List<List<ColiSys.Hashtable>> Collidables;    
+        protected List<Structs.ColiListConnector> Collidables;    
         //body vars
         protected int moveForce;
         protected int mass;
