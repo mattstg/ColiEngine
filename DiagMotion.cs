@@ -12,7 +12,8 @@ namespace ColiSys
         int Rem;
         double dR;
         double CdR;
-        int t;
+        int diagSteps;
+        int RemainderCompleted = 0;
 
         //constructors
         public DiagMotion(int a, int b, S_Box tE)
@@ -38,11 +39,11 @@ namespace ColiSys
             CdR = dR / 2;
             if (x == 0 || y == 0)
             {
-                t = (Math.Abs(x) > Math.Abs(y)) ? Math.Abs(x) : Math.Abs(y);
+                diagSteps = (Math.Abs(x) > Math.Abs(y)) ? Math.Abs(x) : Math.Abs(y);
             }
             else
             {
-                t = (Math.Abs(x) > Math.Abs(y)) ? Math.Abs(x) : Math.Abs(y);
+                diagSteps = (Math.Abs(x) > Math.Abs(y)) ? Math.Abs(y) : Math.Abs(x);
             }
         }
         public DiagMotion()
@@ -53,7 +54,7 @@ namespace ColiSys
             Rem = 0;
             dR = 0;
             CdR = 0;
-            t = 1;
+            diagSteps = 1;
         }
 
         public string GenString()
@@ -85,30 +86,6 @@ namespace ColiSys
             }
 
             S_Box i = new S_Box(E.loc.x + a, E.loc.y + b, E.size.x + c + 1, E.size.y + d + 1);
-            return i;
-        }
-        private S_Box VelToBox(int xx, int yy)
-        {
-            int a = 0, b = 0, c = 0, d = 0;
-            if (xx < 0)
-            {
-                a = -1;
-            }
-            else if (x == 0)
-            {
-                c = -1;
-            }
-
-            if (yy > 0)
-            {
-                b = 1;
-            }
-            else if (y == 0)
-            {
-                d = -1;
-            }
-
-            S_Box i = new S_Box(new S_XY(E.loc.x + a, E.loc.y + b), new S_XY(E.size.x + c, E.size.y + d));
             return i;
         }
 
@@ -156,31 +133,21 @@ namespace ColiSys
 
         public S_Box RetNextBox()
         {
-            //Console.Out.WriteLine("doing while(counter >= t)     counter :" + counter + " t: " + t);
-            if ((counter - 1) >= t && counter != 0)
+            if ((counter) >= diagSteps)
             {
                 return null;
-            }
-            if (counter != 0)
-            {
-                PMove();
-                //Console.Out.WriteLine("E has been moved to: " + E.GenString());
-            }
-            else
-            {
-                //Console.Out.WriteLine("counter == 0. Not moving E.");
             }
 
             S_Box i = VelToBox();
 
-            if ((double)counter >= CdR && Rem != 0 && CdR != 0)
+            if ((double)counter >= CdR && Rem != 0 && CdR != 0 && RemainderCompleted != Rem)
             {
-                //Console.Out.WriteLine("Special case has occured. Moving E additionally...");
-                if (x == t)
+                if (x == diagSteps)
                 {
                     if (y > 0)
                     {
                         i.loc.y += 1;
+                        i.size.y += 1;
                         PMove(0, 1);
                     }
                     else
@@ -199,12 +166,16 @@ namespace ColiSys
                     else
                     {
                         i.loc.x += 1;
+                        i.size.x += 1;
                         PMove(-1, 0);
                     }
                 }
                 //Console.Out.WriteLine("E has been moved to: " + E.GenString());
                 CdR += dR;
+                RemainderCompleted++;
             }
+        
+            PMove();
             counter += 1;
             return i;
         }
