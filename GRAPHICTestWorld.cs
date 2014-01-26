@@ -7,13 +7,15 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Enums.Node;
 using Structs;
+using EntSys;
 //Next version of graphic world needs to take into account zooming in and out and the not drawing of things outside
 namespace ColiSys
 {
     class GRAPHICTestWorld
     {
-
+        Global.Bus bus = Global.Bus.Instance;
         int boxSize;
+        List<Explosion> explosions;
         Hashtable dirtTable;
         Hashtable toAdd;
         NodeManipulator nami = NodeManipulator.Instance;
@@ -28,7 +30,7 @@ namespace ColiSys
             shapeGen = ShapeGenerator.Instance;
             dirtTable = new Hashtable(shapeGen.GenShape(Shape.Square, new S_XY(0, Consts.TopScope.WORLD_SIZE_Y / 2), new S_XY(Consts.TopScope.WORLD_SIZE_X, Consts.TopScope.WORLD_SIZE_Y / 2)));
             toAdd = new Hashtable();
-
+            explosions = new List<Explosion>();
 	    }
 	
 	public void ResetWorld()
@@ -129,11 +131,45 @@ namespace ColiSys
 
     }
 
-    public void Update(float refreshTimer)
+    public void Update(float rt)
     {
-        inputTimer -= refreshTimer;
+        //for mouse clicking input
+        inputTimer -= rt;
         if (inputTimer < 0)
             inputTimer = 0;
+        _UnloadBus();
+        foreach (Explosion expl in explosions)
+        {
+            expl.Update(rt);
+        }
+        //Unload explosions and turn them back into them
+
+
+        _DestroyEmptyLists();
+
+    }
+
+    private void _DestroyEmptyLists()
+    {
+        for (int i = explosions.Count - 1; i >= 0; i--)
+            if (explosions[i].Destroy)
+                explosions.RemoveAt(i);
+
+
+    }
+
+
+    private void _UnloadBus()
+    {
+    //unload explosion types and reset them into explosions
+        List<Global.Passenger> tempList = bus.UnloadPassengersOfType(Enums.Global.VoidableTypes.Explosion);
+        foreach (Global.Passenger expl in tempList)
+        {
+            Explosion temp = new Explosion(expl.Hashtable.RetMainNode(), expl.offset);
+
+            LinkColiLists(temp); //link all colitables it needs
+            explosions.Add(temp);           
+        }
 
     }
 
@@ -171,6 +207,19 @@ namespace ColiSys
         //add all lists
         toRet.Add(GroundList);
         rock.SetCollidables(toRet);
+    }
+
+    public void LinkColiLists(EntSys.Explosion expl)
+    {
+        //create head list of list ptr
+        List<ColiListConnector> toRet = new List<ColiListConnector>();
+        //add all kinds of table types
+        ColiListConnector tempDirtTable = new ColiListConnector(dirtTable, Enums.ColiObjTypes.ColiTypes.Dirt);
+        //should add human here too, but hes in game1 for some reason, the good version of world will accomdate this
+        
+        //add all lists
+        toRet.Add(tempDirtTable);
+        expl.SetCollidables(toRet);
     }
 
 

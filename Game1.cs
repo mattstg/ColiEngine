@@ -20,6 +20,7 @@ namespace ColiSys
     /// </summary>
     public class Game1 : Game
     {
+        
         GraphicsDeviceManager graphics;
         TestContent tc;
         DebugCheatCodes cheats;
@@ -29,6 +30,7 @@ namespace ColiSys
         HumanPlayer human;
         ShapeGenerator shapeGen;
         Rock[] RockList;
+        Global.Bus bus = Global.Bus.Instance;
         
 
 
@@ -65,13 +67,13 @@ namespace ColiSys
             dnaBuilder = new DNABuilder();
             shapeGen = ShapeGenerator.Instance;
             human = new HumanPlayer(dnaBuilder.buildEntDNA(new S_XY(300, 360), new S_XY(50, 50)), null, null, null, null);
-            RockList = new Rock[5];
-            for (int i = 0; i < 5; i++)
-                RockList[i] = new Rock(null, null, null, null, null);
+           // RockList = new Rock[5];
+           // for (int i = 0; i < 5; i++)
+             //   RockList[i] = new Rock(null, null, null, null, null);
             
             world.LinkColiLists(human); //link human to world! Very important!
-            foreach (Rock rock in RockList)
-                world.LinkColiLists(rock);
+           // foreach (Rock rock in RockList)
+           //     world.LinkColiLists(rock);
             base.Initialize();
         }
 
@@ -87,12 +89,12 @@ namespace ColiSys
             world.LoadWorldTexture(tc.dirt);
             
             human.DebugLoadSprite(tc.dirt, shapeGen.GenShape(Shape.Human,new S_XY(), new S_XY(5,10)),new S_XY(0,0),Color.Blue);
-            int c = 0;
-            foreach (Rock rock in RockList)
-            {
-                rock.DebugLoadSprite(tc.dirt, shapeGen.GenShape(Shape.Square, new S_XY(), new S_XY(10, 10)), new S_XY(40*c, 40*c), Color.LightSlateGray);
-                c++;
-            }
+           // int c = 0;
+           // foreach (Rock rock in RockList)
+           // {
+           //     rock.DebugLoadSprite(tc.dirt, shapeGen.GenShape(Shape.Square, new S_XY(), new S_XY(10, 10)), new S_XY(40*c, 40*c), Color.LightSlateGray);
+           //     c++;
+           // }
             //human.DebugLoadSprite(tc.dirt, shapeGen.GenShape(Shape.Square, new S_XY(10, 10), new S_XY(3, 6)), Color.Blue);
             // TODO: use this.Content to load your game content here
         }
@@ -117,12 +119,10 @@ namespace ColiSys
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
             Input(rt);
-
-
-
+                        
             human.Update(rt);
-            foreach (Rock rock in RockList)
-                rock.Update(rt);
+           // foreach (Rock rock in RockList)
+           //     rock.Update(rt);
 
             world.Update(rt);
                        
@@ -147,8 +147,8 @@ namespace ColiSys
             spriteBatch.Begin();
             world.Draw(spriteBatch);
             human.Draw(spriteBatch);
-            foreach (Rock rock in RockList)
-                rock.Draw(spriteBatch);
+          //  foreach (Rock rock in RockList)
+          //      rock.Draw(spriteBatch);
             // TODO: Add your drawing code here
             spriteBatch.End();
             base.Draw(gameTime);

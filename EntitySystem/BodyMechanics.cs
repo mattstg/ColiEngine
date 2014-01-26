@@ -4,12 +4,14 @@ using System.Linq;
 using System.Text;
 using Structs;
 using Microsoft.Xna.Framework;
+
+
 namespace EntSys
 {
     class BodyMechanics:Body
     {
-        protected Vector2 curForce;
-        protected Vector2 velo;
+        
+        Global.Bus bus = Global.Bus.Instance;
         private PhysSys.Physics phys = PhysSys.Physics.Instance;
 
         public BodyMechanics() { }
@@ -21,7 +23,7 @@ namespace EntSys
             
         }
 
-        private void _DNACopier(DNA dna)
+        private void _DNADecoder(DNA dna)
         {
             //Need DNA copier
 
@@ -31,23 +33,24 @@ namespace EntSys
         {
             //force type can be reacted differently depending on body stats or(both) states
             curForce += mag;
+          
 
         }
 
         protected void ForceCnstr(DNA EntDNA, DNA SprDNA, DNA BodDNA, DNA dna)
         {
             base.ForceCnstr(EntDNA,SprDNA,BodDNA);
-            _DNACopier(dna);
+            _DNADecoder(dna);
         }
 
         public void Update(float rt)
         {
             //things that apply force
-            phys.applyNaturalLaws(this); //applys force
+            phys.applyNaturalLaws(this, mass); //applys force
+            _CheckAllColi();
             _ApplyForceToVelo();
-
             //things that mod velo
-            _CheckAllColi(); //check last cause ground coli can affect differntly.. dounoo still working on how to handle that           
+                  
             _MoveUpdate();
 
 
@@ -94,17 +97,20 @@ namespace EntSys
                     {//since do while a 0,0 ret box or first null box can occur!
                         //possibly have some sort of connector, including the type your comparing..
                         //this just sorts through all of them, removes the checking by the need for check by cat then.. unless given type?
-                        if (connecter.hashTable.Coli(movingEnt))
+
+                        Enums.Node.OverlapType[] otype = connecter.hashTable.ColiType(movingEnt); //find type of coli that occured w/ x,y respects
+                        if (otype[0] != Enums.Node.OverlapType.Before)  //so a coli has occured
                         {
                             coliOccur = connecter.coliType;
-                            switch (coliOccur)
+                            switch (coliOccur) //switch->type object bodymech has colided with, and call their reactions based on that
                             {
-                                case Enums.ColiObjTypes.ColiTypes.Magic:
+                                case Enums.ColiObjTypes.ColiTypes.Explosion:
                                     break;
 
                                 case Enums.ColiObjTypes.ColiTypes.Dirt:
-                                    _ColiWithGround();
+                                    _ColiWithGround(Statics.Converter.OverlapToCompass(otype));
                                     break;
+                                    
 
                                 default:
                                     Console.Out.WriteLine("You hit default case in checking connector type in colision!");
@@ -115,7 +121,7 @@ namespace EntSys
                         }
 
                         
-                        Console.Out.WriteLine(movingEnt.GenString());
+                        //Console.Out.WriteLine(movingEnt.GenString());
                         movingEnt = mov1.RetNextBox();
                         
                     }
@@ -126,12 +132,64 @@ namespace EntSys
         }
 
 
-        private bool _ColiWithGround() //maybe can be overwritten by human or such for special reactions? or by body type makes more sense..ya
+        private bool _ColiWithGround(Enums.Navigation.Compass coliDir) //recieves x&y type colision
         {
             //spouse to destroy the ground, then alter the Y velocity by a certain amount, would like to use force, but unsure how atm
-            Console.Out.WriteLine("COLI!");
-            if(velo.Y >= 0)
-                velo.Y = 0;
+            //Remember coliDir is MY direction from the object im colliding with
+            bool createReaction = false;// (Math.Abs(this.momentum.X) > Consts.Ground.DIRT_HP || Math.Abs(this.momentum.Y) > Consts.Ground.DIRT_HP);
+            //has the ent broke ground ^
+            switch (coliDir)
+            {
+                case Enums.Navigation.Compass.N:
+                    if (this.momentum.Y > Consts.Ground.DIRT_HP)
+                        createReaction = true;
+                    this.ApplyForce(Enums.Force.ForceTypes.Dirt, new Vector2(0, -Consts.Ground.DirtColiForce(this.momentum.Y)));
+                    break;
+                case Enums.Navigation.Compass.S:
+                    if (-1 * this.momentum.Y > Consts.Ground.DIRT_HP)
+                        createReaction = true;
+                    this.ApplyForce(Enums.Force.ForceTypes.Dirt,new Vector2(0,Consts.Ground.DirtColiForce(this.momentum.Y)));
+                    break;
+                   
+                case Enums.Navigation.Compass.W:
+                    if (this.momentum.X > Consts.Ground.DIRT_HP)
+                        createReaction = true;
+                    this.ApplyForce(Enums.Force.ForceTypes.Dirt,new Vector2(0,Consts.Ground.DirtColiForce(this.momentum.X)));
+                    break;
+                case Enums.Navigation.Compass.E:
+                    if (-1 * this.momentum.X > Consts.Ground.DIRT_HP)
+                        createReaction = true;
+                    this.ApplyForce(Enums.Force.ForceTypes.Dirt,new Vector2(0,-Consts.Ground.DirtColiForce(this.momentum.X)));
+                    break;
+                case Enums.Navigation.Compass.Center: //intresting case when has traversed into a pixel
+                default:
+                   //this case its kinda weird, so lets try "Stabalize" trying to make velo go closer to 0 regardless
+                    float f = Math.Abs(velo.X)/velo.X;
+                    float f2 = -1*f;
+                    this.ApplyForce(Enums.Force.ForceTypes.Dirt,new Vector2(f2*Consts.Ground.DirtColiForce(this.momentum.X),f2*Consts.Ground.DirtColiForce(this.momentum.Y)));
+                    break;
+                    
+
+            }
+
+
+            if (createReaction)
+            {
+                ColiSys.Node nodex = new ColiSys.Node(this.sizeLocSquare);
+                ColiSys.Node nodey = new ColiSys.Node(this.sizeLocSquare.Dwn());
+                nodex += new S_XY(-5, 5);
+                nodey += new S_XY(-5, 5);
+
+                nodex.Dwn(nodey);
+                ColiSys.Hashtable testMe = new ColiSys.Hashtable(nodex);
+                bus.LoadPassenger(testMe, Enums.Global.VoidableTypes.Explosion,this.loc);
+                Console.Out.WriteLine("EXPLOSION!");
+            }
+                
+
+            
+           // if(velo.Y >= 0)
+          //      velo.Y = 0;
             return true; //shortcut trick
         }
 

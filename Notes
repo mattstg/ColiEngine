@@ -47,3 +47,9 @@ first node 37, second node broken (once 3rd node)
 USING ENTITY OLD SET TO NODEW FUNCS WILL RPOB RETURN FALSE THINGS! FIX OR DNT USE
 
 fix colitypes enum, find a trick
+
+Dirt/Material?metal  ground sumthing object, comes with same params in Consts.Ground
+
+_ColiWithGround in bodyMech is really buggy, also i seem to collide with stuff above me im not touching, is it possible the colision box is way off?
+
+WHEN DISCONNECT A HASH TABLE CAN SPLIT :O INTO ANOTHER, MAKING CRUMBLING GROUND!! WHICH IF YOU MAKE MATERIAL OBJECT ABOVE MEANS CAN STORE ENERGY OR ACT ALL THE SAME ASSUMING ARE CONNECTED OMFG

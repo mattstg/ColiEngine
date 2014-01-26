@@ -7,9 +7,21 @@ namespace Enums
 {
     namespace Force
     {
-        enum ForceTypes{Internal,NaturalLaw}
+        enum ForceTypes{Internal,NaturalLaw,Dirt}
 
 
+
+    }
+
+    namespace Global{
+
+        public enum VoidableTypes {Explosion }
+
+    }
+
+    namespace Navigation
+    {
+        public enum Compass { N, NE, E, SE, S, SW, W, NW, Center };
 
     }
 
@@ -26,7 +38,7 @@ namespace Enums
      namespace ColiObjTypes
      {
          
-         public enum ColiTypes {None, Dirt, Magic};
+         public enum ColiTypes {None, Dirt, Magic, Explosion};
          public enum Ground { Dirt, Stone };
          public enum Magic { Fire, Stone };
 

@@ -14,7 +14,7 @@ namespace EntSys
     class HumanPlayer : BodyMechanics
     {
         ColiSys.NodeManipulator nami = ColiSys.NodeManipulator.Instance;
-        Timers UniResponseT = null;
+        Global.Timers UniResponseT = null;
         keyMap keymap;
            
 
@@ -28,10 +28,10 @@ namespace EntSys
             
         }
 
-        private void _DNACopier(DNA dna)
+        private void _DNADecoder(DNA dna)
         {
             //Hardcoded DNA for now
-            UniResponseT = new Timers(0, 250, 251);
+            UniResponseT = new Global.Timers(0, 250, 251);
         }
 
         
@@ -41,7 +41,7 @@ namespace EntSys
 
 
             base.ForceCnstr(EntDNA,SprDNA,BodDNA,MekDNA);
-            _DNACopier(dna);
+            _DNADecoder(dna);
             _DebugSetKeyMap();
             
 
@@ -95,10 +95,7 @@ namespace EntSys
         }
 
 
-        public void SetCollidables(List<ColiListConnector> tCollidables)
-        {
-            Collidables = tCollidables;
-        }
+        
 
     }
 }

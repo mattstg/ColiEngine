@@ -604,5 +604,26 @@ namespace ColiSys
         }
 
 
+        public Node IncreaseTableByOffset(Node a, S_XY offset)
+        {
+
+            Node toRet = a.CopySelf(copyTypes.copyBoth);
+            Node itx = toRet;
+            Node ity;
+            while(itx != null)
+            {
+                itx += offset.x;
+                ity = itx.Dwn();
+                while (ity != null)
+                {
+                    ity += offset.y;
+                    ity = ity.Adj();
+                }
+                itx = itx.Adj();
+            }
+            return toRet;
+        }
+
+
     }
 }

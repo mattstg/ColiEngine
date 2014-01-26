@@ -10,17 +10,30 @@ namespace EntSys
 {
     class Entity
     {
+        ColiSys.NodeManipulator nami = ColiSys.NodeManipulator.Instance;
+
 
         protected S_XY size;
         protected S_XY loc;
         private S_XY _offset = new S_XY();
+        protected Vector2 curForce;
+        protected Vector2 velo;
+        protected int mass;
+
+        
+        protected List<Structs.ColiListConnector> Collidables;
+
+
+        public Vector2 momentum { get { return velo * mass; } }
+
         //This boundary trick no longer works, was worth a shot tho
         protected S_XY offset { set { _offset.x = (_offset.x < 0) ? 0 : value.x; _offset.y = (_offset.y < 0) ? 0 : value.y; } get { return new S_XY((int)_offset.x,(int)_offset.y); } }
         protected Vector2 rawOffSet = new Vector2(0,0);
         //protected S_XY offset = new S_XY();
-        protected ColiSys.Node sizeLocSquare;
+        protected ColiSys.Node sizeLocSquare; //offset included
         protected ColiSys.Node bodyShape;
-
+        protected ColiSys.Node realBodyShapeLoc { get { return nami.IncreaseTableByOffset(bodyShape,offset); } }
+        //I feel this thing recalcating everytime you call it cause offset has changed might be taxing for large tables.. :/
         public Entity() { }
         public Entity(DNA dna) { ForceCnstr(dna); }
 
@@ -29,11 +42,11 @@ namespace EntSys
         {
             //size = tsize;
             //loc = tloc;
-            _DNACopier(dna);
+            _DNADecoder(dna);
             _SetSizeInNodeForm();
         }
 
-        private void _DNACopier(DNA dna)
+        private void _DNADecoder(DNA dna)
         {
             //Need DNA copier
             if (dna != null)
@@ -46,6 +59,7 @@ namespace EntSys
                 loc = new S_XY(0, 0);
                 size = new S_XY(1, 1);
             }
+            mass = 10;
         }
 
         private void _SetSizeInNodeForm()
@@ -67,12 +81,14 @@ namespace EntSys
             {
                 offset.x = 0;
                 rawOffSet.X = 0;
+                velo.X = 0;
             }
             
             if(offset.y < 0)
             { 
                 offset.y = 0;
-                rawOffSet.X = 0;
+                rawOffSet.Y = 0;
+                velo.Y = 0;
             }
 
 
@@ -85,7 +101,7 @@ namespace EntSys
             if (offset.y > Consts.TopScope.WORLD_SIZE_Y)
             {
                 offset.y = Consts.TopScope.WORLD_SIZE_Y;
-                rawOffSet.X = Consts.TopScope.WORLD_SIZE_Y;
+                rawOffSet.Y = Consts.TopScope.WORLD_SIZE_Y;
             }
 
         }
@@ -133,5 +149,10 @@ namespace EntSys
 
         }
 
+        public void SetCollidables(List<ColiListConnector> tCollidables)
+        {
+            Collidables = tCollidables;
+        }
+        
     }
 }

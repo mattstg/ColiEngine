@@ -9,11 +9,11 @@ namespace EntSys
 {
     class Body : Sprite
     {
-        protected Timers UniResponseT = new Timers();//this way until dna
-        protected List<Structs.ColiListConnector> Collidables;    
+        protected Global.Timers UniResponseT = new Global.Timers();//this way until dna
+           
         //body vars
         protected int moveForce;
-        protected int mass;
+        
 
 
         public Body() { }
@@ -25,11 +25,11 @@ namespace EntSys
             
         }
 
-        private void _DNACopier(DNA dna)
+        private void _DNADecoder(DNA dna)
         {
             //Need DNA copier
-            moveForce = 1;
-            mass = 1;
+            moveForce = 10;
+            
         }
 
         protected void ForceCnstr(DNA EntDNA, DNA SprDNA, DNA dna)
@@ -37,7 +37,7 @@ namespace EntSys
 
 
             base.ForceCnstr(EntDNA,SprDNA);
-            _DNACopier(dna);
+            _DNADecoder(dna);
         }
 
         public void Update(float rt)

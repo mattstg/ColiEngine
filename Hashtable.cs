@@ -159,15 +159,26 @@ namespace ColiSys
 
         }
 
-        private OverlapType _Coli(Node hashTree)
+        public OverlapType[] ColiType(S_Box box)
         {
+            //turn the passed box into a hashtable
+            //Node x = new Node(l,u,adj,dwn);
 
-            return OverlapType.AEO;
+            Node nodeY = new Node(box.loc.y - box.size.y + 1, box.loc.y, null, null);
+            Node nodeX = new Node(box.loc.x, box.loc.x + box.size.x - 1, null, nodeY);
+            //////Console.Out.WriteLine("The NodeY: " + '\n' + nodeY.GenString() + '\n' + "The NodeX: " + '\n' +  nodeX.Dwn().GenString());
+            //now have a tree for box 
+
+
+            return ColiType(nodeX); //given the nodeX trees
+
         }
 
-        public bool Coli(Node hashTree)  //WORKS UNDER ASSUMPTION THAT hashTree CONTAINS 1 x and 1 y!!!!!, please grow algo if needed
+
+        public OverlapType[] ColiType(Node hashTree)
         {
             Node mainITX = mainNode;  //Iterator to main node in x plane
+            OverlapType[] toRet = new OverlapType[2];
 
             while (mainITX != null)
             {
@@ -177,7 +188,7 @@ namespace ColiSys
 
                 if (_GetColiBool(mainITX, hashTree)) //if coli in x
                 {
-
+                    toRet[0] = _GetColiType(mainITX, hashTree);
                     //an overlap of a kind has occured, now loop through for the y laps
                     Node mainITY = mainITX.Dwn(); //retrieve the dwn node
 
@@ -188,8 +199,8 @@ namespace ColiSys
 
                         if (_GetColiBool(mainITY, hashTree.Dwn())) //if a coli occurs between the y from local hash and y from given tree			
                         {
-                            //////Console.Out.WriteLine("The main: " + '\n' + mainITY.GenString() + '\n' + "Moving object: " + '\n' +  hashTree.Dwn().GenString());
-                            return true;//A coli has occured, this means there is a colision between these two trees
+                            toRet[1] = _GetColiType(mainITY, hashTree.Dwn());
+                            return toRet; ;//A coli has occured, this means there is a colision between these two trees
                         }
                         else
                             mainITY = mainITY.Adj();//iterate to the next mainITY				
@@ -200,8 +211,18 @@ namespace ColiSys
                 mainITX = mainITX.Adj(); //iterate to next x		
 
             }
-            return false; //no coli occured
+            toRet[0] = OverlapType.Before; //no coli happened, put some impossible otherwise values in as garabage
+            toRet[1] = OverlapType.Right;
+            return toRet; //no coli occured
+        }
 
+        public bool Coli(Node hashTree)  //WORKS UNDER ASSUMPTION THAT hashTree CONTAINS 1 x and 1 y!!!!!, please grow algo if needed
+        {
+            OverlapType[] result = ColiType(hashTree);
+            if (result[0] == OverlapType.Before)
+                return false;
+            return true;
+            
         }
 
 

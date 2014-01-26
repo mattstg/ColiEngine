@@ -22,9 +22,9 @@ namespace PhysSys
             }
         }
 
-         public void applyNaturalLaws(EntSys.BodyMechanics body)
+         public void applyNaturalLaws(EntSys.BodyMechanics body, int mass)
          {
-             body.ApplyForce(Enums.Force.ForceTypes.NaturalLaw, new Vector2(0, Consts.World.gravity));
+             body.ApplyForce(Enums.Force.ForceTypes.NaturalLaw, new Vector2(0, Consts.World.gravity*mass));
          }
     }
 }

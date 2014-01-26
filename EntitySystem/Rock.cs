@@ -21,9 +21,9 @@ namespace EntSys
             ForceCnstr(EntDNA, SprDNA, BodDNA, MekDNA, dna);
         }
 
-        private void _DNACopier(DNA dna)
+        private void _DNADecoder(DNA dna)
         {            
-            UniResponseT = new Timers(0, 250, 251);
+            UniResponseT = new Global.Timers(0, 250, 251);
         }
 
 
@@ -32,7 +32,7 @@ namespace EntSys
         {
 
             base.ForceCnstr(EntDNA, SprDNA, BodDNA, MekDNA);
-            _DNACopier(dna);            
+            _DNADecoder(dna);            
         }
            
         public void Update(float rt)
