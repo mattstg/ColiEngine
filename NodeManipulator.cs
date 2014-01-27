@@ -23,7 +23,12 @@ namespace ColiSys
             }
         }
 
-
+        public S_Box NodetoBox(Node tN)
+        {
+            tN = ComplexNodeToSquareNode(tN);
+            S_Box E = new S_Box(tN.Ret(Bounds.l), tN.Ret(Bounds.u), tN.Dwn().Ret(Bounds.l), tN.Dwn().Ret(Bounds.u), true);
+            return E;
+        }
 
 
         public Node Inverser(Node n)
