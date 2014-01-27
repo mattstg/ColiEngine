@@ -184,8 +184,8 @@ namespace EntSys
 
             if (createReaction)
             {
-                ColiSys.Node nodex = new ColiSys.Node(this.sizeLocSquare);
-                ColiSys.Node nodey = new ColiSys.Node(this.sizeLocSquare.Dwn());
+                ColiSys.Node nodex = new ColiSys.Node(this.trueEntShape);
+                ColiSys.Node nodey = new ColiSys.Node(this.trueEntShape.Dwn());
                 nodex += new S_XY(-5, 5);
                 nodey += new S_XY(-5, 5);
 

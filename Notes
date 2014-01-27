@@ -53,3 +53,5 @@ Dirt/Material?metal  ground sumthing object, comes with same params in Consts.Gr
 _ColiWithGround in bodyMech is really buggy, also i seem to collide with stuff above me im not touching, is it possible the colision box is way off?
 
 WHEN DISCONNECT A HASH TABLE CAN SPLIT :O INTO ANOTHER, MAKING CRUMBLING GROUND!! WHICH IF YOU MAKE MATERIAL OBJECT ABOVE MEANS CAN STORE ENERGY OR ACT ALL THE SAME ASSUMING ARE CONNECTED OMFG
+
+clean hash table

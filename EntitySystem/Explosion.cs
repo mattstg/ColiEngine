@@ -14,7 +14,7 @@ namespace EntSys
 
         public Explosion(ColiSys.Node newHeadNode,Structs.S_XY offset)
         {
-            this.bodyShape = newHeadNode;
+            HashTrueEntShape = new ColiSys.Hashtable(newHeadNode);
             this.offset = offset;
             lifeSpan = new Global.Timers(250);
 
@@ -45,7 +45,7 @@ namespace EntSys
 
             foreach (Structs.ColiListConnector connecter in Collidables)
             {                
-               if (connecter.hashTable.Coli(this.realBodyShapeLoc))  //so a coli has occured
+               if (connecter.hashTable.Coli(this.coliBox))  //so a coli has occured
                 {
                    coliOccur = connecter.coliType;
                    switch (coliOccur) //switch->type object bodymech has colided with, and call their reactions based on that
@@ -68,7 +68,7 @@ namespace EntSys
         private void _ColiWithGround(ColiSys.Hashtable ht)
         {
             //explosion hits ground, tears through it, add feature to lessen explosion later
-            ht.HashSubtractor(this.realBodyShapeLoc); //eventaually just call Ground.DmgArea() or sumtin
+            ht.HashSubtractor(this.trueEntShape); //eventaually just call Ground.DmgArea() or sumtin
 
         }
         

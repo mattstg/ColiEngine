@@ -155,8 +155,6 @@ namespace ColiSys
 
 
             return Coli(nodeX); //given the nodeX trees
-
-
         }
 
         public OverlapType[] ColiType(S_Box box)

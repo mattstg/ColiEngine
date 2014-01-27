@@ -419,7 +419,39 @@ namespace ColiSys
         }
         */
 
+        public Node ComplexNodeToSquareNode(Node O)
+        {
 
+            ColiSys.Node x = O;
+            ColiSys.Node y = x.Dwn();
+            S_XY yRange = new S_XY(int.MaxValue, 0);
+            S_XY xRange = new S_XY(x.Ret(Bounds.l), 0);
+
+
+            while (x != null)
+            {
+                y = x.Dwn();
+                while (y != null)
+                {
+                    if (y.Ret(Bounds.l) < yRange.x)
+                        yRange.x = y.Ret(Bounds.l);
+
+                    if (y.Ret(Bounds.u) > yRange.y)
+                        yRange.y = y.Ret(Bounds.u);
+
+                    y = y.Adj();
+
+                }
+                if (x.Ret(Bounds.u) > xRange.y)
+                    xRange.y = x.Ret(Bounds.u);
+                x = x.Adj();
+            }
+
+            Node tr = new Node(xRange);
+            tr.Dwn(new Node(yRange));
+            
+            return tr;
+        }
 
         private void _MergeNodes(Node O, Node A)
         {
