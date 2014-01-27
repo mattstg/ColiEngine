@@ -67,14 +67,14 @@ namespace EntSys
 
                 ///DRAW COLI BOX
                 htx = coliBox;
-                htx = nami.StretchSquareTableByXY(htx, new S_XY(0, 1)); //increase size of explosion by  
+                htx = nami.MoveTableByOffset(htx, new S_XY(0, 1)); //increase size of explosion by  
                 while (htx != null)
                 {
                     hty = htx.Dwn();
                     while (hty != null)
                     {
                         //Rectangle rect = new Rectangle(htx.Ret(Bounds.l), hty.Dwn().Ret(Bounds.l), htx.Ret(Bounds.u) - htx.Ret(Bounds.l) + 1 * Consts.TopScope.GAME_SCALE.x, hty.Dwn().Ret(Bounds.u) - hty.Dwn().Ret(Bounds.l) + 1 * Consts.TopScope.GAME_SCALE.y);
-                        Rectangle rect = new Rectangle(htx.Ret(Bounds.l) * Consts.TopScope.GAME_SCALE.x, hty.Ret(Bounds.l) * Consts.TopScope.GAME_SCALE.y, (htx.Ret(Bounds.u) - htx.Ret(Bounds.l)) * Consts.TopScope.GAME_SCALE.x, (hty.Ret(Bounds.u) - hty.Ret(Bounds.l)) * Consts.TopScope.GAME_SCALE.y);
+                        Rectangle rect = new Rectangle(htx.Ret(Bounds.l) * Consts.TopScope.GAME_SCALE.x, hty.Ret(Bounds.l) * Consts.TopScope.GAME_SCALE.y, (htx.Ret(Bounds.u) - htx.Ret(Bounds.l)+1) * Consts.TopScope.GAME_SCALE.x, (hty.Ret(Bounds.u) - hty.Ret(Bounds.l)+1) * Consts.TopScope.GAME_SCALE.y);
                         //Rectangle rect = new Rectangle(100, 100, 50, 50);
                         sb.Draw(t, rect, Color.DeepPink);
                         //sb.Draw(t, new Rectangle(0,0,100,100), Color.White);
@@ -92,7 +92,7 @@ namespace EntSys
                     hty = htx.Dwn();
                     while (hty != null)
                     {
-                        Rectangle rect = new Rectangle(htx.Ret(Bounds.l) * Consts.TopScope.GAME_SCALE.x, hty.Ret(Bounds.l) * Consts.TopScope.GAME_SCALE.y, (htx.Ret(Bounds.u) - htx.Ret(Bounds.l)) * Consts.TopScope.GAME_SCALE.x, (hty.Ret(Bounds.u) - hty.Ret(Bounds.l)) * Consts.TopScope.GAME_SCALE.y);
+                        Rectangle rect = new Rectangle(htx.Ret(Bounds.l) * Consts.TopScope.GAME_SCALE.x, hty.Ret(Bounds.l) * Consts.TopScope.GAME_SCALE.y, (htx.Ret(Bounds.u) - htx.Ret(Bounds.l)+1) * Consts.TopScope.GAME_SCALE.x, (hty.Ret(Bounds.u) - hty.Ret(Bounds.l)+1) * Consts.TopScope.GAME_SCALE.y);
                         sb.Draw(t, rect, Color.Black);
                         //sb.Draw(t, new Rectangle(0,0,100,100), Color.White);
                         hty = hty.Adj();

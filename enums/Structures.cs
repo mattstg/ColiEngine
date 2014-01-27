@@ -18,8 +18,8 @@ namespace Structs
             public Compass()
             {
                 comp = new Enums.Navigation.Compass[3, 3]{{Enums.Navigation.Compass.NW,Enums.Navigation.Compass.N,Enums.Navigation.Compass.NE},
-                                                                                         {Enums.Navigation.Compass.W,Enums.Navigation.Compass.Center,Enums.Navigation.Compass.E},
-                                                                                         {Enums.Navigation.Compass.SW,Enums.Navigation.Compass.S,Enums.Navigation.Compass.SE}};
+                                                         {Enums.Navigation.Compass.W,Enums.Navigation.Compass.Center,Enums.Navigation.Compass.E},
+                                                         {Enums.Navigation.Compass.SW,Enums.Navigation.Compass.S,Enums.Navigation.Compass.SE}};
 
             }
 
@@ -81,7 +81,7 @@ namespace Structs
 
         public static S_XY operator *(S_XY s1, int mult)
         {
-            return new S_XY(s1.x + mult, s1.y + mult);
+            return new S_XY(s1.x * mult, s1.y * mult);
         }
       
 

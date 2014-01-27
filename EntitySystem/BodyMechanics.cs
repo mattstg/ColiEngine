@@ -48,6 +48,7 @@ namespace EntSys
         {
             //things that apply force
             phys.applyNaturalLaws(this, mass); //applys force
+            _ApplyForceToVelo();
             _CheckAllColi();
             _ApplyForceToVelo();
             //things that mod velo
@@ -67,6 +68,7 @@ namespace EntSys
             //eventaully connect with weight and such
             //F=MA UP IN HERE
             velo += (curForce / mass);
+            curForce.X = 0; curForce.Y = 0; //all force used into velo
 
         }
 
@@ -92,7 +94,8 @@ namespace EntSys
             Enums.ColiObjTypes.ColiTypes coliOccur = Enums.ColiObjTypes.ColiTypes.None;
 
            // movingEnt = mov1.RetNextBox();
-            movingEnt = nami.NodetoBox(nami.StretchSquareTableByXY(this.coliBox, new S_XY(0, 1)));
+            movingEnt = nami.NodetoBox(nami.MoveTableByOffset(this.coliBox, new S_XY(0, 1)));
+            S_Box lastValidBox = null;
             while (movingEnt != null && coliOccur == Enums.ColiObjTypes.ColiTypes.None)
             {//since do while a 0,0 ret box or first null box can occur!
                 //possibly have some sort of connector, including the type your comparing..
@@ -135,7 +138,9 @@ namespace EntSys
                 //Cant move foward, the update function takes care of that! but we can return location of colision!
 
                         
-              //  movingEnt = mov1.RetNextBox();
+              
+                //lastValidBox = movingEnt;
+                //  movingEnt = mov1.RetNextBox();
                 movingEnt = null;
 
         }
@@ -148,24 +153,24 @@ namespace EntSys
             //So important, colisquare creates an area where coli occured, check for difference between you pos and its and you will find direction
             int[] dir = new int[2];
             if(coliSquare.loc.x > offset.x || coliSquare.size.x > this.size.x)
-                dir[0] = 2;
+                dir[1] = 2;
                 //was moving right
             else if (coliSquare.loc.x < offset.x)
-                dir[0] = 0;
+                dir[1] = 0;
                 //moving left
             else
-                dir[0] = 1;
+                dir[1] = 1;
                 //not moving vertical
 
 
             if (coliSquare.loc.y > offset.y || coliSquare.size.y > this.size.y)
-                dir[1] = 2;
+                dir[0] = 2;
                 //was moving down
             else if(coliSquare.loc.y < offset.y)
-                dir[1] = 0;
+                dir[0] = 0;
                 //moving up
             else
-                dir[1] = 1;
+                dir[0] = 1;
                 //not moving Horz
 
             Structs.Navigation.Compass compass = new Structs.Navigation.Compass();
@@ -221,11 +226,11 @@ namespace EntSys
 
             if (createReaction)
             {
-                ColiSys.Node node = this.trueEntShapeOffset; //already copies
-                node = nami.MoveTableByOffset(node, this.offset); //explosion takes shape of player and moves to player loc
-                node = nami.StretchSquareTableByXY(node, new S_XY(-2, 2)); //increase size of explosion by   
-                node = nami.MoveTableByOffset(node, this.offset*-1); //explosion takes shape of player and moves to player loc
-                ColiSys.Hashtable testMe = new ColiSys.Hashtable(node);
+                ColiSys.Node node = this.trueEntShape; //already copies
+                
+                node = nami.MoveTableByOffset(node, new S_XY(0, 5)); //increase size of explosion by   
+              
+                ColiSys.Hashtable testMe = new ColiSys.Hashtable(nami.MoveTableByOffset(node,(this.offset)));
                 bus.LoadPassenger(testMe, Enums.Global.VoidableTypes.Explosion,this.offset);
                 Console.Out.WriteLine("EXPLOSION!");
             }
