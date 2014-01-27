@@ -11,7 +11,7 @@ namespace EntSys
     class Entity
     {
         ColiSys.NodeManipulator nami = ColiSys.NodeManipulator.Instance;
-
+        ColiSys.Hashtable TrueEntShape = new ColiSys.Hashtable();
 
         protected S_XY size;
         protected S_XY loc;

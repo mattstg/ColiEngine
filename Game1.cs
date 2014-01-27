@@ -24,7 +24,7 @@ namespace ColiSys
         GraphicsDeviceManager graphics;
         TestContent tc;
         DebugCheatCodes cheats;
-        SpriteBatch spriteBatch;
+        public static SpriteBatch spriteBatch;
         GRAPHICTestWorld world;
         DNABuilder dnaBuilder;
         HumanPlayer human;

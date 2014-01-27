@@ -84,19 +84,25 @@ namespace EntSys
         private void _CheckAllColi()
         {
             ColiSys.DiagMotion mov1 = new ColiSys.DiagMotion((int)velo.X, (int)velo.Y, RetSizeLocCopyBox());
+            //ColiSys.DiagMotion mov1 = new ColiSys.DiagMotion(0, 1, RetSizeLocCopyBox());
+            Structs.S_XY newOffset = new Structs.S_XY();
             Structs.S_Box movingEnt = new Structs.S_Box(2,1,3,4);
             bool quit = false;
 
 
             Enums.ColiObjTypes.ColiTypes coliOccur = Enums.ColiObjTypes.ColiTypes.None;
 
+            movingEnt = mov1.RetNextBox();
+            while (movingEnt != null && coliOccur == Enums.ColiObjTypes.ColiTypes.None)
+            {//since do while a 0,0 ret box or first null box can occur!
+                //possibly have some sort of connector, including the type your comparing..
+                //this just sorts through all of them, removes the checking by the need for check by cat then.. unless given type?
+
+                
                 foreach (Structs.ColiListConnector connecter in Collidables)
                 {
-                    movingEnt = mov1.RetNextBox();
-                    while (movingEnt != null && coliOccur == Enums.ColiObjTypes.ColiTypes.None)
-                    {//since do while a 0,0 ret box or first null box can occur!
-                        //possibly have some sort of connector, including the type your comparing..
-                        //this just sorts through all of them, removes the checking by the need for check by cat then.. unless given type?
+                   
+                   
 
                         Enums.Node.OverlapType[] otype = connecter.hashTable.ColiType(movingEnt); //find type of coli that occured w/ x,y respects
                         if (otype[0] != Enums.Node.OverlapType.Before)  //so a coli has occured
@@ -110,7 +116,7 @@ namespace EntSys
                                 case Enums.ColiObjTypes.ColiTypes.Dirt:
                                     _ColiWithGround(Statics.Converter.OverlapToCompass(otype));
                                     break;
-                                    
+
 
                                 default:
                                     Console.Out.WriteLine("You hit default case in checking connector type in colision!");
@@ -118,14 +124,17 @@ namespace EntSys
 
 
                             }
+                            //coliOccur = Enums.ColiObjTypes.ColiTypes.None; //a coli has occured, stop checking for more
+                        }
+                        else //No coli has occured, move the Ent
+                        {
+                            this.offset = movingEnt.loc;
+
                         }
 
                         
-                        //Console.Out.WriteLine(movingEnt.GenString());
-                        movingEnt = mov1.RetNextBox();
-                        
                     }
-                   
+                movingEnt = mov1.RetNextBox();
 
                 }
 
