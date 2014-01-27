@@ -55,3 +55,8 @@ _ColiWithGround in bodyMech is really buggy, also i seem to collide with stuff a
 WHEN DISCONNECT A HASH TABLE CAN SPLIT :O INTO ANOTHER, MAKING CRUMBLING GROUND!! WHICH IF YOU MAKE MATERIAL OBJECT ABOVE MEANS CAN STORE ENERGY OR ACT ALL THE SAME ASSUMING ARE CONNECTED OMFG
 
 clean hash table
+
+Make diagMotion work
+Dirt object, with interface so cycle through types of ground instead of dirt and apply effects
+Friction?
+

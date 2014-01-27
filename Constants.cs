@@ -66,7 +66,7 @@ namespace Consts {
            float fMult = 1;
 
             if(force < hp*thresh)
-                return force; //not enough force to trigger break or bounce, return his force as ground Normal balancing out
+                return force + 1; //not enough force to trigger break or bounce, return his force as ground Normal balancing out
             else
             {
                 if(force < hp)
@@ -77,7 +77,7 @@ namespace Consts {
                     if (force > hp * absorb)
                         return hp * absorb; //max force returnable
                     else
-                        return force;  //less than max, returns current force since all absorbed --future if dirt is object, return energy abosrded to the Material/Metals/Earth object
+                        return force + 1;  //less than max, returns current force since all absorbed --future if dirt is object, return energy abosrded to the Material/Metals/Earth object
             }
 
         }
