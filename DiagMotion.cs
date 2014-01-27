@@ -21,6 +21,17 @@ namespace ColiSys
             x = a;
             y = b;
             E = new S_Box(tE);
+            priCalc();            
+        }
+
+
+        public S_Box NodetoBox(Node tN)
+        {
+            E = new S_Box(tN.Ret(Bounds.l), tN.Ret(Bounds.u), tN.Dwn().Ret(Bounds.l), tN.Dwn().Ret(Bounds.u), true);
+            return E;
+        }
+
+        public void priCalc(){
             if (Math.Abs(x) > Math.Abs(y))
             {
                 Rem = Math.Abs(x) - Math.Abs(y);
@@ -45,6 +56,15 @@ namespace ColiSys
             {
                 diagSteps = (Math.Abs(x) > Math.Abs(y)) ? Math.Abs(y) : Math.Abs(x);
             }
+        }
+
+
+        public DiagMotion(int a, int b, Node tN)
+        {
+            E = new S_Box(tN.Ret(Bounds.l), tN.Ret(Bounds.u), tN.Dwn().Ret(Bounds.l), tN.Dwn().Ret(Bounds.u), true);
+            x = a;
+            y = b;
+            priCalc();
         }
         public DiagMotion()
         {
