@@ -10,18 +10,26 @@ namespace EntSys
 {
     class Entity
     {
-        ColiSys.NodeManipulator nami = ColiSys.NodeManipulator.Instance;
-        
+        protected ColiSys.NodeManipulator nami = ColiSys.NodeManipulator.Instance;
         protected ColiSys.Hashtable HashTrueEntShape;
         protected ColiSys.Node trueEntShape { get { return HashTrueEntShape.RetMainNode(); } }
 
-        protected ColiSys.Node coliBox { get { return nami.IncreaseTableByOffset(nami.ComplexNodeToSquareNode(trueEntShape), offset); } }
+        protected ColiSys.Node trueEntShapeOffset { get { return nami.MoveTableByOffset(trueEntShape, offset); } }
+        protected ColiSys.Node coliBox { get { return nami.MoveTableByOffset(nami.ComplexNodeToSquareNode(trueEntShape), offset); } }
+        
 
 
+        protected S_XY size{
+            get
+            {
+                ColiSys.Node t = coliBox;
+                return new S_XY(t.Ret(Bounds.u) - t.Ret(Bounds.l) + 1, t.Dwn().Ret(Bounds.u) - t.Dwn().Ret(Bounds.l) + 1);
+            }
+        }
 
-        protected S_XY size;
+
         protected S_XY loc;
-        private S_XY _offset = new S_XY();
+       // private S_XY _offset = new S_XY();
         protected Vector2 curForce;
         protected Vector2 velo;
         protected int mass;
@@ -33,7 +41,7 @@ namespace EntSys
         public Vector2 momentum { get { return velo * mass; } }
 
         //This boundary trick no longer works, was worth a shot tho
-        protected S_XY offset { set { _offset.x = (_offset.x < 0) ? 0 : value.x; _offset.y = (_offset.y < 0) ? 0 : value.y; } get { return new S_XY((int)_offset.x,(int)_offset.y); } }
+        protected S_XY offset = new S_XY();// { set { _offset.x = (_offset.x < 0) ? 0 : value.x; _offset.y = (_offset.y < 0) ? 0 : value.y; } get { return new S_XY((int)_offset.x,(int)_offset.y); } }
         protected Vector2 rawOffSet = new Vector2(0,0);
         //protected S_XY offset = new S_XY();
        // protected ColiSys.Node sizeLocSquare; //offset included
@@ -49,6 +57,12 @@ namespace EntSys
 
         }
 
+        protected bool ifBodyEmpty()
+        {
+            return (HashTrueEntShape == null);
+
+        }
+
         protected void ForceCnstr(DNA dna)
         {
             //size = tsize;
@@ -60,16 +74,8 @@ namespace EntSys
         private void _DNADecoder(DNA dna)
         {
             //Need DNA copier
-            if (dna != null)
-            {
-                loc = dna.dDNA[0];
-                size = dna.dDNA[1];
-            }
-            else
-            {
-                loc = new S_XY(0, 0);
-                size = new S_XY(1, 1);
-            }
+            
+            
             mass = 10;
         }
 

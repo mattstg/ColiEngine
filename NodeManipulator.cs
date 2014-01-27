@@ -26,7 +26,7 @@ namespace ColiSys
         public S_Box NodetoBox(Node tN)
         {
             tN = ComplexNodeToSquareNode(tN);
-            S_Box E = new S_Box(tN.Ret(Bounds.l), tN.Ret(Bounds.u), tN.Dwn().Ret(Bounds.l), tN.Dwn().Ret(Bounds.u), true);
+            S_Box E = new S_Box(tN.Ret(Bounds.l), tN.Dwn().Ret(Bounds.l), tN.Ret(Bounds.u), tN.Dwn().Ret(Bounds.u), false);
             return E;
         }
 
@@ -641,7 +641,7 @@ namespace ColiSys
         }
 
 
-        public Node IncreaseTableByOffset(Node a, S_XY offset)
+        public Node MoveTableByOffset(Node a, S_XY offset)
         {
 
             Node toRet = a.CopySelf(copyTypes.copyBoth);
@@ -649,11 +649,32 @@ namespace ColiSys
             Node ity;
             while(itx != null)
             {
-                itx += offset.x;
+                itx.Mod(new S_XY(offset.x,offset.x));
                 ity = itx.Dwn();
                 while (ity != null)
                 {
-                    ity += offset.y;
+                    ity.Mod(new S_XY(offset.y,offset.y));
+                    ity = ity.Adj();
+                }
+                itx = itx.Adj();
+            }
+            return toRet;
+        }
+
+        //I feel function could be so unsafe for any complex non square shape, only use for sqaure
+        public Node StretchSquareTableByXY(Node a, S_XY offset)
+       {
+
+            Node toRet = a.CopySelf(copyTypes.copyBoth);
+            Node itx = toRet;
+            Node ity;
+            while(itx != null)
+            {
+                itx.Mod(offset);
+                ity = itx.Dwn();
+                while (ity != null)
+                {
+                    ity.Mod(offset);
                     ity = ity.Adj();
                 }
                 itx = itx.Adj();

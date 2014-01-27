@@ -21,8 +21,10 @@ namespace Enums
 
     namespace Navigation
     {
-        public enum Compass { N, NE, E, SE, S, SW, W, NW, Center };
+        public enum Compass { N, NE, E, SE, S, SW, W, NW, Center};
 
+
+        
     }
 
      namespace Node

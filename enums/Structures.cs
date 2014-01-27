@@ -7,6 +7,45 @@ using Microsoft.Xna.Framework;
 
 namespace Structs
 {
+    namespace Navigation
+    {
+        public class Compass
+        {
+            private Enums.Navigation.Compass[,] comp;
+            public Enums.Navigation.Compass dir;
+
+
+            public Compass()
+            {
+                comp = new Enums.Navigation.Compass[3, 3]{{Enums.Navigation.Compass.NW,Enums.Navigation.Compass.N,Enums.Navigation.Compass.NE},
+                                                                                         {Enums.Navigation.Compass.W,Enums.Navigation.Compass.Center,Enums.Navigation.Compass.E},
+                                                                                         {Enums.Navigation.Compass.SW,Enums.Navigation.Compass.S,Enums.Navigation.Compass.SE}};
+
+            }
+
+
+
+            public Enums.Navigation.Compass SetCompass(int[] t)
+            {
+                dir = comp[t[0],t[1]];
+                return dir;
+            }
+
+
+        }
+
+
+
+
+
+
+    }
+
+
+
+
+
+
     public class S_XY
     {
 
@@ -38,6 +77,11 @@ namespace Structs
         public static S_XY operator +(S_XY s1, S_XY s2)
         {
             return new S_XY(s1.x + s2.x, s1.y + s2.y);
+        }
+
+        public static S_XY operator *(S_XY s1, int mult)
+        {
+            return new S_XY(s1.x + mult, s1.y + mult);
         }
       
 

@@ -88,7 +88,7 @@ namespace ColiSys
             tc.LoadContent(Content);
             world.LoadWorldTexture(tc.dirt);
             
-            human.DebugLoadSprite(tc.dirt, shapeGen.GenShape(Shape.Human,new S_XY(), new S_XY(5,10)),new S_XY(0,0),Color.Blue);
+            human.DebugLoadSprite(tc.dirt, shapeGen.GenShape(Shape.Human,new S_XY(), new S_XY(5,15)),new S_XY(0,0),Color.Blue);
            // int c = 0;
            // foreach (Rock rock in RockList)
            // {

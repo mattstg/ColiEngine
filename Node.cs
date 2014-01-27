@@ -32,6 +32,20 @@ namespace ColiSys
             Set(l, u);
         }
 
+        public void Mod(S_XY lu)
+        {
+            Set(lu.x + l, lu.y + u);
+           
+        }
+
+        public void Mod(int mod, Bounds bnd)
+        {
+            if(bnd == Bounds.l)
+                l += mod;
+            else
+                u += mod;
+        }
+
         public Node(int l, int u, Node adj, Node dwn)
         { // node constructor.
             Set(l, u);
@@ -282,6 +296,11 @@ namespace ColiSys
 
         public void Set(int a, int b)
         {
+            if (a < 0)
+                a = 0;
+            if (b < 0)
+                b = 0;
+
             if (a > b)
             {
                 int t = b;
