@@ -35,14 +35,20 @@ namespace Structs
         }
 
 
+    }
 
+
+    namespace EntStructs
+    {
+        struct ArmorResistance
+        {
+            float EntColi;
+
+        }
 
 
 
     }
-
-
-
 
 
 
