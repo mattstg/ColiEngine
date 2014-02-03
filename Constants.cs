@@ -28,7 +28,7 @@ namespace Consts {
 
     class World
     {
-        public const float gravity = 0.01f;
+        public const float gravity = 1f;
 
 
     }

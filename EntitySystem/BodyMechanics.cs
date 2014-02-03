@@ -49,11 +49,13 @@ namespace EntSys
             //things that apply force
             phys.applyNaturalLaws(this, mass); //applys force
             _ApplyForceToVelo();
-            _CheckAllColi();
-            _ApplyForceToVelo();
+
+           // _CheckAllColi();
+           // _ApplyForceToVelo();
+            _MoveAndCheckVelo(rt);
             //things that mod velo
                   
-            _MoveUpdate();
+            //_MoveUpdate();
 
 
             PlaceInBounds();
@@ -63,12 +65,14 @@ namespace EntSys
             base.Update(rt);
         }
 
-        private void _ApplyForceToVelo()
+        private Vector2 _ApplyForceToVelo()
         {
             //eventaully connect with weight and such
             //F=MA UP IN HERE
-            velo += (curForce / mass);
+            Vector2 toRet = curForce / mass;
+            velo += toRet;
             curForce.X = 0; curForce.Y = 0; //all force used into velo
+            return toRet;
 
         }
 
@@ -240,6 +244,145 @@ namespace EntSys
            // if(velo.Y >= 0)
           //      velo.Y = 0;
             return true; //shortcut trick
+        }
+
+        private Enums.Navigation.Compass getTravelingDir(Vector2 velo)
+        {
+            //So important, colisquare creates an area where coli occured, check for difference between you pos and its and you will find direction
+            int[] dir = new int[2];
+            if (velo.X > 0 )
+                dir[1] = 2;
+            //was moving right
+            else if (velo.X < 0)
+                dir[1] = 0;
+            //moving left
+            else
+                dir[1] = 1;
+            //not moving vertical
+
+
+            if (velo.Y > 0)
+                dir[0] = 2;
+            //was moving down
+            else if (velo.Y < 0)
+                dir[0] = 0;
+            //moving up
+            else
+                dir[0] = 1;
+            //not moving Horz
+            Structs.Navigation.Compass comp = new Structs.Navigation.Compass();
+            return comp.SetCompass(dir);
+
+        }
+
+        private float _RetHighest(Vector2 a)
+        {
+            if (a.X > a.Y)
+                return a.X;
+            else 
+                return a.Y;
+        }
+
+        private void _SnapToColiSpot(ColiSys.DiagMotion diag)
+        {
+            S_Box tloc = diag.RetLast();
+            offset = tloc.loc;
+            rawOffSet = new Vector2(rawOffSet.X - (int)rawOffSet.X + offset.x, rawOffSet.Y - (int)rawOffSet.Y + offset.y);
+        }
+
+        private bool[] _GetDirCol(Vector2 turnVelo,ColiSys.Hashtable ht)
+        {
+            bool[] toRet = new bool[]{false,false};
+            ColiSys.DiagMotion d = new ColiSys.DiagMotion((int)(Math.Abs(turnVelo.X) / turnVelo.X),0, this.coliBox);
+            if(ht.Coli(d.RetNextBox()))
+            {
+                toRet[0] = true;
+            }
+            ColiSys.DiagMotion d2 = new ColiSys.DiagMotion(0,(int)(Math.Abs(turnVelo.Y) / turnVelo.Y), this.coliBox);
+            if (ht.Coli(d.RetNextBox()))
+            {
+                toRet[1] = true;
+            }
+            return toRet;
+
+        }
+
+        private void _MoveAndCheckVelo(float rt)
+        {
+            bool[] ColiHV = new bool[] { false, false };
+            bool coliOccured = false;
+            float tr = rt;
+            float timeStep;
+            Vector2 tempRawOffset = new Vector2(rawOffSet.X, rawOffSet.Y);
+            Enums.Navigation.Compass dirHeading;
+            tempRawOffset += velo * (rt/1000) ;
+            Vector2 turnVelo = new Vector2((int)(tempRawOffset.X - offset.x),(int)(tempRawOffset.Y-offset.y));
+            timeStep = tr*(1/_RetHighest(turnVelo));
+            if (turnVelo.X != 0 || turnVelo.Y != 0)
+            {
+                //so movement is occuring
+                ColiSys.DiagMotion diagMot = new ColiSys.DiagMotion((int)turnVelo.X, (int)turnVelo.Y,this.coliBox);
+                S_Box checkHere = diagMot.RetNextBox();
+
+                while (tr > 0 && (turnVelo.X >= 1 || turnVelo.Y >= 1) && checkHere != null)
+                {
+                    coliOccured = false;
+                    _SnapToColiSpot(diagMot);
+                    tr -= timeStep;
+
+
+                    foreach (Structs.ColiListConnector connecter in Collidables)
+                    {
+
+
+                        if (connecter.hashTable.Coli(checkHere)) //find type of coli that occured w/ x,y respects
+                        {
+                            //if coli occur, find out direction of the coli
+                            // dirHeading = getTravelingDir(turnVelo);
+                           // _SnapToColiSpot(diagMot);
+                            ColiHV = _GetDirCol(turnVelo, connecter.hashTable);  //i should be snaped to location, so i just need to check around me
+                            coliOccured = true;
+
+
+
+                            switch (connecter.coliType) //switch->type object bodymech has colided with, and call their reactions based on that
+                            {
+                                case Enums.ColiObjTypes.ColiTypes.Explosion:
+                                    break;
+
+                                case Enums.ColiObjTypes.ColiTypes.Dirt:
+                                    Console.Out.WriteLine("COLLISION WITH GROUND!");
+                                    //_ColiWithGround(Statics.Converter.OverlapToCompass(otype), movingEnt);
+                                    break;
+
+
+                                default:
+                                    Console.Out.WriteLine("You hit default case in checking connector type in colision!");
+                                    break;
+
+
+                            }
+                        }
+                        //remember at end to snap to location
+
+
+                    }
+                    if (coliOccured)  //since a coli occured, need to reset tv,velo,timestep,"temprawoff",
+                    {
+                        //some forces have been applied, need to apply those forces to velo, returns velo the was added
+                        Vector2 addedVelo = _ApplyForceToVelo();
+                        turnVelo += addedVelo * (1 / tr);
+                        timeStep = (1 / _RetHighest(turnVelo));
+                        diagMot = new ColiSys.DiagMotion((int)turnVelo.X, (int)turnVelo.Y, this.coliBox); //should have snapped to location from above
+
+                    }
+
+                    checkHere = diagMot.RetNextBox();
+                }
+
+
+            }
+            
         }
 
     }

@@ -28,7 +28,7 @@ namespace EntSys
         private void _DNADecoder(DNA dna)
         {
             //Need DNA copier
-            moveForce = 10;
+            moveForce = 60;
             
         }
 
