@@ -327,7 +327,6 @@ namespace EntSys
                 while (tr > 0 && (turnVelo.X >= 1 || turnVelo.Y >= 1) && checkHere != null)
                 {
                     coliOccured = false;
-                    _SnapToColiSpot(diagMot);
                     tr -= timeStep;
 
 
@@ -374,10 +373,17 @@ namespace EntSys
                         turnVelo += addedVelo * (1 / tr);
                         timeStep = (1 / _RetHighest(turnVelo));
                         diagMot = new ColiSys.DiagMotion((int)turnVelo.X, (int)turnVelo.Y, this.coliBox); //should have snapped to location from above
+                        _SnapToColiSpot(diagMot);
+                        checkHere = diagMot.RetNextBox();
+                    }
+                    else
+                    {
+                        checkHere = diagMot.RetNextBox();
+                        _SnapToColiSpot(diagMot);
 
                     }
 
-                    checkHere = diagMot.RetNextBox();
+                    
                 }
 
 
