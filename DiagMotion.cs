@@ -14,6 +14,7 @@ namespace ColiSys
         double CdR;
         int diagSteps;
         int RemainderCompleted = 0;
+        new S_Box lastLoc;
 
         //constructors
         public DiagMotion(int a, int b, S_Box tE)
@@ -21,9 +22,9 @@ namespace ColiSys
             x = a;
             y = b;
             E = new S_Box(tE);
+            lastLoc = new S_Box(tE);
             priCalc();            
         }
-
 
         public S_Box NodetoBox(Node tN)
         {
@@ -31,7 +32,7 @@ namespace ColiSys
             return E;
         }
 
-        public void priCalc(){
+        private void priCalc(){
             if (Math.Abs(x) > Math.Abs(y))
             {
                 Rem = Math.Abs(x) - Math.Abs(y);
@@ -58,10 +59,10 @@ namespace ColiSys
             }
         }
 
-
         public DiagMotion(int a, int b, Node tN)
         {
             E = new S_Box(tN.Ret(Bounds.l), tN.Ret(Bounds.u), tN.Dwn().Ret(Bounds.l), tN.Dwn().Ret(Bounds.u), true);
+            lastLoc = new S_Box(E);
             x = a;
             y = b;
             priCalc();
@@ -158,8 +159,13 @@ namespace ColiSys
                 return null;
             }
 
-            S_Box i = VelToBox();
+            if(counter != 0)
+            {
+                lastLoc = E;
+            }
 
+            S_Box i = VelToBox();
+            
             if ((double)counter >= CdR && Rem != 0 && CdR != 0 && RemainderCompleted != Rem)
             {
                 if (x == diagSteps)
@@ -198,6 +204,12 @@ namespace ColiSys
             PMove();
             counter += 1;
             return i;
+        }
+
+        public S_Box RetLast()
+        {
+
+            return lastLoc;
         }
 
     }
