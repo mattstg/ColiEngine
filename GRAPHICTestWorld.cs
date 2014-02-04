@@ -162,14 +162,8 @@ namespace ColiSys
     private void _UnloadBus()
     {
     //unload explosion types and reset them into explosions
-        List<Global.Passenger> tempList = bus.UnloadPassengersOfType(Enums.Global.VoidableTypes.Explosion);
-        foreach (Global.Passenger expl in tempList)
-        {
-            Explosion temp = new Explosion(expl.Hashtable.RetMainNode(), expl.offset);
-
-            LinkColiLists(temp); //link all colitables it needs
-            explosions.Add(temp);           
-        }
+        //Unload explosions
+        
 
     }
 

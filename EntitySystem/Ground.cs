@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Structs.EntStructs;
 
-namespace MSquared.ColiEngine.EntitySystem
+namespace EntSys
 {
     class Ground
     {

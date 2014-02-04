@@ -22,9 +22,7 @@ namespace Structs
                                                          {Enums.Navigation.Compass.SW,Enums.Navigation.Compass.S,Enums.Navigation.Compass.SE}};
 
             }
-
-
-
+            
             public Enums.Navigation.Compass SetCompass(int[] t)
             {
                 dir = comp[t[0],t[1]];
@@ -89,6 +87,11 @@ namespace Structs
         {
             return new S_XY(s1.x * mult, s1.y * mult);
         }
+        public static S_XY operator -(S_XY s1, S_XY s2)
+        {
+            return new S_XY(s1.x - s2.x, s1.y - s2.y);
+        }
+        
       
 
     }
