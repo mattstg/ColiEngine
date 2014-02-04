@@ -13,7 +13,7 @@ namespace EntSys
         protected ColiSys.NodeManipulator nami = ColiSys.NodeManipulator.Instance;
         protected ColiSys.Hashtable HashTrueEntShape;
         protected ColiSys.Node trueEntShape { get { return HashTrueEntShape.RetMainNode(); } }
-
+        protected Global.Timers timerOncePerSec;
         protected ColiSys.Node trueEntShapeOffset { get { return nami.MoveTableByOffset(trueEntShape, offset); } }
         protected ColiSys.Node coliBox { get { return nami.MoveTableByOffset(nami.ComplexNodeToSquareNode(trueEntShape), offset); } }
         
@@ -30,7 +30,7 @@ namespace EntSys
 
         protected S_XY loc;
        // private S_XY _offset = new S_XY();
-        protected Vector2 curForce;
+        protected Vector2 curForce = new Vector2(0,0);
         protected Vector2 velo;
         protected int mass;
 
@@ -68,6 +68,8 @@ namespace EntSys
             //size = tsize;
             //loc = tloc;
             _DNADecoder(dna);
+            timerOncePerSec = new Global.Timers(1000, 1001);
+            timerOncePerSec.curT = 1000; //start it at ready
             //_SetSizeInNodeForm();
         }
 
@@ -133,6 +135,17 @@ namespace EntSys
         public void Update(float rt)
         {
 
+
+
+
+
+
+
+            //should be done last, less you dec before ur ready
+            if (timerOncePerSec.ready)
+                timerOncePerSec.Dec(true);
+            else
+                timerOncePerSec.Tick(rt);
         }
         /*
         protected void setColiBox()

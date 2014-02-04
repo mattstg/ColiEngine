@@ -148,7 +148,7 @@ namespace ColiSys
             //turn the passed box into a hashtable
             //Node x = new Node(l,u,adj,dwn);
 
-            Node nodeY = new Node(box.loc.y - box.size.y + 1, box.loc.y, null, null);
+            Node nodeY = new Node(box.loc.y, box.size.y + box.loc.y - 1, null, null);
             Node nodeX = new Node(box.loc.x, box.loc.x + box.size.x - 1, null, nodeY);
             //////Console.Out.WriteLine("The NodeY: " + '\n' + nodeY.GenString() + '\n' + "The NodeX: " + '\n' +  nodeX.Dwn().GenString());
             //now have a tree for box 

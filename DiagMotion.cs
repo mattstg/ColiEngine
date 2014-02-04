@@ -37,7 +37,7 @@ namespace ColiSys
 
         public S_Box NodetoBox(Node tN)
         {
-            E = new S_Box(tN.Ret(Bounds.l), tN.Dwn().Ret(Bounds.u), tN.Ret(Bounds.u) - tN.Ret(Bounds.l) + 1, tN.Dwn().Ret(Bounds.u) - tN.Dwn().Ret(Bounds.l) + 1, true);
+            E = new S_Box(tN.Ret(Bounds.l), tN.Dwn().Ret(Bounds.l), tN.Ret(Bounds.u) - tN.Ret(Bounds.l) + 1, tN.Dwn().Ret(Bounds.u) - tN.Dwn().Ret(Bounds.l) + 1, true);
             return E;
         }
 

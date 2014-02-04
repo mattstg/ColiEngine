@@ -47,7 +47,7 @@ namespace EntSys
         public void Update(float rt)
         {
             //things that apply force
-            phys.applyNaturalLaws(this, mass); //applys force
+            _UpdatePerSec(rt);
             _ApplyForceToVelo();
 
            // _CheckAllColi();
@@ -56,13 +56,21 @@ namespace EntSys
             //things that mod velo
                   
             //_MoveUpdate();
-
-
             PlaceInBounds();
             //do all calcs with force
             curForce = new Vector2(0,0); //reset 0,0
             
             base.Update(rt);
+        }
+
+        private void _UpdatePerSec(float rt)
+        {
+            if (timerOncePerSec.ready)
+            {
+
+                phys.applyNaturalLaws(this, mass); //applys force
+
+            }
         }
 
         private Vector2 _ApplyForceToVelo()
@@ -287,21 +295,28 @@ namespace EntSys
         {
             S_Box tloc = diag.RetLast();
             offset = tloc.loc;
-            rawOffSet = new Vector2(rawOffSet.X - (int)rawOffSet.X + offset.x, rawOffSet.Y - (int)rawOffSet.Y + offset.y);
+            //rawOffSet = new Vector2(rawOffSet.X - (int)rawOffSet.X + offset.x, rawOffSet.Y - (int)rawOffSet.Y + offset.y);
         }
 
         private bool[] _GetDirCol(Vector2 turnVelo,ColiSys.Hashtable ht)
         {
             bool[] toRet = new bool[]{false,false};
-            ColiSys.DiagMotion d = new ColiSys.DiagMotion((int)(Math.Abs(turnVelo.X) / turnVelo.X),0, this.coliBox);
-            if(ht.Coli(d.RetNextBox()))
+            if (turnVelo.X != 0)
             {
-                toRet[0] = true;
+                ColiSys.DiagMotion d = new ColiSys.DiagMotion((int)(Math.Abs(turnVelo.X) / turnVelo.X), 0, this.coliBox);
+                if (ht.Coli(d.RetNextBox()))
+                {
+                    toRet[0] = true;
+                }
             }
-            ColiSys.DiagMotion d2 = new ColiSys.DiagMotion(0,(int)(Math.Abs(turnVelo.Y) / turnVelo.Y), this.coliBox);
-            if (ht.Coli(d.RetNextBox()))
+            if (turnVelo.Y != 0)
             {
-                toRet[1] = true;
+                ColiSys.DiagMotion d2 = new ColiSys.DiagMotion(0, (int)(Math.Abs(turnVelo.Y) / turnVelo.Y), this.coliBox);
+                if (ht.Coli(d2.RetNextBox()))
+                {
+                    toRet[1] = true;
+                }
+               
             }
             return toRet;
 
@@ -315,17 +330,18 @@ namespace EntSys
             float timeStep;
             Vector2 tempRawOffset = new Vector2(rawOffSet.X, rawOffSet.Y);
             Enums.Navigation.Compass dirHeading;
-            tempRawOffset += velo * (rt/1000) ;
+            Vector2 scaledVelo = velo * (rt / 1000);
+            tempRawOffset += scaledVelo;
             Vector2 turnVelo = new Vector2((int)(tempRawOffset.X - offset.x),(int)(tempRawOffset.Y-offset.y));
             timeStep = tr*(1/_RetHighest(turnVelo));
             if (turnVelo.X != 0 || turnVelo.Y != 0)
             {
                 //so movement is occuring
-                ColiSys.DiagMotion diagMot = new ColiSys.DiagMotion((int)turnVelo.X, (int)turnVelo.Y,this.coliBox);
+                ColiSys.DiagMotion diagMot = new ColiSys.DiagMotion((int)turnVelo.X, (int)turnVelo.Y, this.coliBox);
                 S_Box checkHere = diagMot.RetNextBox();
 
-                while (tr > 0 && (turnVelo.X >= 1 || turnVelo.Y >= 1) && checkHere != null)
-                {
+                while (tr > 0 && (turnVelo.X != 0 || turnVelo.Y != 0) && checkHere != null) 
+                { //THIS SHOULD BE ALLOWED TO BE NEGATIVE
                     coliOccured = false;
                     tr -= timeStep;
 
@@ -333,12 +349,13 @@ namespace EntSys
                     foreach (Structs.ColiListConnector connecter in Collidables)
                     {
 
+                        
 
                         if (connecter.hashTable.Coli(checkHere)) //find type of coli that occured w/ x,y respects
                         {
-                            //if coli occur, find out direction of the coli
+                             //if coli occur, find out direction of the coli
                             // dirHeading = getTravelingDir(turnVelo);
-                           // _SnapToColiSpot(diagMot);
+                            // _SnapToColiSpot(diagMot);
                             ColiHV = _GetDirCol(turnVelo, connecter.hashTable);  //i should be snaped to location, so i just need to check around me
                             coliOccured = true;
 
@@ -370,22 +387,37 @@ namespace EntSys
                     {
                         //some forces have been applied, need to apply those forces to velo, returns velo the was added
                         Vector2 addedVelo = _ApplyForceToVelo();
-                        turnVelo += addedVelo * (1 / tr);
-                        timeStep = (1 / _RetHighest(turnVelo));
-                        diagMot = new ColiSys.DiagMotion((int)turnVelo.X, (int)turnVelo.Y, this.coliBox); //should have snapped to location from above
-                        _SnapToColiSpot(diagMot);
-                        checkHere = diagMot.RetNextBox();
+                        if (tr > 0)
+                        {
+                            turnVelo += addedVelo * (1 / tr);
+                            timeStep = (1 / _RetHighest(turnVelo));
+                            _SnapToColiSpot(diagMot);
+                            diagMot = new ColiSys.DiagMotion((int)turnVelo.X, (int)turnVelo.Y, this.coliBox);                             
+                            checkHere = diagMot.RetNextBox();
+                        }
+                        else
+                        {
+                            _SnapToColiSpot(diagMot);
+                            checkHere = null;
+                        }
                     }
                     else
                     {
                         checkHere = diagMot.RetNextBox();
-                        _SnapToColiSpot(diagMot);
+                        rawOffSet += scaledVelo; //increase rawOffset
+                        offset = new S_XY(diagMot.RetLast().loc.x, diagMot.RetLast().loc.y) ; //move offset foward
+                       // _SnapToColiSpot(diagMot); //Sets offset then resets rawOffset
 
                     }
 
-                    
+
                 }
 
+
+            }
+            else
+            {
+                rawOffSet += scaledVelo;
 
             }
             
