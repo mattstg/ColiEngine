@@ -367,7 +367,7 @@ namespace EntSys
                                     break;
 
                                 case Enums.ColiObjTypes.ColiTypes.Dirt:
-                                    AE.TriggerEvent(this, (Ground)connecter.getObj());
+                                    AE.TriggerEvent(this, (Ground)connecter.obj);
                                     Console.Out.WriteLine("COLLISION WITH GROUND!");
                                     //_ColiWithGround(Statics.Converter.OverlapToCompass(otype), movingEnt);
                                     break;

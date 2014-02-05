@@ -67,7 +67,7 @@ namespace EntSys
 
                         case Enums.ColiObjTypes.ColiTypes.Dirt:
                           // AE.TriggerEvent(this,(Ground)connecter.getObj));
-                            _ColiWithGround((Ground)connecter.getObj());
+                            _ColiWithGround((Ground)connecter.obj);
                             break;
 
                         default:

@@ -209,7 +209,7 @@ namespace ColiSys
         ent.SetCollidables(toRet);
     }
 
-
+        /*
     public void LinkColiLists(EntSys.HumanPlayer human)
     {
         //create head list of list ptr
@@ -258,7 +258,7 @@ namespace ColiSys
         expl.SetCollidables(toRet);
     }
 
-
+        */
 
     }
 }
