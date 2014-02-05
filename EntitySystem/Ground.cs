@@ -19,16 +19,17 @@ namespace EntSys
         float thornDmg = 0;  //0-inf percent dmg back
         float stickyness = 0; //not sure yet
         public ColiSys.Hashtable htable;
-
+        public ActionEvent AE; //public because other objects will call Grounds event since ground does not update
         //I imagine a ground factory object that creates types of ground
         public Ground(float hp, float bounceForceMultLB, float bounceForceMultUB, float bounceThreshold, float absorb, float thornDmg, float stickyness, ArmorResistance armor, ColiSys.Hashtable htable, float friction)
         {
             this.hp = hp; this.bounceForceMultLB = bounceForceMultLB; this.bounceForceMultUB = bounceForceMultUB; this.bounceThreshold = bounceThreshold;
             this.absorb = absorb; this.thornDmg = thornDmg; this.stickyness = stickyness; //armor struct
             this.armor = armor; this.htable = htable; this.friction = friction;
+            AE = new ActionEvent(objType.Ground);
         }
 
-        public Ground() { }
+        public Ground() { AE = new ActionEvent(objType.Ground); }
 
         public bool ColiWithGround(ColiSys.Hashtable coliBox)
         {
