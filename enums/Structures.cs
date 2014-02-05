@@ -83,6 +83,11 @@ namespace Structs
             return new S_XY(s1.x + s2.x, s1.y + s2.y);
         }
 
+        public static S_XY operator +(S_XY s1, int s2)
+        {
+            return new S_XY(s1.x + s2, s1.y + s2);
+        }
+
         public static S_XY operator *(S_XY s1, int mult)
         {
             return new S_XY(s1.x * mult, s1.y * mult);
@@ -135,19 +140,35 @@ namespace Structs
         }
 
     }
-
+    /*
     class ColiListConnector
     {
         
 
         public ColiSys.Hashtable hashTable;
         public Enums.ColiObjTypes.ColiTypes coliType;
+        
+        private EntSys.Ground _ground;
+
 
         public ColiListConnector(ColiSys.Hashtable ptable, Enums.ColiObjTypes.ColiTypes pcoliType)
         {
             hashTable = ptable;
             coliType = pcoliType;
         }
-    }
+
+        public ColiListConnector(EntSys.Ground g)
+        {
+            _ground = g;
+            hashTable = g.htable;
+            coliType = Enums.ColiObjTypes.ColiTypes.Dirt;
+        }
+
+        public object retObj()
+        {
+            return _ground;
+
+        }*
+    }*/
 
 }

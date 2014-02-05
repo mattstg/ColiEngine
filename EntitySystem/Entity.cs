@@ -12,10 +12,10 @@ namespace EntSys
     {
         protected ColiSys.NodeManipulator nami = ColiSys.NodeManipulator.Instance;
         protected ColiSys.Hashtable HashTrueEntShape;
-        protected ColiSys.Node trueEntShape { get { return HashTrueEntShape.RetMainNode(); } }
+        public ColiSys.Node trueEntShape { get { return HashTrueEntShape.RetMainNode(); } }
         protected Global.Timers timerOncePerSec;
-        protected ColiSys.Node trueEntShapeOffset { get { return nami.MoveTableByOffset(trueEntShape, offset); } }
-        protected ColiSys.Node coliBox { get { return nami.MoveTableByOffset(nami.ComplexNodeToSquareNode(trueEntShape), offset); } }
+        public ColiSys.Node trueEntShapeOffset { get { return nami.MoveTableByOffset(trueEntShape, offset); } }
+        public ColiSys.Node coliBox { get { return nami.MoveTableByOffset(nami.ComplexNodeToSquareNode(trueEntShape), offset); } }
         
 
 
@@ -35,13 +35,14 @@ namespace EntSys
         protected int mass;
 
         
-        protected List<Structs.ColiListConnector> Collidables;
+        protected List<ColiListConnector> Collidables;
 
 
         public Vector2 momentum { get { return velo * mass; } }
 
         //This boundary trick no longer works, was worth a shot tho
         protected S_XY offset = new S_XY();// { set { _offset.x = (_offset.x < 0) ? 0 : value.x; _offset.y = (_offset.y < 0) ? 0 : value.y; } get { return new S_XY((int)_offset.x,(int)_offset.y); } }
+        public S_XY offsetCopy { get { return new S_XY(offset); } } //returns a copy of offset publically so others cant alter
         protected Vector2 rawOffSet = new Vector2(0,0);
         //protected S_XY offset = new S_XY();
        // protected ColiSys.Node sizeLocSquare; //offset included

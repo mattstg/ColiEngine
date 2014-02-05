@@ -10,8 +10,9 @@ namespace EntSys
         Global.Timers lifeSpan;
         ColiSys.NodeManipulator nami = ColiSys.NodeManipulator.Instance;
         public bool Destroy = false;
-        
+        ActionEvent AE = new ActionEvent();
 
+        
         public Explosion(ColiSys.Node newHeadNode,Structs.S_XY offset)
         {
             HashTrueEntShape = new ColiSys.Hashtable(newHeadNode);
@@ -42,19 +43,19 @@ namespace EntSys
         public void _CheckAllColi()
         {
             Enums.ColiObjTypes.ColiTypes coliOccur = Enums.ColiObjTypes.ColiTypes.None;
-
-            foreach (Structs.ColiListConnector connecter in Collidables)
+            if (Collidables != null);
+            foreach (ColiListConnector connecter in Collidables)
             {                
                if (connecter.hashTable.Coli(this.coliBox))  //so a coli has occured
                 {
-                   coliOccur = connecter.coliType;
+                   coliOccur = connecter.type;
                    switch (coliOccur) //switch->type object bodymech has colided with, and call their reactions based on that
                         {
                         case Enums.ColiObjTypes.ColiTypes.Magic:
                             break;
 
                         case Enums.ColiObjTypes.ColiTypes.Dirt:
-                            _ColiWithGround(connecter.hashTable);
+                            _ColiWithGround((Ground)connecter.getObj());
                             break;
 
                         default:
@@ -65,10 +66,11 @@ namespace EntSys
             }
         }
         
-        private void _ColiWithGround(ColiSys.Hashtable ht)
+        private void _ColiWithGround(Ground g)
         {
             //explosion hits ground, tears through it, add feature to lessen explosion later
-            ht.HashSubtractor(this.trueEntShape); //eventaually just call Ground.DmgArea() or sumtin
+            AE.TriggerEvent(this, g);
+            g.htable.HashSubtractor(trueEntShapeOffset); //eventaually just call Ground.DmgArea() or sumtin
 
         }
         

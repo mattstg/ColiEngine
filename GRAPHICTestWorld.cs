@@ -16,7 +16,7 @@ namespace ColiSys
         Global.Bus bus = Global.Bus.Instance;
         int boxSize;
         List<Explosion> explosions;
-        Hashtable dirtTable;
+        Ground theGround;
         Hashtable toAdd;
         NodeManipulator nami = NodeManipulator.Instance;
         float inputTimer;
@@ -25,38 +25,39 @@ namespace ColiSys
 
         public GRAPHICTestWorld()
         {
+            theGround = new Ground();
             inputTimer = 0;
             boxSize = 50;
             shapeGen = ShapeGenerator.Instance;
-            dirtTable = new Hashtable(shapeGen.GenShape(Shape.Square, new S_XY(0, Consts.TopScope.WORLD_SIZE_Y / 2), new S_XY(Consts.TopScope.WORLD_SIZE_X, Consts.TopScope.WORLD_SIZE_Y / 2)));
+            theGround.htable = new Hashtable(shapeGen.GenShape(Shape.Square, new S_XY(0, Consts.TopScope.WORLD_SIZE_Y / 2), new S_XY(Consts.TopScope.WORLD_SIZE_X, Consts.TopScope.WORLD_SIZE_Y / 2)));
             toAdd = new Hashtable();
             explosions = new List<Explosion>();
 	    }
 	
 	public void ResetWorld()
 	{
-        dirtTable = new Hashtable(shapeGen.GenShape(Shape.Square, new S_XY(0, Consts.TopScope.WORLD_SIZE_Y), new S_XY(Consts.TopScope.WORLD_SIZE_X, Consts.TopScope.WORLD_SIZE_Y)));
+        theGround.htable = new Hashtable(shapeGen.GenShape(Shape.Square, new S_XY(0, Consts.TopScope.WORLD_SIZE_Y), new S_XY(Consts.TopScope.WORLD_SIZE_X, Consts.TopScope.WORLD_SIZE_Y)));
 	}
 
     public void LoadWorldTexture(Texture2D texture)
     {
-        dirtTable.LoadTexture(texture,Color.White);
+        theGround.htable.LoadTexture(texture,Color.White);
         toAdd.LoadTexture(texture, Color.GreenYellow);
     }
 	
 	public void AddNodeToWorld(Hashtable hasht)
 	{
-        dirtTable.HashAdder(hasht.RetMainNode());		
+        theGround.htable.HashAdder(hasht.RetMainNode());		
 	}
 
     public void SubNodeFromWorld(Hashtable hasht)
     {
-        dirtTable.HashSubtractor(hasht.RetMainNode());
+        theGround.htable.HashSubtractor(hasht.RetMainNode());
     }
 
     public void Draw(SpriteBatch sb)
     {
-        dirtTable.Draw(sb);
+        theGround.htable.Draw(sb);
         toAdd.Draw(sb);
 
     }
@@ -80,7 +81,7 @@ namespace ColiSys
                     toAdd.HashAdder(tempx); //Error that can occur, reason so far unknown
                 else
                     Console.Out.WriteLine("Error clicking outside monogame");
-                Console.Out.WriteLine("///////////////////////////////CURRENT ADDITION dirtTable/////////////////////");
+                Console.Out.WriteLine("///////////////////////////////CURRENT ADDITION theGround.htable/////////////////////");
                 Console.Out.WriteLine(nami.GenString(toAdd));
                 
             }
@@ -88,41 +89,41 @@ namespace ColiSys
             {
                 Console.Out.WriteLine("///////////////////////////////////////////////////////////////////");
                 Console.Out.WriteLine("///////////////////////////////HASH SUBTRACTOR/////////////////////");
-                Console.Out.WriteLine(nami.GenString(dirtTable));
+                Console.Out.WriteLine(nami.GenString(theGround.htable));
 
                 Console.Out.WriteLine("////////Original ^////////////////////SUBTRACTION v  /////////////");
                 Console.Out.WriteLine(nami.GenString(toAdd));
 
-                dirtTable.HashSubtractor(toAdd);
+                theGround.htable.HashSubtractor(toAdd);
                 toAdd.EmptyTable();                
                 
                 Console.Out.WriteLine("////////////////////////// vvv Result vvv//////////////////////////");
-                Console.Out.WriteLine(nami.GenString(dirtTable));
+                Console.Out.WriteLine(nami.GenString(theGround.htable));
             }
             if (mouse.MiddleButton == ButtonState.Pressed || keys.IsKeyDown(Keys.A))
             {
                 Console.Out.WriteLine("///////////////////////////////////////////////////////////////////");
                 Console.Out.WriteLine("///////////////////////////////HASH ADDER//////////////////////////");
-                Console.Out.WriteLine(nami.GenString(dirtTable));
+                Console.Out.WriteLine(nami.GenString(theGround.htable));
 
                 Console.Out.WriteLine("////////Original ^////////////////////ADDITION v  /////////////////");
                 Console.Out.WriteLine(nami.GenString(toAdd));
 
-                dirtTable.HashAdder(toAdd);
+                theGround.htable.HashAdder(toAdd);
                 toAdd.EmptyTable();
 
                 Console.Out.WriteLine("////////////////////////// vvv Result vvv//////////////////////////");
-                Console.Out.WriteLine(nami.GenString(dirtTable));
+                Console.Out.WriteLine(nami.GenString(theGround.htable));
 
             }
             if (keys.IsKeyDown(Keys.I))
             {
                 Console.Out.WriteLine("////////////////////////// vvv Before Inverse vvv//////////////////////////");
-                Console.Out.WriteLine(nami.GenString(dirtTable));
-                Node temp = nami.Inverser(dirtTable.RetMainNode());
-                dirtTable.ResetMainNode(temp);
+                Console.Out.WriteLine(nami.GenString(theGround.htable));
+                Node temp = nami.Inverser(theGround.htable.RetMainNode());
+                theGround.htable.ResetMainNode(temp);
                 Console.Out.WriteLine("////////////////////////// vv After Inverse vvv//////////////////////////");
-                Console.Out.WriteLine(nami.GenString(dirtTable));
+                Console.Out.WriteLine(nami.GenString(theGround.htable));
                 
 
             }
@@ -163,8 +164,13 @@ namespace ColiSys
     {
     //unload explosion types and reset them into explosions
         //Unload explosions
-        
-
+        List<object> t = bus.Unload(Global.PassengerType.Explosion);
+        foreach (object o in t)
+        {
+            Explosion exp = (Explosion)o;
+            LinkColiLists(exp);
+            explosions.Add(exp);
+        }
     }
 
 
@@ -176,7 +182,7 @@ namespace ColiSys
 
          
         //add all kinds of table types
-        ColiListConnector GroundList = new ColiListConnector(dirtTable,Enums.ColiObjTypes.ColiTypes.Dirt);
+        ColiListConnector GroundList = new ColiListConnector(theGround);
         
 
 
@@ -195,7 +201,7 @@ namespace ColiSys
 
 
         //add all kinds of table types
-        ColiListConnector GroundList = new ColiListConnector(dirtTable, Enums.ColiObjTypes.ColiTypes.Dirt);
+        ColiListConnector GroundList = new ColiListConnector(theGround);
 
 
         //add all lists
@@ -208,11 +214,11 @@ namespace ColiSys
         //create head list of list ptr
         List<ColiListConnector> toRet = new List<ColiListConnector>();
         //add all kinds of table types
-        ColiListConnector tempDirtTable = new ColiListConnector(dirtTable, Enums.ColiObjTypes.ColiTypes.Dirt);
+        ColiListConnector GroundList = new ColiListConnector(theGround);
         //should add human here too, but hes in game1 for some reason, the good version of world will accomdate this
         
         //add all lists
-        toRet.Add(tempDirtTable);
+        toRet.Add(GroundList);
         expl.SetCollidables(toRet);
     }
 

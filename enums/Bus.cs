@@ -6,21 +6,21 @@ using System.Text;
 
 namespace Global
 {
-    enum PassengerType { Ground, Explosion }
+    public enum PassengerType { Ground, Explosion }
 
-    /*
+    
     public struct Passenger
     {
-        public ColiSys.Hashtable Hashtable;
-        PassengerType type;
-        public Structs.S_XY offset;
+        public object pass;
+        public PassengerType type;
 
-    }*/
+        public Passenger(object o, PassengerType t) { pass = o; type = t; }
+    }
 
     class Bus
     {
 
-        List<EntSys.Ground> GroundList = new List<EntSys.Ground>();
+        List<Passenger> passList = new List<Passenger>();
 
         private static Bus instance;
         private Bus() { }
@@ -37,24 +37,25 @@ namespace Global
         }       
         
         //Load//////////////////////////
-        public void LoadPassenger(EntSys.Ground pass)
-        { GroundList.Add(pass); }
+        public void LoadPassenger(EntSys.Ground g)
+        { passList.Add(new Passenger(g, PassengerType.Ground)); }
 
-
-
-
+        public void LoadPassenger(EntSys.Explosion e)
+        { passList.Add(new Passenger(e, PassengerType.Explosion)); }
 
         //Unload/////////////////////////////
-        public List<EntSys.Ground> UnloadGround(bool del)
+        public List<object> Unload(PassengerType t)
         {
-            if (del)
+            List<object> toRet = new List<object>();
+            for (int i = passList.Count - 1; i >= 0;i--)
             {
-                List<EntSys.Ground> toRet = new List<EntSys.Ground>();
-                GroundList.Clear();
-                return toRet;
+                if (passList[i].type == t)
+                {
+                    toRet.Add(passList[i].pass);
+                    passList.RemoveAt(i);
+                }
             }
-            else            
-                return GroundList;
+            return toRet;
         }
 
        

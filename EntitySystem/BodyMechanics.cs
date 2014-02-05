@@ -10,10 +10,10 @@ namespace EntSys
 {
     class BodyMechanics:Body
     {
-        
+        ActionEvent AE = new ActionEvent();
         Global.Bus bus = Global.Bus.Instance;
         private PhysSys.Physics phys = PhysSys.Physics.Instance;
-        private ColiSys.NodeManipulator nami = ColiSys.NodeManipulator.Instance;
+        //private ColiSys.NodeManipulator nami = ColiSys.NodeManipulator.Instance;
 
         public BodyMechanics() { }
         public BodyMechanics(DNA EntDNA, DNA SprDNA, DNA BodDNA, DNA dna)
@@ -94,6 +94,8 @@ namespace EntSys
             //nami check
         }
 
+        //Old Functions
+        /*
         private void _CheckAllColi()
         {
             //ColiSys.DiagMotion mov1 = new ColiSys.DiagMotion((int)velo.X, (int)velo.Y, this.coliBox);
@@ -158,8 +160,8 @@ namespace EntSys
         }
 
         }
-
-
+        */
+        /*
         private bool _ColiWithGround(Enums.Navigation.Compass coliDir,S_Box coliSquare) //recieves x&y type colision
         {
             //So important, colisquare creates an area where coli occured, check for difference between you pos and its and you will find direction
@@ -253,7 +255,9 @@ namespace EntSys
           //      velo.Y = 0;
             return true; //shortcut trick
         }
-
+        */
+       
+        
         private Enums.Navigation.Compass getTravelingDir(Vector2 velo)
         {
             //So important, colisquare creates an area where coli occured, check for difference between you pos and its and you will find direction
@@ -341,32 +345,29 @@ namespace EntSys
                 S_Box checkHere = diagMot.RetNextBox();
 
                 while (tr > 0 && (turnVelo.X != 0 || turnVelo.Y != 0) && checkHere != null) 
-                { //THIS SHOULD BE ALLOWED TO BE NEGATIVE
+                { 
                     coliOccured = false;
                     tr -= timeStep;
 
 
-                    foreach (Structs.ColiListConnector connecter in Collidables)
+                    foreach (ColiListConnector connecter in Collidables)
                     {
 
                         
 
                         if (connecter.hashTable.Coli(checkHere)) //find type of coli that occured w/ x,y respects
                         {
-                             //if coli occur, find out direction of the coli
-                            // dirHeading = getTravelingDir(turnVelo);
-                            // _SnapToColiSpot(diagMot);
+                             //if coli occur, find out direction of the coli                            
                             ColiHV = _GetDirCol(turnVelo, connecter.hashTable);  //i should be snaped to location, so i just need to check around me
-                            coliOccured = true;
+                            coliOccured = true;     
 
-
-
-                            switch (connecter.coliType) //switch->type object bodymech has colided with, and call their reactions based on that
+                            switch (connecter.type) //switch->type object bodymech has colided with, and call their reactions based on that
                             {
                                 case Enums.ColiObjTypes.ColiTypes.Explosion:
                                     break;
 
                                 case Enums.ColiObjTypes.ColiTypes.Dirt:
+                                    AE.TriggerEvent(this, (Ground)connecter.getObj());
                                     Console.Out.WriteLine("COLLISION WITH GROUND!");
                                     //_ColiWithGround(Statics.Converter.OverlapToCompass(otype), movingEnt);
                                     break;
@@ -386,6 +387,7 @@ namespace EntSys
                     if (coliOccured)  //since a coli occured, need to reset tv,velo,timestep,"temprawoff",
                     {
                         //some forces have been applied, need to apply those forces to velo, returns velo the was added
+                        
                         Vector2 addedVelo = _ApplyForceToVelo();
                         if (tr > 0)
                         {

@@ -28,6 +28,7 @@ namespace EntSys
             this.armor = armor; this.htable = htable; this.friction = friction;
         }
 
+        public Ground() { }
 
         public bool ColiWithGround(ColiSys.Hashtable coliBox)
         {
