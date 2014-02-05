@@ -5,36 +5,47 @@ using System.Text;
 
 namespace EntSys
 {
+    struct unTargetables
+    {
+        ColiListConnector obj;
+        Global.Timers timer;
+
+    }
+
+
     class Explosion : Sprite
     {
         Global.Timers lifeSpan;
         ColiSys.NodeManipulator nami = ColiSys.NodeManipulator.Instance;
         public bool Destroy = false;
-        ActionEvent AE = new ActionEvent();
-
+        ActionEvent AE = new ActionEvent(objType.Explosion);
+        float force;
+        List<unTargetables> untargetableList;
+        public ColiSys.Hashtable htable; //made public for connector to access
         
-        public Explosion(ColiSys.Node newHeadNode,Structs.S_XY offset)
+        
+        public Explosion(ColiSys.Node newHeadNode,Structs.S_XY offset,float force,List<unTargetables> untargetableList)
         {
+            acceptedColi = new AcceptedCollidables(true, true, false);
             HashTrueEntShape = new ColiSys.Hashtable(newHeadNode);
+            htable = HashTrueEntShape;
             this.offset = offset;
             lifeSpan = new Global.Timers(250);
+            this.force = force;
+            this.untargetableList = untargetableList;
 
         }
 
+       // virtual void ApplyDmg(); //unsure about this atm..
 
         public void Update(float rt)
         {
             lifeSpan.Tick(rt);
-            if (!lifeSpan.ready)
-            {
-                Console.Out.Write("BOOM!!!");
-
-            }
-            else
-            {
+            if (!lifeSpan.ready)            
+                Console.Out.Write("BOOM!!!");            
+            else            
                 Destroy = true;
-
-            }
+            
 
             _CheckAllColi();
 
@@ -43,7 +54,7 @@ namespace EntSys
         public void _CheckAllColi()
         {
             Enums.ColiObjTypes.ColiTypes coliOccur = Enums.ColiObjTypes.ColiTypes.None;
-            if (Collidables != null);
+            if (Collidables != null)
             foreach (ColiListConnector connecter in Collidables)
             {                
                if (connecter.hashTable.Coli(this.coliBox))  //so a coli has occured
@@ -55,6 +66,7 @@ namespace EntSys
                             break;
 
                         case Enums.ColiObjTypes.ColiTypes.Dirt:
+                          // AE.TriggerEvent(this,(Ground)connecter.getObj));
                             _ColiWithGround((Ground)connecter.getObj());
                             break;
 

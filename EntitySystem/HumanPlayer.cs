@@ -13,6 +13,7 @@ namespace EntSys
 {
     class HumanPlayer : BodyMechanics
     {
+        
         ColiSys.NodeManipulator nami = ColiSys.NodeManipulator.Instance;
         Global.Timers UniResponseT = null;
         keyMap keymap;
@@ -39,7 +40,7 @@ namespace EntSys
         protected void ForceCnstr(DNA EntDNA, DNA SprDNA, DNA BodDNA, DNA MekDNA, DNA dna)
         {
 
-
+            acceptedColi = new AcceptedCollidables(true,true,true);
             base.ForceCnstr(EntDNA,SprDNA,BodDNA,MekDNA);
             _DNADecoder(dna);
             _DebugSetKeyMap();

@@ -10,6 +10,7 @@ namespace EntSys
 {
     class Entity
     {
+
         protected ColiSys.NodeManipulator nami = ColiSys.NodeManipulator.Instance;
         protected ColiSys.Hashtable HashTrueEntShape;
         public ColiSys.Node trueEntShape { get { return HashTrueEntShape.RetMainNode(); } }
@@ -36,7 +37,7 @@ namespace EntSys
 
         
         protected List<ColiListConnector> Collidables;
-
+        public AcceptedCollidables acceptedColi; //type of coli to load into collidables
 
         public Vector2 momentum { get { return velo * mass; } }
 

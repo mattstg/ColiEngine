@@ -10,7 +10,7 @@ namespace EntSys
 {
     class BodyMechanics:Body
     {
-        ActionEvent AE = new ActionEvent();
+        ActionEvent AE = new ActionEvent(objType.Body);
         Global.Bus bus = Global.Bus.Instance;
         private PhysSys.Physics phys = PhysSys.Physics.Instance;
         //private ColiSys.NodeManipulator nami = ColiSys.NodeManipulator.Instance;

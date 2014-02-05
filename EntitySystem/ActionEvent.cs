@@ -5,37 +5,40 @@ using System.Text;
 
 namespace EntSys
 {
+    enum objType { Body = 0, Explosion = 1 }
     class ActionEvent
     {
         bool forTest = false;
+        objType type;
         Global.Bus bus = Global.Bus.Instance;
+        AbilityStore AS = AbilityStore.Instance;
         //this class belongs to an Ent, it takes in triggers and commences proper events
-        List<Func<BodyMechanics,Ground,bool>> bodGroundActions;
-        List<Func<Explosion, Ground, bool>> expGroundActions;
-        
-        
-        public ActionEvent() {
-        
-            bodGroundActions = new List<Func<BodyMechanics,Ground,bool>>();
-            expGroundActions = new List<Func<Explosion, Ground, bool>>();
-            _DebugFillEventLists();
-        
-        }
+        List<Func<Object,BodyMechanics,Ground,bool>> bodGroundActions;
+        List<Func<Object, Explosion, Ground, bool>> expGroundActions;
 
-        private void _DebugFillEventLists()
+
+        public ActionEvent(objType type)
         {
-            bodGroundActions.Add(bg1);
-            expGroundActions.Add(eg1);
-
+            this.type = type;
+            bodGroundActions = new List<Func<Object,BodyMechanics, Ground, bool>>();
+            expGroundActions = new List<Func<Object,Explosion, Ground, bool>>();
+            AS.RegAbilityPack((int)type,bodGroundActions,expGroundActions);
         }
+
+        //atm unique checking is NOT a thing! ability to have some ability mutiple times
+        public void RegAbilityPack(int num)
+        {
+            AS.RegAbilityPack((int)type, bodGroundActions, expGroundActions);
+        }
+
 
 
         public bool TriggerEvent(BodyMechanics bod,Ground ground)
         {
             //cycle through events
-            foreach(Func<BodyMechanics,Ground,bool> func in bodGroundActions)
+            foreach(Func<Object,BodyMechanics,Ground,bool> func in bodGroundActions)
             {
-                func(bod, ground);
+                func(this,bod, ground);
             }
             return true;
         }
@@ -43,34 +46,16 @@ namespace EntSys
         public bool TriggerEvent(Explosion exp, Ground ground)
         {
             //cycle through events
-            foreach (Func<Explosion, Ground, bool> func in expGroundActions)
+            foreach (Func<Object, Explosion, Ground, bool> func in expGroundActions)
             {
-                func(exp, ground);
+                func(this,exp, ground);
             }
             return true;
         }
 
         
 
-        /////For now, all Events will be created here, they should be created elsewhere i guess... this way for custom skill generation
-        private bool bg1(BodyMechanics bod, Ground ground)
-        {
-            if (!forTest)
-            {
-                bus.LoadPassenger(new Explosion(bod.trueEntShape,new Structs.S_XY(bod.offsetCopy.x,bod.offsetCopy.y+14)));
-                Console.Out.Write("YO SHIT BE HAPPENING");
-                forTest = true;
-            }
-             
-             return true;
-        }
-
-        private bool eg1(Explosion exp, Ground ground)
-        {
-            Console.Out.Write("EXPLOSION HIT GROUND!");
-            return true;
-
-        }
+        
 
     }
 }

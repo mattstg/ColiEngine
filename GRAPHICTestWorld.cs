@@ -174,6 +174,42 @@ namespace ColiSys
     }
 
 
+
+
+    public void LinkColiLists(EntSys.Entity ent)
+    {
+        List<ColiListConnector> toRet = new List<ColiListConnector>();
+
+
+
+        //add all kinds of table types
+        if (ent.acceptedColi.ground)
+        {
+            ColiListConnector GroundList = new ColiListConnector(theGround);
+            toRet.Add(GroundList);
+        }
+        if (ent.acceptedColi.explosion)
+        {
+            foreach (Explosion exp in explosions)
+            {
+                ColiListConnector e = new ColiListConnector(exp);
+                toRet.Add(e);
+            }
+
+        }
+        if (ent.acceptedColi.player)
+        {
+
+        }
+
+
+
+        //add all lists
+        
+        ent.SetCollidables(toRet);
+    }
+
+
     public void LinkColiLists(EntSys.HumanPlayer human)
     {
         //create head list of list ptr

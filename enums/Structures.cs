@@ -7,6 +7,8 @@ using Microsoft.Xna.Framework;
 
 namespace Structs
 {
+    
+
     namespace Navigation
     {
         public class Compass
@@ -170,5 +172,20 @@ namespace Structs
 
         }*
     }*/
+
+}
+
+namespace EntSys
+{
+    struct AcceptedCollidables
+    {
+        public bool player, ground, explosion;
+
+        public AcceptedCollidables(bool player, bool ground, bool exp)
+        {
+            this.player = player; this.ground = ground; this.explosion = exp;
+        }
+
+    }
 
 }

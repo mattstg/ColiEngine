@@ -270,7 +270,7 @@ namespace ColiSys
             Node headNode = a;
             Node tx = null;
 
-            while (headNode.Dwn().Ret(Bounds.l) == -1)
+            while (headNode.Dwn() == null || headNode.Dwn().Ret(Bounds.l) == -1)
                 headNode = headNode.Adj();
 
 
