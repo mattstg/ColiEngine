@@ -7,7 +7,7 @@ namespace EntSys
 {
     struct unTargetables
     {
-        ColiListConnector obj;
+        VagueObject obj;
         Global.Timers timer;
 
     }
@@ -17,7 +17,6 @@ namespace EntSys
     {
         Global.Timers lifeSpan;
         ColiSys.NodeManipulator nami = ColiSys.NodeManipulator.Instance;
-        public bool Destroy = false;
         ActionEvent AE = new ActionEvent(objType.Explosion);
         float force;
         List<unTargetables> untargetableList;
@@ -26,13 +25,17 @@ namespace EntSys
         
         public Explosion(ColiSys.Node newHeadNode,Structs.S_XY offset,float force,List<unTargetables> untargetableList)
         {
-            acceptedColi = new AcceptedCollidables(true, true, false);
+            acceptedColi = new List<objType>();
+            acceptedColi.Add(objType.Ground);
+            acceptedColi.Add(objType.Explosion);
+            acceptedColi.Add(objType.Body);
             HashTrueEntShape = new ColiSys.Hashtable(newHeadNode);
             htable = HashTrueEntShape;
             this.offset = offset;
             lifeSpan = new Global.Timers(250);
             this.force = force;
             this.untargetableList = untargetableList;
+            base.ForceCnstr(null, null);
 
         }
 
@@ -44,7 +47,7 @@ namespace EntSys
             if (!lifeSpan.ready)            
                 Console.Out.Write("BOOM!!!");            
             else            
-                Destroy = true;
+                destroy = true;
             
 
             _CheckAllColi();
@@ -53,21 +56,22 @@ namespace EntSys
 
         public void _CheckAllColi()
         {
-            Enums.ColiObjTypes.ColiTypes coliOccur = Enums.ColiObjTypes.ColiTypes.None;
+            objType coliOccur = objType.None;
             if (Collidables != null)
-            foreach (ColiListConnector connecter in Collidables)
-            {                
-               if (connecter.hashTable.Coli(this.coliBox))  //so a coli has occured
+            foreach (VagueObject connecter in Collidables)
+            {         
+       
+               if (connecter.Coli(this.coliBox))  //so a coli has occured
                 {
                    coliOccur = connecter.type;
                    switch (coliOccur) //switch->type object bodymech has colided with, and call their reactions based on that
                         {
-                        case Enums.ColiObjTypes.ColiTypes.Magic:
+                            case objType.Explosion:
                             break;
 
-                        case Enums.ColiObjTypes.ColiTypes.Dirt:
+                            case objType.Ground:
                           // AE.TriggerEvent(this,(Ground)connecter.getObj));
-                            _ColiWithGround((Ground)connecter.obj);
+                            _ColiWithGround(connecter.getObj<Ground>());
                             break;
 
                         default:
@@ -80,6 +84,7 @@ namespace EntSys
         
         private void _ColiWithGround(Ground g)
         {
+            
             //explosion hits ground, tears through it, add feature to lessen explosion later
             AE.TriggerEvent(this, g);
             g.htable.HashSubtractor(trueEntShapeOffset); //eventaually just call Ground.DmgArea() or sumtin

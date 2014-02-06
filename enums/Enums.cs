@@ -48,3 +48,13 @@ namespace Enums
 
 
 }
+
+namespace EntSys
+{
+
+    enum objType { Body = 0, Explosion = 1, Ground = 2, None = 99 }
+    enum objBaseType { ground, ent, misc };
+    enum objSpecificType { ent, sprite, body, bm, human, exp, ground };
+    
+
+}

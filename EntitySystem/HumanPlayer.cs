@@ -40,7 +40,11 @@ namespace EntSys
         protected void ForceCnstr(DNA EntDNA, DNA SprDNA, DNA BodDNA, DNA MekDNA, DNA dna)
         {
 
-            acceptedColi = new AcceptedCollidables(true,true,true);
+            acceptedColi = new List<objType>();
+            acceptedColi.Add(objType.Ground);
+            acceptedColi.Add(objType.Explosion);
+            acceptedColi.Add(objType.Body);
+
             base.ForceCnstr(EntDNA,SprDNA,BodDNA,MekDNA);
             _DNADecoder(dna);
             _DebugSetKeyMap();

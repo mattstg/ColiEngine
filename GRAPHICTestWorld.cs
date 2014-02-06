@@ -15,8 +15,9 @@ namespace ColiSys
     {
         Global.Bus bus = Global.Bus.Instance;
         int boxSize;
-        List<Explosion> explosions;
         Ground theGround;
+        List<VagueObject> masterList;
+        
         Hashtable toAdd;
         NodeManipulator nami = NodeManipulator.Instance;
         float inputTimer;
@@ -25,13 +26,19 @@ namespace ColiSys
 
         public GRAPHICTestWorld()
         {
+            shapeGen = ShapeGenerator.Instance; 
+
+            masterList = new List<VagueObject>();
             theGround = new Ground();
+            theGround.htable = new Hashtable(shapeGen.GenShape(Shape.Square, new S_XY(0, Consts.TopScope.WORLD_SIZE_Y / 2), new S_XY(Consts.TopScope.WORLD_SIZE_X, Consts.TopScope.WORLD_SIZE_Y / 2)));
+            masterList.Add(new VagueObject(theGround));
+            
+
+
             inputTimer = 0;
             boxSize = 50;
-            shapeGen = ShapeGenerator.Instance;
-            theGround.htable = new Hashtable(shapeGen.GenShape(Shape.Square, new S_XY(0, Consts.TopScope.WORLD_SIZE_Y / 2), new S_XY(Consts.TopScope.WORLD_SIZE_X, Consts.TopScope.WORLD_SIZE_Y / 2)));
+                       
             toAdd = new Hashtable();
-            explosions = new List<Explosion>();
 	    }
 	
 	public void ResetWorld()
@@ -57,7 +64,10 @@ namespace ColiSys
 
     public void Draw(SpriteBatch sb)
     {
-        theGround.htable.Draw(sb);
+
+        foreach (VagueObject vo in masterList)
+            vo.Draw();
+
         toAdd.Draw(sb);
 
     }
@@ -87,13 +97,14 @@ namespace ColiSys
             }
             if (mouse.RightButton == ButtonState.Pressed)
             {
+                
                 Console.Out.WriteLine("///////////////////////////////////////////////////////////////////");
                 Console.Out.WriteLine("///////////////////////////////HASH SUBTRACTOR/////////////////////");
                 Console.Out.WriteLine(nami.GenString(theGround.htable));
 
                 Console.Out.WriteLine("////////Original ^////////////////////SUBTRACTION v  /////////////");
                 Console.Out.WriteLine(nami.GenString(toAdd));
-
+                
                 theGround.htable.HashSubtractor(toAdd);
                 toAdd.EmptyTable();                
                 
@@ -139,10 +150,8 @@ namespace ColiSys
         if (inputTimer < 0)
             inputTimer = 0;
         _UnloadBus();
-        foreach (Explosion expl in explosions)
-        {
-            expl.Update(rt);
-        }
+        foreach (VagueObject vo in masterList)
+            vo.Update(rt);
         //Unload explosions and turn them back into them
 
 
@@ -152,9 +161,9 @@ namespace ColiSys
 
     private void _DestroyEmptyLists()
     {
-        for (int i = explosions.Count - 1; i >= 0; i--)
-            if (explosions[i].Destroy)
-                explosions.RemoveAt(i);
+        for (int i = masterList.Count - 1; i >= 0; i--)
+            if (masterList[i].Destroy() || masterList[i] == null)
+                masterList.RemoveAt(i);
 
 
     }
@@ -162,6 +171,7 @@ namespace ColiSys
 
     private void _UnloadBus()
     {
+        List<VagueObject> recentlyAdded = new List<VagueObject>();
     //unload explosion types and reset them into explosions
         //Unload explosions
         List<object> t = bus.Unload(Global.PassengerType.Explosion);
@@ -169,96 +179,52 @@ namespace ColiSys
         {
             Explosion exp = (Explosion)o;
             LinkColiLists(exp);
-            explosions.Add(exp);
+            masterList.Add(new VagueObject(exp));
+            recentlyAdded.Add(new VagueObject(exp));
         }
+
+        addNewColiItemsToMasterListObjs(recentlyAdded);
+
+    }
+        //if obj is itself, remove from linkColiList
+        //if obj is dead or null, remove from linkColiList
+        //update to check all list items should be removed or not
+        
+    public void addNewColiItemsToMasterListObjs(List<VagueObject> toAdd)
+    {
+        //dont add to none ent items
+        
+        foreach (VagueObject vo in masterList)
+        {
+            if (vo.baseType == objBaseType.ent)
+            {
+                EntSys.Entity t = vo.getObj<EntSys.Entity>();
+                
+                foreach (VagueObject ta in toAdd)
+                {
+                    if (t.acceptsColiType(ta.type))
+                        t.AddCollidables(ta);
+                }
+            }
+
+        }
+
     }
 
-
+    
+    
 
 
     public void LinkColiLists(EntSys.Entity ent)
     {
-        List<ColiListConnector> toRet = new List<ColiListConnector>();
-
-
-
-        //add all kinds of table types
-        if (ent.acceptedColi.ground)
+        foreach(VagueObject vo in masterList)
         {
-            ColiListConnector GroundList = new ColiListConnector(theGround);
-            toRet.Add(GroundList);
+            if (ent.acceptsColiType(vo.type))
+                ent.AddCollidables(vo);
         }
-        if (ent.acceptedColi.explosion)
-        {
-            foreach (Explosion exp in explosions)
-            {
-                ColiListConnector e = new ColiListConnector(exp);
-                toRet.Add(e);
-            }
-
-        }
-        if (ent.acceptedColi.player)
-        {
-
-        }
-
-
-
-        //add all lists
-        
-        ent.SetCollidables(toRet);
     }
 
-        /*
-    public void LinkColiLists(EntSys.HumanPlayer human)
-    {
-        //create head list of list ptr
-        List<ColiListConnector> toRet = new List<ColiListConnector>();
-        
-
-         
-        //add all kinds of table types
-        ColiListConnector GroundList = new ColiListConnector(theGround);
-        
-
-
-
-        //add all lists
-        toRet.Add(GroundList);
-        human.SetCollidables(toRet);
-
-     }
-
-    public void LinkColiLists(EntSys.Rock rock)
-    {
-        //create head list of list ptr
-        List<ColiListConnector> toRet = new List<ColiListConnector>();
-
-
-
-        //add all kinds of table types
-        ColiListConnector GroundList = new ColiListConnector(theGround);
-
-
-        //add all lists
-        toRet.Add(GroundList);
-        rock.SetCollidables(toRet);
-    }
-
-    public void LinkColiLists(EntSys.Explosion expl)
-    {
-        //create head list of list ptr
-        List<ColiListConnector> toRet = new List<ColiListConnector>();
-        //add all kinds of table types
-        ColiListConnector GroundList = new ColiListConnector(theGround);
-        //should add human here too, but hes in game1 for some reason, the good version of world will accomdate this
-        
-        //add all lists
-        toRet.Add(GroundList);
-        expl.SetCollidables(toRet);
-    }
-
-        */
+    
 
     }
 }

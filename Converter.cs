@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Enums.Node;
 using Structs;
-
+using EntSys;
 
 namespace Statics
 {
@@ -45,7 +45,24 @@ namespace Statics
 
         }
 
-        
+        public static objBaseType ObjTypeToBaseType(objType o)
+        {
+            switch (o)
+            {
+                case objType.Body:
+                case objType.Explosion:
+                    return objBaseType.ent;
+                case objType.Ground:
+                    return objBaseType.ground;
+                default:
+                    return objBaseType.misc;
+                    break;
+
+
+            }
+
+
+        }
 
 
     }

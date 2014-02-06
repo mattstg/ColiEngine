@@ -1,11 +1,11 @@
 namespace ColiSys
 {
-    public class Entity
+    public class Ent
     {
         int[] loc = new int[2]; //location of the top OverlapType.Left of the entity
         int[] size = new int[2]; //the size of the entity
 
-        public Entity(int ox, int oy, int sx, int sy)
+        public Ent(int ox, int oy, int sx, int sy)
         {
             loc[0] = ox;
             loc[1] = oy;
@@ -13,7 +13,7 @@ namespace ColiSys
             size[1] = sy;
         }
 
-        public Entity()
+        public Ent()
         { //default cunstructor creates 1x1 entity @ (0,0)
             loc[0] = 0;
             loc[1] = 0;
@@ -21,7 +21,7 @@ namespace ColiSys
             size[1] = 2;
         }
 
-        public Entity(Entity E)
+        public Ent(Ent E)
         { //copy constructor
             loc = E.getLoc();
             size = E.getSize();

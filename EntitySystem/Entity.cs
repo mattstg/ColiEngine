@@ -17,7 +17,7 @@ namespace EntSys
         protected Global.Timers timerOncePerSec;
         public ColiSys.Node trueEntShapeOffset { get { return nami.MoveTableByOffset(trueEntShape, offset); } }
         public ColiSys.Node coliBox { get { return nami.MoveTableByOffset(nami.ComplexNodeToSquareNode(trueEntShape), offset); } }
-        
+        public bool destroy;
 
 
         protected S_XY size{
@@ -36,8 +36,8 @@ namespace EntSys
         protected int mass;
 
         
-        protected List<ColiListConnector> Collidables;
-        public AcceptedCollidables acceptedColi; //type of coli to load into collidables
+        protected List<VagueObject> Collidables;
+        public List<objType> acceptedColi; //type of coli to load into collidables
 
         public Vector2 momentum { get { return velo * mass; } }
 
@@ -65,10 +65,19 @@ namespace EntSys
 
         }
 
+        public bool Coli(S_Box sbox)
+        {
+            ColiSys.Hashtable ht = new ColiSys.Hashtable(trueEntShapeOffset);
+            return ht.Coli(sbox);
+
+        }
+
         protected void ForceCnstr(DNA dna)
         {
+            Collidables = new List<VagueObject>();
             //size = tsize;
             //loc = tloc;
+            destroy = false;
             _DNADecoder(dna);
             timerOncePerSec = new Global.Timers(1000, 1001);
             timerOncePerSec.curT = 1000; //start it at ready
@@ -180,10 +189,30 @@ namespace EntSys
 
         }*/
 
-        public void SetCollidables(List<ColiListConnector> tCollidables)
+        public void SetCollidables(List<VagueObject> tCollidables)
         {
             Collidables = tCollidables;
         }
-        
+        public void AddCollidables(List<VagueObject> tCollidables)
+        {
+            Collidables.AddRange(tCollidables);
+        }
+
+        public void AddCollidables(VagueObject tCollidables)
+        {
+            Collidables.Add(tCollidables);
+        }
+
+        public bool acceptsColiType(objType ty)
+        {
+            bool toRet = false;
+            foreach (objType ot in acceptedColi)
+            {
+                if (ty == ot)
+                    toRet = true;
+
+            }
+            return toRet;
+        }
     }
 }

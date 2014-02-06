@@ -8,6 +8,7 @@ namespace EntSys
 {
     class Ground
     {
+        public bool destroy { get { return (htable.RetMainNode() == null); } }
         //so single object with these vars, a type, energy, 
         float hp = 15;
         float bounceThreshold = .33f; //bounce within 90-100%
@@ -35,6 +36,11 @@ namespace EntSys
         {
             return htable.Coli(coliBox.RetMainNode());
 
+        }
+
+        public void Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch sb)
+        {
+            htable.Draw(sb);
         }
 
         public float GetBounceForce(float force)

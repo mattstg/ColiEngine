@@ -42,7 +42,7 @@ namespace EntSys
 
         }
         
-        public void SetCollidables(List<ColiListConnector> tCollidables)
+        public void SetCollidables(List<VagueObject> tCollidables)
         {
             Collidables = tCollidables;
         }

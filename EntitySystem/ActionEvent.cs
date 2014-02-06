@@ -5,7 +5,6 @@ using System.Text;
 
 namespace EntSys
 {
-    enum objType { Body = 0, Explosion = 1, Ground = 2 }
     class ActionEvent
     {
         bool forTest = false;
