@@ -255,12 +255,18 @@ namespace EntSys
                      ApplyForce(ForceTypes.Internal, new Vector2(0, moveForce));
                     break;
                 default:
-                    Console.Out.WriteLine("move dir default in MoveInDir");
+                    Console.Out.WriteLine("non dir key pressed");
                     break;
                   
          }
         }
+        public void ApplyForceOppOfHeading(ForceTypes ft,float force)
+        {
+            Enums.Navigation.Compass compass = GetHeading();
+            
 
+
+        }
 
 
 

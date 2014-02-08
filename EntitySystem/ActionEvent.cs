@@ -19,20 +19,20 @@ namespace EntSys
         Global.Bus bus = Global.Bus.Instance;
         AbilityStore AS = AbilityStore.Instance;
         //this class belongs to an Ent, it takes in triggers and commences proper events
-        List<Func<VagueObject, BodyMechanics, Ground, bool>> BmGActions;
-        List<Func<VagueObject, Explosion, Ground, bool>> ExpGActions;
-        List<Func<VagueObject, BodyMechanics, Explosion, bool>> BmExpActions;
-        List<Func<VagueObject, KeyboardState,bool>> KeyActions;
+        List<Func<VagueObject, BodyMechanics, Ground, AERetType>> BmGActions;
+        List<Func<VagueObject, Explosion, Ground, AERetType>> ExpGActions;
+        List<Func<VagueObject, BodyMechanics, Explosion, AERetType>> BmExpActions;
+        List<Func<VagueObject, KeyboardState, AERetType>> KeyActions;
 
 
         public ActionEvent(VagueObject vo)
         {
             this.type = vo.type;
             master = vo;
-            BmGActions = new List<Func<VagueObject, BodyMechanics, Ground, bool>>();
-            ExpGActions = new List<Func<VagueObject, Explosion, Ground, bool>>();
-            BmExpActions = new List<Func<VagueObject, BodyMechanics, Explosion, bool>>();
-            KeyActions = new List<Func<VagueObject, KeyboardState, bool>>();
+            BmGActions = new List<Func<VagueObject, BodyMechanics, Ground, AERetType>>();
+            ExpGActions = new List<Func<VagueObject, Explosion, Ground, AERetType>>();
+            BmExpActions = new List<Func<VagueObject, BodyMechanics, Explosion, AERetType>>();
+            KeyActions = new List<Func<VagueObject, KeyboardState, AERetType>>();
             AS.RegAbilityPack((int)type, BmGActions, ExpGActions, BmExpActions,KeyActions);
         }
 
@@ -42,12 +42,12 @@ namespace EntSys
             AS.RegAbilityPack((int)type, BmGActions, ExpGActions, BmExpActions, KeyActions);
         }
 
-
+        
 
         public bool TriggerEvent(BodyMechanics bod,Ground ground)
         {
             //cycle through events
-            foreach (Func<VagueObject, BodyMechanics, Ground, bool> func in BmGActions)
+            foreach (Func<VagueObject, BodyMechanics, Ground, AERetType> func in BmGActions)
             {
                 func(master,bod, ground);
             }
@@ -57,7 +57,7 @@ namespace EntSys
         public bool TriggerEvent(KeyboardState keyA)
         {
             //cycle through events
-            foreach (Func<VagueObject, KeyboardState,bool> func in KeyActions)
+            foreach (Func<VagueObject, KeyboardState, AERetType> func in KeyActions)
             {
                 func(master, keyA);
             }
@@ -67,7 +67,7 @@ namespace EntSys
         public bool TriggerEvent(Explosion exp, Ground ground)
         {
             //cycle through events
-            foreach (Func<VagueObject, Explosion, Ground, bool> func in ExpGActions)
+            foreach (Func<VagueObject, Explosion, Ground, AERetType> func in ExpGActions)
             {
                 func(master, exp, ground);
             }
@@ -77,7 +77,7 @@ namespace EntSys
         public bool TriggerEvent(BodyMechanics Bm, Explosion exp)
         {
             //cycle through events
-            foreach (Func<VagueObject, BodyMechanics, Explosion, bool> func in BmExpActions)
+            foreach (Func<VagueObject, BodyMechanics, Explosion, AERetType> func in BmExpActions)
             {
                 func(master, Bm, exp);
             }

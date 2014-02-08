@@ -203,14 +203,14 @@ namespace EntSys
             Collidables.Add(tCollidables);
         }
 
-        private Enums.Navigation.Compass GetHeading(Vector2 velo)
+        protected Enums.Navigation.Compass GetHeading(Vector2 tvelo)
         {
             //So important, colisquare creates an area where coli occured, check for difference between you pos and its and you will find direction
             int[] dir = new int[2];
-            if (velo.X > 0)
+            if (tvelo.X > 0)
                 dir[1] = 2;
             //was moving right
-            else if (velo.X < 0)
+            else if (tvelo.X < 0)
                 dir[1] = 0;
             //moving left
             else
@@ -218,10 +218,10 @@ namespace EntSys
             //not moving vertical
 
 
-            if (velo.Y > 0)
+            if (tvelo.Y > 0)
                 dir[0] = 2;
             //was moving down
-            else if (velo.Y < 0)
+            else if (tvelo.Y < 0)
                 dir[0] = 0;
             //moving up
             else
@@ -231,6 +231,12 @@ namespace EntSys
             return comp.SetCompass(dir);
 
         }
+
+        protected Enums.Navigation.Compass GetHeading()
+        {
+            return GetHeading(velo);
+        }
+
 
         public bool acceptsColiType(objType ty)
         {

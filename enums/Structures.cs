@@ -142,6 +142,8 @@ namespace Structs
         }
 
     }
+
+    
     /*
     class ColiListConnector
     {
@@ -172,5 +174,12 @@ namespace Structs
 
         }*
     }*/
+
+}
+
+
+namespace EntSys
+{
+    struct AERetType { };
 
 }

@@ -55,5 +55,5 @@ namespace EntSys
     enum objBaseType { Ground, Ent, Misc };
     enum objSpecificType { Ent, Sprite, Body, Bm, Human, Exp, Ground };
     enum dir { up =0 , right = 1, down = 2, left = 3 }
-
+    
 }
