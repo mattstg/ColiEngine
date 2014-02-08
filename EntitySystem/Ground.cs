@@ -27,10 +27,10 @@ namespace EntSys
             this.hp = hp; this.bounceForceMultLB = bounceForceMultLB; this.bounceForceMultUB = bounceForceMultUB; this.bounceThreshold = bounceThreshold;
             this.absorb = absorb; this.thornDmg = thornDmg; this.stickyness = stickyness; //armor struct
             this.armor = armor; this.htable = htable; this.friction = friction;
-            AE = new ActionEvent(objType.Ground);
+            AE = new ActionEvent(new VagueObject(this));
         }
 
-        public Ground() { AE = new ActionEvent(objType.Ground); }
+        public Ground() { AE = new ActionEvent(new VagueObject(this)); }
 
         public bool ColiWithGround(ColiSys.Hashtable coliBox)
         {

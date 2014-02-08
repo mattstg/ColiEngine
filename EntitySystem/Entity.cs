@@ -36,9 +36,9 @@ namespace EntSys
         protected int mass;
 
         
-        protected List<VagueObject> Collidables;
+        protected VOContainer Collidables;
         public List<objType> acceptedColi; //type of coli to load into collidables
-
+        public List<objSpecificType> acceptedSColi; //specific type
         public Vector2 momentum { get { return velo * mass; } }
 
         //This boundary trick no longer works, was worth a shot tho
@@ -74,7 +74,7 @@ namespace EntSys
 
         protected void ForceCnstr(DNA dna)
         {
-            Collidables = new List<VagueObject>();
+            Collidables = new VOContainer(this);
             //size = tsize;
             //loc = tloc;
             destroy = false;
@@ -189,18 +189,47 @@ namespace EntSys
 
         }*/
 
-        public void SetCollidables(List<VagueObject> tCollidables)
+        public void SetCollidables(VOContainer tCollidables)
         {
             Collidables = tCollidables;
         }
-        public void AddCollidables(List<VagueObject> tCollidables)
+        public void AddCollidables(VOContainer tCollidables)
         {
-            Collidables.AddRange(tCollidables);
+            Collidables.Add(tCollidables);
         }
 
         public void AddCollidables(VagueObject tCollidables)
         {
             Collidables.Add(tCollidables);
+        }
+
+        private Enums.Navigation.Compass GetHeading(Vector2 velo)
+        {
+            //So important, colisquare creates an area where coli occured, check for difference between you pos and its and you will find direction
+            int[] dir = new int[2];
+            if (velo.X > 0)
+                dir[1] = 2;
+            //was moving right
+            else if (velo.X < 0)
+                dir[1] = 0;
+            //moving left
+            else
+                dir[1] = 1;
+            //not moving vertical
+
+
+            if (velo.Y > 0)
+                dir[0] = 2;
+            //was moving down
+            else if (velo.Y < 0)
+                dir[0] = 0;
+            //moving up
+            else
+                dir[0] = 1;
+            //not moving Horz
+            Structs.Navigation.Compass comp = new Structs.Navigation.Compass();
+            return comp.SetCompass(dir);
+
         }
 
         public bool acceptsColiType(objType ty)
@@ -211,6 +240,17 @@ namespace EntSys
                 if (ty == ot)
                     toRet = true;
 
+            }
+            return toRet;
+        }
+
+        public bool acceptsColiType(objSpecificType ty)
+        {
+            bool toRet = false;
+            foreach (objSpecificType ot in acceptedSColi)
+            {
+                if (ty == ot)
+                    toRet = true;
             }
             return toRet;
         }

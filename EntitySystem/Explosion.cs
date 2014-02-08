@@ -17,15 +17,18 @@ namespace EntSys
     {
         Global.Timers lifeSpan;
         ColiSys.NodeManipulator nami = ColiSys.NodeManipulator.Instance;
-        ActionEvent AE = new ActionEvent(objType.Explosion);
+        ActionEvent AE;
         float force;
         List<unTargetables> untargetableList;
         public ColiSys.Hashtable htable; //made public for connector to access
-        
+
+        public Explosion() { AE = new ActionEvent(new VagueObject(this)); }
         
         public Explosion(ColiSys.Node newHeadNode,Structs.S_XY offset,float force,List<unTargetables> untargetableList)
         {
+            AE = new ActionEvent(new VagueObject(this));
             acceptedColi = new List<objType>();
+            acceptedSColi = new List<objSpecificType>();
             acceptedColi.Add(objType.Ground);
             acceptedColi.Add(objType.Explosion);
             acceptedColi.Add(objType.Body);
@@ -57,8 +60,9 @@ namespace EntSys
         public void _CheckAllColi()
         {
             objType coliOccur = objType.None;
-            if (Collidables != null)
-            foreach (VagueObject connecter in Collidables)
+            VagueObject connecter = new VagueObject(); //need to assign?
+            Collidables.ResetIT();
+            while (Collidables.GetNext(connecter))
             {         
        
                if (connecter.Coli(this.coliBox))  //so a coli has occured

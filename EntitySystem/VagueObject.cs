@@ -6,7 +6,10 @@ using Enums.ColiObjTypes;
 
 namespace EntSys
 {
-
+    /*
+     * Please remmeber, any changes to the vairables in VagueObject would
+     * require changes to be made to GetNext in VOContainer because of the weird pointer problem
+     */ 
 
     class VagueObject
     {
@@ -17,14 +20,18 @@ namespace EntSys
 
         public object obj;
 
+        public VagueObject()
+        { //calling this when using it as a pointer for GetNext
+
+        }
 
 
         public VagueObject(Ground g)
         {
             obj = g;
-            baseType = objBaseType.ground;
+            baseType = objBaseType.Ground;
             type = objType.Ground;
-            specificType = objSpecificType.ground;
+            specificType = objSpecificType.Ground;
 
         }
 
@@ -32,9 +39,9 @@ namespace EntSys
         {
             obj = e;
           
-            baseType = objBaseType.ent;
+            baseType = objBaseType.Ent;
             type = objType.Explosion;
-            specificType = objSpecificType.exp;
+            specificType = objSpecificType.Exp;
 
         }
 
@@ -42,10 +49,13 @@ namespace EntSys
         {
             obj = h;
             type = objType.Body;
-            baseType = objBaseType.ent;
-            specificType = objSpecificType.human;
+            baseType = objBaseType.Ent;
+            specificType = objSpecificType.Human;
 
         }
+
+        
+
 
 
         public T getObj<T>()
@@ -57,15 +67,14 @@ namespace EntSys
         //This can only be called 
         public bool Coli(Structs.S_Box sbox)
         {
-            switch (type)
+            switch (baseType)
             {
-                case objType.Ground:
+                case objBaseType.Ground:
                     Ground g = (Ground)obj;
                     return g.htable.Coli(sbox);
 
 
-                case objType.Explosion:
-                case objType.Body:
+                case objBaseType.Ent:
                     Entity t = (Entity)obj;
                     return t.Coli(sbox);
 
@@ -85,13 +94,13 @@ namespace EntSys
         //Needs a .draw and a .update and .destroy
         public void Draw()
         {
-            if (baseType == objBaseType.ent)
+            if (baseType == objBaseType.Ent)
             {
                 Sprite t = (Sprite)obj;
                 t.Draw(ColiSys.Game1.spriteBatch);
 
             }
-            else if (baseType == objBaseType.ground)
+            else if (baseType == objBaseType.Ground)
             {
                 Ground g = (Ground)obj;
                 g.Draw(ColiSys.Game1.spriteBatch);
@@ -108,28 +117,28 @@ namespace EntSys
         {
             switch (specificType)
             {
-                case objSpecificType.bm:
+                case objSpecificType.Bm:
                     BodyMechanics bm = (BodyMechanics)obj;
                     bm.Update(rt);
                     
                     break;
-                case objSpecificType.body:
+                case objSpecificType.Body:
                     Body b = (Body)obj;
                     b.Update(rt);
                     break;
-                case objSpecificType.ent:
+                case objSpecificType.Ent:
                     Entity ent = (Entity)obj;
                     ent.Update(rt);
                     break;
-                case objSpecificType.human:
+                case objSpecificType.Human:
                     HumanPlayer h = (HumanPlayer)obj;
                     h.Update(rt);
                     break;
-                case objSpecificType.sprite:
+                case objSpecificType.Sprite:
                     Sprite s = (Sprite)obj;
                     s.Update(rt);
                     break;
-                case objSpecificType.exp:
+                case objSpecificType.Exp:
                     Explosion exp = (Explosion)obj;
                     exp.Update(rt);
                     break;
@@ -146,13 +155,13 @@ namespace EntSys
         }
         public bool Destroy()
         {
-            if (baseType == objBaseType.ent)
+            if (baseType == objBaseType.Ent)
             {
                 Entity t = (Entity)obj;
                 return t.destroy;
 
             }
-            else if (baseType == objBaseType.ground)
+            else if (baseType == objBaseType.Ground)
             {
                 Ground g = (Ground)obj;
                 return g.destroy;

@@ -16,7 +16,7 @@ namespace EntSys
         
         ColiSys.NodeManipulator nami = ColiSys.NodeManipulator.Instance;
         Global.Timers UniResponseT = null;
-        keyMap keymap;
+        public keyMap keymap;
            
 
 
@@ -39,21 +39,26 @@ namespace EntSys
 
         protected void ForceCnstr(DNA EntDNA, DNA SprDNA, DNA BodDNA, DNA MekDNA, DNA dna)
         {
+            AE = new ActionEvent(new VagueObject(this));
 
+            acceptedSColi = new List<objSpecificType>();
             acceptedColi = new List<objType>();
+
             acceptedColi.Add(objType.Ground);
             acceptedColi.Add(objType.Explosion);
             acceptedColi.Add(objType.Body);
+            
 
             base.ForceCnstr(EntDNA,SprDNA,BodDNA,MekDNA);
             _DNADecoder(dna);
             _DebugSetKeyMap();
-            
-
         }
 
         public void Input()
         {
+            if(Keyboard.GetState().GetPressedKeys().Length > 0)
+                 AE.TriggerEvent(Keyboard.GetState());
+            /*
             KeyboardState keys = Keyboard.GetState();
             if (UniResponseT.ready && keys.GetPressedKeys().Length != 0)
             {
@@ -70,7 +75,7 @@ namespace EntSys
 
                 UniResponseT.Dec(true);
                 //setColiBox();
-            }
+            }*/
         }
 
         public void Update(float rt)

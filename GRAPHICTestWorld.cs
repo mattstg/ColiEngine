@@ -175,15 +175,18 @@ namespace ColiSys
     //unload explosion types and reset them into explosions
         //Unload explosions
         List<object> t = bus.Unload(Global.PassengerType.Explosion);
-        foreach (object o in t)
+        if (t.Count > 0)
         {
-            Explosion exp = (Explosion)o;
-            LinkColiLists(exp);
-            masterList.Add(new VagueObject(exp));
-            recentlyAdded.Add(new VagueObject(exp));
-        }
+            foreach (object o in t)
+            {
+                Explosion exp = (Explosion)o;
+                LinkColiLists(exp);
+                masterList.Add(new VagueObject(exp));
+                recentlyAdded.Add(new VagueObject(exp));
+            }
 
-        addNewColiItemsToMasterListObjs(recentlyAdded);
+            addNewColiItemsToMasterListObjs(recentlyAdded);
+        }
 
     }
         //if obj is itself, remove from linkColiList
@@ -192,17 +195,17 @@ namespace ColiSys
         
     public void addNewColiItemsToMasterListObjs(List<VagueObject> toAdd)
     {
-        //dont add to none ent items
-        
+        //dont add to none ent items        
+
         foreach (VagueObject vo in masterList)
         {
-            if (vo.baseType == objBaseType.ent)
+            if (vo.baseType == objBaseType.Ent)
             {
                 EntSys.Entity t = vo.getObj<EntSys.Entity>();
                 
                 foreach (VagueObject ta in toAdd)
                 {
-                    if (t.acceptsColiType(ta.type))
+                    if (t.acceptsColiType(ta.type) || t.acceptsColiType(ta.specificType))
                         t.AddCollidables(ta);
                 }
             }
@@ -210,9 +213,6 @@ namespace ColiSys
         }
 
     }
-
-    
-    
 
 
     public void LinkColiLists(EntSys.Entity ent)

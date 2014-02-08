@@ -29,7 +29,6 @@ namespace ColiSys
         DNABuilder dnaBuilder;
         HumanPlayer human;
         ShapeGenerator shapeGen;
-        Rock[] RockList;
         Global.Bus bus = Global.Bus.Instance;
         
 

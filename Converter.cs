@@ -51,11 +51,11 @@ namespace Statics
             {
                 case objType.Body:
                 case objType.Explosion:
-                    return objBaseType.ent;
+                    return objBaseType.Ent;
                 case objType.Ground:
-                    return objBaseType.ground;
+                    return objBaseType.Ground;
                 default:
-                    return objBaseType.misc;
+                    return objBaseType.Misc;
                     break;
 
 

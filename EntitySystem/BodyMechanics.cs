@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using Structs;
 using Microsoft.Xna.Framework;
-
+using Enums.Force;
 
 namespace EntSys
 {
     class BodyMechanics:Body
     {
-        ActionEvent AE = new ActionEvent(objType.Body);
+        protected ActionEvent AE;
         Global.Bus bus = Global.Bus.Instance;
         private PhysSys.Physics phys = PhysSys.Physics.Instance;
         //private ColiSys.NodeManipulator nami = ColiSys.NodeManipulator.Instance;
@@ -93,36 +93,9 @@ namespace EntSys
 
             //nami check
         }
-      
+
         
-        private Enums.Navigation.Compass getTravelingDir(Vector2 velo)
-        {
-            //So important, colisquare creates an area where coli occured, check for difference between you pos and its and you will find direction
-            int[] dir = new int[2];
-            if (velo.X > 0 )
-                dir[1] = 2;
-            //was moving right
-            else if (velo.X < 0)
-                dir[1] = 0;
-            //moving left
-            else
-                dir[1] = 1;
-            //not moving vertical
-
-
-            if (velo.Y > 0)
-                dir[0] = 2;
-            //was moving down
-            else if (velo.Y < 0)
-                dir[0] = 0;
-            //moving up
-            else
-                dir[0] = 1;
-            //not moving Horz
-            Structs.Navigation.Compass comp = new Structs.Navigation.Compass();
-            return comp.SetCompass(dir);
-
-        }
+       
 
         private float _RetHighest(Vector2 a)
         {
@@ -186,8 +159,9 @@ namespace EntSys
                     coliOccured = false;
                     tr -= timeStep;
 
-
-                    foreach (VagueObject connecter in Collidables)
+                    VagueObject connecter = new VagueObject(); //need to assign?
+                    Collidables.ResetIT();                   
+                    while (Collidables.GetNext(connecter))
                     {                        
 
                         if (connecter.Coli(checkHere)) //find type of coli that occured w/ x,y respects
@@ -258,5 +232,40 @@ namespace EntSys
             
         }
 
+
+
+        //////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////ACTIONS CALLED BY PLAYER/AI SCOPE //////////////////////
+
+        public void MoveInDir(dir moveDir)
+        {
+            switch(moveDir)
+            {
+                case dir.up:
+                    ApplyForce(ForceTypes.Internal, new Vector2(0, -moveForce));
+                    break;
+                case dir.right:
+                     ApplyForce(ForceTypes.Internal, new Vector2(moveForce, 0));
+                    break;
+                case dir.left:
+                    ApplyForce(ForceTypes.Internal, new Vector2(-moveForce, 0));
+                    break;
+                case dir.down:
+                     ApplyForce(ForceTypes.Internal, new Vector2(0, moveForce));
+                    break;
+                default:
+                    Console.Out.WriteLine("move dir default in MoveInDir");
+                    break;
+                  
+         }
+        }
+
+
+
+
+        //////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////////
     }
 }

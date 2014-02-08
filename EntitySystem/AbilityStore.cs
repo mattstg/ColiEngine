@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 /*
  * Pack 0, default pack for player
  * Pack 1, default pack for explosions
@@ -26,10 +28,10 @@ namespace EntSys
                 }
                 return instance;
             }
-        }  
-        
-        public void RegAbilityPack(int packNum, List<Func<Object,BodyMechanics,Ground,bool>> BmGActions,List<Func<Object,Explosion, Ground, bool>> ExpGActions
-                                    ,List<Func<Object,BodyMechanics,Explosion,bool>> BmExpActions)
+        }
+
+        public void RegAbilityPack(int packNum, List<Func<VagueObject, BodyMechanics, Ground, bool>> BmGActions, List<Func<VagueObject, Explosion, Ground, bool>> ExpGActions
+                                    , List<Func<VagueObject, BodyMechanics, Explosion, bool>> BmExpActions, List<Func<VagueObject, KeyboardState, bool>> KeyActions)
         {
             switch(packNum)
             {
@@ -37,7 +39,7 @@ namespace EntSys
                     BmGActions.Add(BmGCreateExp);  
                     BmGActions.Add(callG);
                     BmExpActions.Add(BmColiExp);
-                    
+                    KeyActions.Add(HumanKeyMove);
                     return;
                     
                 case 1: //Exp
@@ -68,7 +70,7 @@ namespace EntSys
 
 
         /////For now, all Events will be created here, they should be created elsewhere i guess... this way for custom skill generation
-        private bool BmGCreateExp(Object callingObj,BodyMechanics bm, Ground ground)
+        private bool BmGCreateExp(VagueObject callingObj, BodyMechanics bm, Ground ground)
         {          
                 //used in body hitting ground, create explosion, apply on ground effects, or do nothing
                 //Not used to exert normal forces on body, ground should do that, but most likely, this function, or another ground function, should call
@@ -78,17 +80,39 @@ namespace EntSys
             return true;
         }
 
-        private bool ExpGAlterPath(Object callingObj, Explosion exp, Ground ground)
+
+        //requirement, min Human, is there  a way to force requirements?
+        private bool HumanKeyMove(VagueObject callingObj, KeyboardState ks)
+        {
+            //Calling this will be an entity. So applying force to it based on its body's restrictions
+
+            HumanPlayer bm = callingObj.getObj<HumanPlayer>();
+            if (ks.IsKeyDown(bm.keymap.down))
+                bm.MoveInDir(dir.down);
+            if (ks.IsKeyDown(bm.keymap.right))
+                bm.MoveInDir(dir.right);
+            if (ks.IsKeyDown(bm.keymap.left))
+                bm.MoveInDir(dir.left);
+            if (ks.IsKeyDown(bm.keymap.up))
+                bm.MoveInDir(dir.up);
+            
+            return true;
+        }
+
+
+        private bool ExpGAlterPath(VagueObject callingObj, Explosion exp, Ground ground)
         {
             //Exp
             //Exp hitting the ground
             //explosion hits ground, possibility of altering explosion path?
-            Console.Out.Write("EXPLOSION HIT GROUND!");
+          //  Console.Out.Write("EXPLOSION HIT GROUND!");
+            //nah should just be absorded, but bouncing would be cool if it doesnt break it, like
+            //how ground bounces
             return true;
 
         }
 
-        private bool callG(Object callingObj,BodyMechanics bm, Ground ground)
+        private bool callG(VagueObject callingObj, BodyMechanics bm, Ground ground)
         {
             //Bm            
             //When body hits ground, body needs to call grounds AE
@@ -99,7 +123,7 @@ namespace EntSys
 
         }
 
-        private bool callG(Object callingObj,Explosion exp, Ground ground)
+        private bool callG(VagueObject callingObj, Explosion exp, Ground ground)
         {
             //Exp
             //When exp hits ground, exp needs to call grounds AE
@@ -110,7 +134,7 @@ namespace EntSys
 
         }
 
-        private bool BmColiExp(Object callingObj,BodyMechanics bm, Explosion exp)
+        private bool BmColiExp(VagueObject callingObj, BodyMechanics bm, Explosion exp)
         {
             //Body
             //Body being hit by Explosion
@@ -122,7 +146,7 @@ namespace EntSys
 
         }
 
-        private bool ExpColiBm(Object callingObj,BodyMechanics bm, Explosion exp)
+        private bool ExpColiBm(VagueObject callingObj, BodyMechanics bm, Explosion exp)
         {
             //Exp
             //Body being hit by Explosion
@@ -133,7 +157,7 @@ namespace EntSys
 
         }
 
-        private bool GcoliExp(Object callingObj,Explosion exp, Ground ground)
+        private bool GcoliExp(VagueObject callingObj, Explosion exp, Ground ground)
         {
             //Ground:
             //When the explosion hits the ground
@@ -143,7 +167,7 @@ namespace EntSys
 
         }
 
-         private bool GcoliBm(Object callingObj,BodyMechanics bm, Ground ground)
+        private bool GcoliBm(VagueObject callingObj, BodyMechanics bm, Ground ground)
          {
              //Ground being hit by body, apply normal Forces back on bod,  or destroy and subtract from ground
              //this AE belongs to ground, but ground will not call it since it doesnt have coli check on update, 
