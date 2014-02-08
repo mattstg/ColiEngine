@@ -7,13 +7,16 @@ using Structs;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using EntStructEnum;
+using BodyParts;
 
-
+//remove later^^
 namespace EntSys
 {
     class HumanPlayer : BodyMechanics
     {
-        
+        ColiSys.TestContent tc = ColiSys.TestContent.Instance;
+        ColiSys.ShapeGenerator sgen = ColiSys.ShapeGenerator.Instance;
+        //Remove Later^^
         ColiSys.NodeManipulator nami = ColiSys.NodeManipulator.Instance;
         Global.Timers UniResponseT = null;
         public keyMap keymap;
@@ -33,6 +36,11 @@ namespace EntSys
         {
             //Hardcoded DNA for now
             UniResponseT = new Global.Timers(0, 250, 251);
+
+            //This should be in DNA passed down to Body//
+            Wings wing = new Wings();
+            bodyParts.Add(wing);
+            /////////////////////////////////////////////
         }
 
         
@@ -86,6 +94,17 @@ namespace EntSys
 
         }
 
+          public void DebugLoadHuman() //eventaully will be in dna
+        {
+              
+           
+            LoadTexture(tc.dirt,Color.Blue);
+            SetEntShape(new ColiSys.Hashtable(sgen.GenShape(ColiSys.Shape.Human,new S_XY(), new S_XY(5,15))));           
+            S_XY tOff = new S_XY(50, 50);
+            offset = tOff;
+            rawOffSet = new Vector2(tOff.x, tOff.y);
+
+        }
         
 
         private void _UpdateAllTimers(float rt)

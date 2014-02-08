@@ -33,7 +33,7 @@ namespace Enums
         public enum ENode { adj, dwn };
         public enum copyTypes { copyNode, copyDwn, copyAdj, copyBoth };
         public enum OverlapType { Right, Left, OEA, AEO, Equals, Before, After };
-        public enum Shape { Circle, Square, ConsoleIn, Human };
+        
 
     }
 

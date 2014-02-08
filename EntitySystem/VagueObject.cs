@@ -97,7 +97,7 @@ namespace EntSys
             if (baseType == objBaseType.Ent)
             {
                 Sprite t = (Sprite)obj;
-                t.Draw(ColiSys.Game1.spriteBatch);
+                t.Draw();
 
             }
             else if (baseType == objBaseType.Ground)

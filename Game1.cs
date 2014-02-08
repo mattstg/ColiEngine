@@ -22,7 +22,7 @@ namespace ColiSys
     {
         
         GraphicsDeviceManager graphics;
-        TestContent tc;
+        TestContent tc;  
         DebugCheatCodes cheats;
         public static SpriteBatch spriteBatch;
         GRAPHICTestWorld world;
@@ -38,6 +38,7 @@ namespace ColiSys
         public Game1()
             : base()
         {
+            Shape shapo;
             graphics = new GraphicsDeviceManager(this);
             graphics.PreferredBackBufferHeight = 720;
 
@@ -58,7 +59,13 @@ namespace ColiSys
         /// </summary>
         protected override void Initialize()
         {
+            //loading content
+            spriteBatch = new SpriteBatch(GraphicsDevice);
             tc = TestContent.Instance;
+            tc.LoadContent(Content);
+            /////////////
+
+           
             cheats = DebugCheatCodes.Instance;
             world = new GRAPHICTestWorld();
             
@@ -83,11 +90,9 @@ namespace ColiSys
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-            tc.LoadContent(Content);
-            world.LoadWorldTexture(tc.dirt);
             
-            human.DebugLoadSprite(tc.dirt, shapeGen.GenShape(Shape.Human,new S_XY(), new S_XY(5,15)),new S_XY(0,0),Color.Blue);
+            world.LoadWorldTexture(tc.dirt);
+            human.DebugLoadHuman();
            // int c = 0;
            // foreach (Rock rock in RockList)
            // {
@@ -145,7 +150,7 @@ namespace ColiSys
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin();
             world.Draw(spriteBatch);
-            human.Draw(spriteBatch);
+            human.Draw();
           //  foreach (Rock rock in RockList)
           //      rock.Draw(spriteBatch);
             // TODO: Add your drawing code here

@@ -30,8 +30,7 @@ namespace EntSys
         {
             //Need DNA copier
             moveForce = 60;
-            Wings wing = new Wings();
-            bodyParts.Add(wing);
+            
         }
 
         protected void ForceCnstr(DNA EntDNA, DNA SprDNA, DNA dna)
@@ -44,13 +43,24 @@ namespace EntSys
 
         public void Update(float rt)
         {
-
+            _UpdateBodyParts(rt);
             base.Update(rt);
         }
 
 
+        private void _UpdateBodyParts(float rt)
+        {
+            foreach (BodyPart bp in bodyParts)
+                bp.Update(rt);
 
+        }
 
+        public void Draw()
+        {
+            foreach (BodyPart bp in bodyParts)
+                bp.Draw();
+            base.Draw();//pass draw down to sprite class
+        }
 
 
         //Public Funcs
@@ -61,6 +71,14 @@ namespace EntSys
                     return true;
             
             return false;
+        }
+
+        public void MoveBodyParts(Microsoft.Xna.Framework.Vector2 modOffset)
+        {
+            foreach (BodyPart bp in bodyParts)
+            {
+                bp.MovePartBy(modOffset); 
+            }
         }
 
     }

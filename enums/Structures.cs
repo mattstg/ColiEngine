@@ -181,5 +181,12 @@ namespace Structs
 namespace EntSys
 {
     struct AERetType { };
+    struct DamageType
+    {
+        float piercing;
+        float blunt;
+        float groundShrapnel;
 
+
+    }
 }

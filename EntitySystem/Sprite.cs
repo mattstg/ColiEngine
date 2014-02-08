@@ -31,18 +31,14 @@ namespace EntSys
             //Need DNA copier
             
         }
+              
 
-        public void DebugLoadSprite(Texture2D tt,ColiSys.Node tBodyShape,S_XY tOffset,Color col) //eventaully will be in dna
+        public void LoadTexture(Texture2D tt, Color col)
         {
             t = tt;            
             color = col;
-            HashTrueEntShape = new ColiSys.Hashtable(tBodyShape);
-            //setColiBox();
-            offset = tOffset;
-            rawOffSet = new Vector2(tOffset.x,tOffset.y);
-
         }
-
+        
         protected void ForceCnstr(DNA EntDNA, DNA dna)
         {
             //load vars
@@ -55,8 +51,10 @@ namespace EntSys
             base.Update(rt);
         }
 
-        public void Draw(SpriteBatch sb)
+        public void Draw()
         {
+            SpriteBatch sb = ColiSys.Game1.spriteBatch;
+
             if (!this.ifBodyEmpty() && t != null)
             {
                 S_Box range;
@@ -65,7 +63,7 @@ namespace EntSys
 
 
 
-                ///DRAW COLI BOX
+                /*///DRAW COLI BOX
                 htx = coliBox;
                 htx = nami.MoveTableByOffset(htx, new S_XY(0, 1)); //increase size of explosion by  
                 while (htx != null)
@@ -81,7 +79,7 @@ namespace EntSys
                         hty = hty.Adj();
                     }
                     htx = htx.Adj();
-                }
+                }*/
 
 
                 ///////////Draw actaul Sprite///////////

@@ -9,8 +9,10 @@ using Structs;
 
 namespace ColiSys
 {
+    public enum Shape { Circle, Square, ConsoleIn, Human };
     public class ShapeGenerator
     {
+       
         NodeManipulator nami;
         private static ShapeGenerator instance;
                 

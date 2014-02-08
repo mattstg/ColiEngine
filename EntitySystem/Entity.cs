@@ -53,10 +53,9 @@ namespace EntSys
         public Entity() { }
         public Entity(DNA dna) { ForceCnstr(dna); }
 
-        public void SetBody(ColiSys.Hashtable tempTrueEntShape)
-        {
-
-
+        public void SetEntShape(ColiSys.Hashtable tempTrueEntShape)
+        {            
+            HashTrueEntShape = tempTrueEntShape;
         }
 
         protected bool ifBodyEmpty()
