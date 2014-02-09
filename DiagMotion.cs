@@ -52,7 +52,9 @@ namespace ColiSys
             }
             thisMotion = (DM > nDM) ? MainMotion.Diago : MainMotion.notDiag;
 
-
+            if(Math.Abs(x) >= 19){
+                Console.Out.WriteLine("Hello World!");
+            };
 
             switch (thisMotion)
             {
@@ -60,8 +62,6 @@ namespace ColiSys
                     //remainder will be the nDM
                     Rem = nDM;
                     //dR should be the spacing between the nDM
-                    dR = (Rem != 0) ? TotalSteps / (Rem + 1) : 0;
-                    
                     //CdR should be counting up until the next moment where a nDM should be added.
                     break;
 
@@ -69,13 +69,14 @@ namespace ColiSys
                     //remainder will be the DM
                     Rem = DM;
                     //dR should be the spacing between the DM
-                    dR = (Rem!=0)?TotalSteps / Rem:0;
                     //CdR should be counting up until the next moment where a DM should be added.
                     break;
                 default:
                     break;
             };
-            CdR = dR / 2;
+            
+            dR = (Rem!=0)? TotalSteps / (Rem + 1):0;
+            CdR = dR;
         }
 
         public DiagMotion(int a, int b, Node tN)
@@ -154,20 +155,22 @@ namespace ColiSys
         //this method moves the copy of the object you are collision testing forward one step in its motion.
         private void PMove()
         {
+            lastLoc = new S_Box(E);
             int tx = 0, ty = 0;
             if (x != 0)
             {
-                tx = (x > 0) ? -1 : 1; 
+                tx = (x < 0) ? -1 : 1; 
             }
             if (y != 0)
             {
-                ty = (y > 0) ? -1 : 1; 
+                ty = (y < 0) ? -1 : 1; 
             }
             E.loc.x += tx;
             E.loc.y += ty;
         }
         private void PMove(int xx, int yy)
         {
+            lastLoc = new S_Box(E);
             int tx = 0, ty = 0;
             if (xx != 0)
             {
@@ -183,7 +186,6 @@ namespace ColiSys
 
         public S_Box RetNextBox()
         {
-            lastLoc = (CurrentStep != 0) ? E : lastLoc;
             if ((CurrentStep) >= TotalSteps) { return null; };
             S_Box i = null; //initializing our colision box
             if (((double)CurrentStep >= CdR) && (RemainderCompleted != Rem) && (Rem != 0) && (CdR != 0)) //this is the special case we need to be adding periodically 
@@ -211,6 +213,7 @@ namespace ColiSys
                 };
                 CdR += dR;
                 RemainderCompleted++;
+                CurrentStep += 1;
             }
             else //so this is the normal case... be doing the opposite of the special case.
             {
@@ -243,9 +246,9 @@ namespace ColiSys
 
         public S_Box RetLast()
         {
-            Console.Out.WriteLine("E:" + E.GenString);
-            return lastLoc; //returns the last location of the phantom (E)
             
+            return lastLoc; //returns the last location of the phantom (E)
+            Console.Out.WriteLine("Hello World!");
             
         }
 
