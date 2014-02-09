@@ -22,7 +22,7 @@ namespace ColiSys
         
         new S_Box lastLoc;
 
-        enum MainMotion{ Diago, notDiag, Mixed };
+        enum MainMotion{ Diago, notDiag};
         MainMotion thisMotion;
        
         //constructors
@@ -45,30 +45,23 @@ namespace ColiSys
             TotalSteps = (Math.Abs(x) > Math.Abs(y))? Math.Abs(x): Math.Abs(y);
             if(Math.Abs(x) > Math.Abs(y)){ //if x velocity is largest 
                 nDM = Math.Abs(x) - Math.Abs(y); // non diagonal motions
-                DM = nDM - TotalSteps; //diag motions being deduces
+                DM = Math.Abs(y); //diag motions being deduces
             }else{
                 nDM = Math.Abs(y) - Math.Abs(x); // non diagonal motions
-                DM = nDM - TotalSteps; //diag motions being deduces
+                DM = Math.Abs(x); //diag motions being deduces
             }
+            thisMotion = (DM > nDM) ? MainMotion.Diago : MainMotion.notDiag;
 
-            if (DM != nDM)
-            {
-                thisMotion = (DM > nDM) ? MainMotion.Diago : MainMotion.notDiag;
-            }
-            else
-            {
-                thisMotion = MainMotion.Mixed;
-            }
 
 
             switch (thisMotion)
             {
-                case MainMotion.Mixed: //so in the case where there is equal number of DM and nDM we need to arbitrarily choose one... So I made it the same as Equal.
                 case MainMotion.Diago:
                     //remainder will be the nDM
                     Rem = nDM;
                     //dR should be the spacing between the nDM
-                    dR = (DM!=0)?TotalSteps / DM:0;
+                    dR = (Rem != 0) ? TotalSteps / (Rem + 1) : 0;
+                    
                     //CdR should be counting up until the next moment where a nDM should be added.
                     break;
 
@@ -76,7 +69,7 @@ namespace ColiSys
                     //remainder will be the DM
                     Rem = DM;
                     //dR should be the spacing between the DM
-                    dR = (nDM!=0)?TotalSteps / nDM:0;
+                    dR = (Rem!=0)?TotalSteps / Rem:0;
                     //CdR should be counting up until the next moment where a DM should be added.
                     break;
                 default:
@@ -121,7 +114,6 @@ namespace ColiSys
             {
                 c = -1;
             }
-
             if (y > 0)
             {
                 b = 1;
@@ -165,40 +157,28 @@ namespace ColiSys
             int tx = 0, ty = 0;
             if (x != 0)
             {
-                if (x > 0)
-                    tx = 1;
-                else
-                    tx = -1;
+                tx = (x > 0) ? -1 : 1; 
             }
             if (y != 0)
             {
-                if (y > 0)
-                    ty = 1;
-                else
-                    ty = -1;
+                ty = (y > 0) ? -1 : 1; 
             }
-            E.loc.x =+ tx;
-            E.loc.y =+ ty;
+            E.loc.x += tx;
+            E.loc.y += ty;
         }
         private void PMove(int xx, int yy)
         {
             int tx = 0, ty = 0;
             if (xx != 0)
             {
-                if (x > 0)
-                    tx = 1;
-                else
-                    tx = -1;
+                tx = (xx < 0) ? -1 : 1; 
             }
             if (yy != 0)
             {
-                if (y > 0)
-                    ty = 1;
-                else
-                    ty = -1;
+                ty = (yy < 0) ? -1 : 1; 
             }
-            E.loc.x = E.loc.x + tx;
-            E.loc.y = E.loc.y + ty;
+            E.loc.x += tx;
+            E.loc.y += ty;
         }
 
         public S_Box RetNextBox()
@@ -210,7 +190,6 @@ namespace ColiSys
             {
                 switch (thisMotion)
                 {
-                    case MainMotion.Mixed:
                     case MainMotion.Diago: //if there are more diagonal movements than horizontal/virtical ones
                         if (Math.Abs(x) > Math.Abs(y))
                         {  //moving in the x
@@ -237,7 +216,6 @@ namespace ColiSys
             {
                 switch (thisMotion)
                 {
-                    case MainMotion.Mixed:
                     case MainMotion.Diago: //if there are more diagonal movements than horizontal/virtical ones
                         i = VelToBox(); //doing a typical diagonal motion
                         PMove(); //appropriately moving phantom
@@ -265,7 +243,10 @@ namespace ColiSys
 
         public S_Box RetLast()
         {
+            Console.Out.WriteLine("E:" + E.GenString);
             return lastLoc; //returns the last location of the phantom (E)
+            
+            
         }
 
     }
