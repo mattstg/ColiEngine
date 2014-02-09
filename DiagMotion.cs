@@ -68,7 +68,7 @@ namespace ColiSys
                     //remainder will be the nDM
                     Rem = nDM;
                     //dR should be the spacing between the nDM
-                    dR = TotalSteps / DM;
+                    dR = (DM!=0)?TotalSteps / DM:0;
                     //CdR should be counting up until the next moment where a nDM should be added.
                     break;
 
@@ -76,7 +76,7 @@ namespace ColiSys
                     //remainder will be the DM
                     Rem = DM;
                     //dR should be the spacing between the DM
-                    dR = TotalSteps / nDM;
+                    dR = (nDM!=0)?TotalSteps / nDM:0;
                     //CdR should be counting up until the next moment where a DM should be added.
                     break;
                 default:
