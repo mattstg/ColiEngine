@@ -6,33 +6,95 @@ using EntSys;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 //addition of all mass!
-
+//When creating new bodyParts, please ensure it has an Update
 
 namespace BodyParts
 {
     public enum BodyPartType { Wings };
-
-
-    class BodyPart : Sprite
+    public struct BodyPulse
     {
-               
+        long energy;
+        int trigger;
+
+        public BodyPulse split(int splitBy)
+        {
+            BodyPulse bp = new BodyPulse();
+            bp.energy = energy / splitBy;
+            bp.trigger = trigger;
+            return bp;
+        }
+    }
+
+    abstract class BodyPart : Sprite
+    {
+        List<BodyPartConnection> connecters;
         public BodyPartType partType;
+
         public BodyPart()
-        { }
+        {
+            connecters = new List<BodyPartConnection>();
+        
+        }
         protected void Update(float rt)
         {
             //This should upgrade physical things on body part
+            foreach (BodyPartConnection bpc in connecters)
+                bpc.Update(this, rt);
+
+
 
         }
         //TakeDamage(float, DamageType, dir)
         //
-
-        public void MovePartBy(Vector2 moveBy)
+        public void UnlockAllConnections()
         {
-            offset += new Structs.S_XY((int)moveBy.X, (int)moveBy.Y);
-            rawOffSet += moveBy;
+            foreach (BodyPartConnection bpc in connecters)            
+                bpc.Unlock(this);          
+
         }
-        
+
+
+        public void MovePartBy(Structs.S_XY moveBy)
+        {
+            offset += moveBy;
+            foreach (BodyPartConnection bpc in connecters)
+                bpc.MovePartBy(this, moveBy);
+        }
+
+        public void CheckColi(Structs.S_XY byOffset, VagueObject coliObj, List<BodyPart> coliParts)
+        {
+            //check if coli has happened if move by this ammount, if yes, add itself to the list of parts that have colided this tick
+            if (coliObj.Coli(nami.MoveTableByOffset(coliBox, byOffset)))
+                coliParts.Add(this);
+            foreach (BodyPartConnection bpc in connecters)
+                bpc.CheckColi(this,byOffset, coliObj, coliParts);
+        }
+
+        public void SutureBodyPart()
+        {
+           // BodyPartConnection bp = new BodyPartConnection();
+           // bp.SealConnection(
+
+        }
+
+        public void Recieve(BodyPulse bp)
+        {
+            bool hasChild = false;
+            DecodePulse(bp);
+            foreach (BodyPartConnection bpc in connecters)
+            {
+                hasChild = true;
+                bpc.Send(this, bp.split(connecters.Count));                
+            }
+            if (!hasChild)
+            {
+                //Need to reverse the pulse? or pulse just ends here... hmm
+
+            }
+
+        }
+
+        public abstract void DecodePulse(BodyPulse bp);
        
     }
 }

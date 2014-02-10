@@ -5,10 +5,10 @@ using System.Text;
 
 namespace BodyParts
 {
-    class Wings : BodyPart
+    class BodyPartFrameworkExample : BodyPart
     {
         ColiSys.TestContent tc;
-        public Wings()
+        public BodyPartFrameworkExample()
         {
             tc = ColiSys.TestContent.Instance;
             
@@ -44,8 +44,7 @@ namespace BodyParts
 
         public override void DecodePulse(BodyPulse bp)
         {
-
-
+            //break apart the bodyPulse and use it
         }
 
 

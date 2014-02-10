@@ -63,7 +63,7 @@ namespace EntSys
         }
 
 
-        //Public Funcs
+        //This func prob wont be needed since abilities will be done inside the bodyparts now
         public bool HasBodyPart(BodyPartType type)
         {
             foreach (BodyPart bp in bodyParts)            
@@ -73,7 +73,22 @@ namespace EntSys
             return false;
         }
 
-        public void MoveBodyParts(Microsoft.Xna.Framework.Vector2 modOffset)
+        
+
+
+        public List<BodyPart> GetAllCollidingParts(S_XY moveBy,VagueObject checkAgainst)
+        {
+            
+            List<BodyPart> allColiParts = new List<BodyPart>();
+            foreach (BodyPart bp in bodyParts)
+            {
+                bp.UnlockAllConnections(); //VERY IMPORTANT, else you wont get proper data
+                bp.CheckColi(moveBy, checkAgainst, allColiParts);
+            }
+            return allColiParts;
+        }
+
+        public void MoveBodyParts(S_XY modOffset)
         {
             foreach (BodyPart bp in bodyParts)
             {
