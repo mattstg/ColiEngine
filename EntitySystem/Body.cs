@@ -88,8 +88,9 @@ namespace EntSys
             return allColiParts;
         }
 
-        public void MoveBodyParts(S_XY modOffset)
+        public void MoveAllBy(S_XY modOffset)
         {
+            offset += modOffset;
             foreach (BodyPart bp in bodyParts)
             {
                 bp.MovePartBy(modOffset); 

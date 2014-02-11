@@ -5,6 +5,7 @@ using System.Text;
 using Structs;
 using Microsoft.Xna.Framework;
 using Enums.Force;
+using BodyParts;
 
 namespace EntSys
 {
@@ -113,24 +114,42 @@ namespace EntSys
                 return a.y;
         }
 
-        private void _SnapToColiSpot(S_Box lastColiCheck)
+        private S_XY _diffToColiSpot(S_Box lastColiCheck)
         {
+            S_XY movePartsByOffset = new S_XY();
             if (lastColiCheck != null)
             {
                 if (lastColiCheck.loc.x < offset.x)
-                    offset.x = lastColiCheck.loc.x;
+                {
+                    //offset.x = lastColiCheck.loc.x;
+                    movePartsByOffset.x = -1;
+
+                }
                 else if (size.x < lastColiCheck.size.x) //going to right
-                    offset.x++;
+                {
+                    //offset.x++;
+                    movePartsByOffset.x = 1;
+                }
                 else if (lastColiCheck.loc.x != offset.x)
                     Console.Out.Write("unexpected value");
 
                 if (lastColiCheck.loc.y < offset.y)
-                    offset.y = lastColiCheck.loc.y; //up
+                {
+                   // offset.y = lastColiCheck.loc.y; //up
+                    movePartsByOffset.y = -1;
+
+                }
                 else if (size.y < lastColiCheck.size.y) //going down
-                    offset.y++;
-                else if(offset.y != lastColiCheck.loc.y)
+                {
+                    //offset.y++;
+                    movePartsByOffset.y = 1;
+                }
+                else if (offset.y != lastColiCheck.loc.y)
                     Console.Out.Write("unexpected value");
+
+               
             }
+            return movePartsByOffset;
         }
 
         private bool[] _GetDirCol(Vector2 turnVelo,VagueObject ht)
@@ -277,7 +296,6 @@ namespace EntSys
                 while (trem > 0)
                 {
                     VagueObject connecter = new VagueObject(); //need to assign?
-//CHECK HERE FIRST TIME RETS LOC y51 and SIZE16
                     S_Box checkHere = dMot.RetNextBox(); //second call, last loc changed by two?
                     bool ColiHappend = false;
 
@@ -285,7 +303,11 @@ namespace EntSys
                     if(checkHere != null)
                         while (Collidables.GetNext(connecter))
                         { //checking against each Collidable in bodyMechs list
-                            if(connecter.Coli(checkHere))
+                            bool thisCollided = connecter.Coli(checkHere);
+                            List<BodyPart> collidedParts = new List<BodyPart>();
+                            foreach ( BodyPart bp in bodyParts)
+                                bp.CheckColi(checkHere.loc - offset,connecter,collidedParts);
+                            if(thisCollided || collidedParts.Count != 0)
                             {
                                 ColiHappend = true;
 
@@ -308,9 +330,14 @@ namespace EntSys
                             //debug test
                             if (offset.y != dMot.RetLast().loc.y + 1 && dMot.RetLast().size.y != 15 && dMot.RetLast().size.x != 5)
                                 Console.Out.WriteLine("breakpoint");
-
-                            _SnapToColiSpot(checkHere);
-                            rawOffSet += (tROdiff/expectedNumOfCycles);
+                            if (checkHere != null)
+                            {
+                                S_XY movePartsBy = _diffToColiSpot(checkHere);
+                                MoveAllBy(movePartsBy);
+                                rawOffSet += (tROdiff / expectedNumOfCycles);
+                                //rawOffSet.X += movePartsBy.x;
+                                //rawOffSet.Y += movePartsBy.y;
+                            }
                         
 
 
