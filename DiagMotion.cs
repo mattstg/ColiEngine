@@ -115,14 +115,16 @@ namespace ColiSys
             {
                 c = -1;
             }
-            if (y > 0)
+            if (y < 0)
             {
-                b = 1;
+               b = -1;
+               // d = -1;
             }
             else if (y == 0)
             {
                 d = -1;
             }
+
 
             S_Box i = new S_Box(E.loc.x + a, E.loc.y + b, E.size.x + c + 1, E.size.y + d + 1);
             return i;
@@ -186,7 +188,7 @@ namespace ColiSys
 
         public S_Box RetNextBox()
         {
-            if ((CurrentStep) >= TotalSteps) { return null; };
+            if ((CurrentStep) >= TotalSteps) { PMove();  return null; };//callin pmove to up lastloc
             S_Box i = null; //initializing our colision box
             if (((double)CurrentStep >= CdR) && (RemainderCompleted != Rem) && (Rem != 0) && (CdR != 0)) //this is the special case we need to be adding periodically 
             {
@@ -247,7 +249,7 @@ namespace ColiSys
         public S_Box RetLast()
         {
             
-            return lastLoc; //returns the last location of the phantom (E)
+            return new S_Box(lastLoc); //returns the last location of the phantom (E)
             Console.Out.WriteLine("Hello World!");
             
         }

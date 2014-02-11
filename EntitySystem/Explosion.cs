@@ -26,6 +26,7 @@ namespace EntSys
         
         public Explosion(ColiSys.Node newHeadNode,Structs.S_XY offset,float force,List<unTargetables> untargetableList)
         {
+            Console.Out.WriteLine("EXP Created");
             AE = new ActionEvent(new VagueObject(this));
             acceptedColi = new List<objType>();
             acceptedSColi = new List<objSpecificType>();
@@ -35,7 +36,7 @@ namespace EntSys
             HashTrueEntShape = new ColiSys.Hashtable(newHeadNode);
             htable = HashTrueEntShape;
             this.offset = offset;
-            lifeSpan = new Global.Timers(250);
+            lifeSpan = new Global.Timers(32);
             this.force = force;
             this.untargetableList = untargetableList;
             base.ForceCnstr(null, null);
@@ -47,10 +48,13 @@ namespace EntSys
         public void Update(float rt)
         {
             lifeSpan.Tick(rt);
-            if (!lifeSpan.ready)            
-                Console.Out.Write("BOOM!!!");            
-            else            
+            if (!lifeSpan.ready)
+                Console.Out.Write("BOOM!!!");
+            else
+            {
+                Console.Out.WriteLine("EXP Destroyed");
                 destroy = true;
+            }
             
 
             _CheckAllColi();

@@ -52,7 +52,8 @@ namespace EntSys
 
            // _CheckAllColi();
            // _ApplyForceToVelo();
-            _MoveAndCheckVelo(rt);
+           // _MoveAndCheckVelo(rt);
+            newColiAndMoveFunc(rt);
             //things that mod velo
                   
             //_MoveUpdate();
@@ -99,17 +100,37 @@ namespace EntSys
 
         private float _RetHighest(Vector2 a)
         {
-            if (a.X > a.Y)
+            if (Math.Abs(a.X) > Math.Abs(a.Y))
                 return a.X;
             else 
                 return a.Y;
         }
-
-        private void _SnapToColiSpot(ColiSys.DiagMotion diag)
+        private int _RetHighest(S_XY a)
         {
-            S_Box tloc = diag.RetLast();
-            offset = tloc.loc;
-            //rawOffSet = new Vector2(rawOffSet.X - (int)rawOffSet.X + offset.x, rawOffSet.Y - (int)rawOffSet.Y + offset.y);
+            if (Math.Abs(a.x) > Math.Abs(a.y))
+                return a.x;
+            else
+                return a.y;
+        }
+
+        private void _SnapToColiSpot(S_Box lastColiCheck)
+        {
+            if (lastColiCheck != null)
+            {
+                if (lastColiCheck.loc.x < offset.x)
+                    offset.x = lastColiCheck.loc.x;
+                else if (size.x < lastColiCheck.size.x) //going to right
+                    offset.x++;
+                else if (lastColiCheck.loc.x != offset.x)
+                    Console.Out.Write("unexpected value");
+
+                if (lastColiCheck.loc.y < offset.y)
+                    offset.y = lastColiCheck.loc.y; //up
+                else if (size.y < lastColiCheck.size.y) //going down
+                    offset.y++;
+                else if(offset.y != lastColiCheck.loc.y)
+                    Console.Out.Write("unexpected value");
+            }
         }
 
         private bool[] _GetDirCol(Vector2 turnVelo,VagueObject ht)
@@ -177,8 +198,6 @@ namespace EntSys
 
                                 case objType.Ground:
                                     AE.TriggerEvent(this, connecter.getObj<Ground>());
-                                    Console.Out.WriteLine("COLLISION WITH GROUND!");
-                                    //_ColiWithGround(Statics.Converter.OverlapToCompass(otype), movingEnt);
                                     break;
 
 
@@ -198,15 +217,16 @@ namespace EntSys
                         Vector2 addedVelo = _ApplyForceToVelo();
                         if (tr > 0)
                         {
+                            //raw velo not updated cause its not spouse to move, only update rawoffset when move is possible
                             turnVelo += addedVelo * (1 / tr);
                             timeStep = (1 / _RetHighest(turnVelo));
-                            _SnapToColiSpot(diagMot);
+                           // _SnapToColiSpot(diagMot);
                             diagMot = new ColiSys.DiagMotion((int)turnVelo.X, (int)turnVelo.Y, this.coliBox);                             
                             checkHere = diagMot.RetNextBox();
                         }
-                        else
+                        else //no time left, end the loop
                         {
-                            _SnapToColiSpot(diagMot);
+                           // _SnapToColiSpot(diagMot);
                             checkHere = null;
                         }
                     }
@@ -214,7 +234,10 @@ namespace EntSys
                     {
                         checkHere = diagMot.RetNextBox();
                         rawOffSet += scaledVelo; //increase rawOffset
-                        offset = new S_XY(diagMot.RetLast().loc.x, diagMot.RetLast().loc.y) ; //move offset foward
+                        S_XY temps = new S_XY(diagMot.RetLast().loc.x, diagMot.RetLast().loc.y) ;
+                        if (Math.Abs(offset.y - temps.y) != 1)
+                             Console.Out.WriteLine("see, thats a lil odd");
+                        offset = temps; //move offset foward
                        // _SnapToColiSpot(diagMot); //Sets offset then resets rawOffset
 
                     }
@@ -232,6 +255,77 @@ namespace EntSys
             
         }
 
+
+        
+
+
+        public void newColiAndMoveFunc(float rt)
+        {
+            int expectedNumOfCycles;
+            int NumOfCyclesCounter = 0;
+            Vector2 tRawOffset = rawOffSet + velo * (rt / 1000);
+            //Vector2 tRawOffset = rawOffSet + new Vector2(3,1);
+            Vector2 tROdiff = tRawOffset - rawOffSet;
+            S_XY veloThisCycle = new S_XY((int)(tRawOffset.X - offset.x), (int)(tRawOffset.Y - offset.y));
+            expectedNumOfCycles = Math.Abs(_RetHighest(veloThisCycle));
+            float trem = rt;
+            float tTick = trem / expectedNumOfCycles; //by highest velo
+            ColiSys.DiagMotion dMot = new ColiSys.DiagMotion(veloThisCycle.x, veloThisCycle.y, this.coliBox);
+            
+
+            if(veloThisCycle.x != 0 || veloThisCycle.y != 0)
+                while (trem > 0)
+                {
+                    VagueObject connecter = new VagueObject(); //need to assign?
+//CHECK HERE FIRST TIME RETS LOC y51 and SIZE16
+                    S_Box checkHere = dMot.RetNextBox(); //second call, last loc changed by two?
+                    bool ColiHappend = false;
+
+                    Collidables.ResetIT();
+                    if(checkHere != null)
+                        while (Collidables.GetNext(connecter))
+                        { //checking against each Collidable in bodyMechs list
+                            if(connecter.Coli(checkHere))
+                            {
+                                ColiHappend = true;
+
+                            } else {//has not collided with anything 
+                                ColiHappend = false; //allready dont, just ensuring atm
+                           
+                            }
+                        }
+                    if (ColiHappend)
+                    {
+
+
+
+                    }
+                    else //Succesful no Coli move, move the Ent and all peices foward
+                    {
+                        
+                            trem -= tTick;
+
+                            //debug test
+                            if (offset.y != dMot.RetLast().loc.y + 1 && dMot.RetLast().size.y != 15 && dMot.RetLast().size.x != 5)
+                                Console.Out.WriteLine("breakpoint");
+
+                            _SnapToColiSpot(checkHere);
+                            rawOffSet += (tROdiff/expectedNumOfCycles);
+                        
+
+
+                    }
+                }
+              else //else there was not enough velo to go foward
+              {
+                  rawOffSet = tRawOffset;
+
+              }
+
+
+
+
+        }
 
 
         //////////////////////////////////////////////////////////////////////////////////
