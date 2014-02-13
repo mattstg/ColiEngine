@@ -310,6 +310,10 @@ namespace EntSys
                             if(thisCollided || collidedParts.Count != 0)
                             {
                                 ColiHappend = true;
+                                ApplyForce(ForceTypes.Internal, new Vector2(0, -(float)Math.Abs(velo.Y * mass * 2)));
+                                //debug reaction, bounce up
+                                //Multiple coli dectected on same turn can stack odly, example the -,
+                                //In here, the action events will be called
 
                             } else {//has not collided with anything 
                                 ColiHappend = false; //allready dont, just ensuring atm
@@ -318,7 +322,18 @@ namespace EntSys
                         }
                     if (ColiHappend)
                     {
+                        //cause a coli happened, we need to reapply the forces that happened above
+                        
 
+                        _ApplyForceToVelo();
+                        veloThisCycle.x = (int)((trem / 1000) * velo.X);
+                        veloThisCycle.y = (int)((trem / 1000) * velo.Y);
+                        dMot = new ColiSys.DiagMotion(veloThisCycle.x, veloThisCycle.y, this.coliBox);
+                        expectedNumOfCycles = Math.Abs(_RetHighest(veloThisCycle));
+                        if (expectedNumOfCycles != 0)
+                            tTick = trem / expectedNumOfCycles; //by highest velo
+                        else
+                            trem = 0;
 
 
                     }
@@ -334,7 +349,7 @@ namespace EntSys
                             {
                                 S_XY movePartsBy = _diffToColiSpot(checkHere);
                                 MoveAllBy(movePartsBy);
-                                rawOffSet += (tROdiff / expectedNumOfCycles);
+                                rawOffSet += velo* (tTick / 1000);
                                 //rawOffSet.X += movePartsBy.x;
                                 //rawOffSet.Y += movePartsBy.y;
                             }
