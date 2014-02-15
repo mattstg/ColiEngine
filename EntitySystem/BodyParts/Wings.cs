@@ -2,19 +2,22 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using EntSys;
 
 namespace BodyParts
 {
     class Wings : BodyPart
     {
         ColiSys.TestContent tc;
-        public Wings()
+        public Wings( BodyMechanics master,EntSys.DNA EntDNA, EntSys.DNA SpriteDNA)
         {
-            tc = ColiSys.TestContent.Instance;
-            
+            tc = ColiSys.TestContent.Instance;            
             partType = BodyPartType.Wings;
-            LoadBodyPart(DefaultShapeGen());
-            base.ForceCnstr(null,null);
+            LoadBodyPart(DefaultShapeGen());           
+            AE = new ActionEvent(new VagueObject(this));
+            AE.RegAbilityPack(10);
+            base.ForceCnstr(EntDNA, SpriteDNA);
+            Master = master;
         }
 
         public ColiSys.Hashtable DefaultShapeGen()

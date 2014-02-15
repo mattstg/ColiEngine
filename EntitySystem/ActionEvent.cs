@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using BodyParts;
 
 namespace EntSys
 {
@@ -15,31 +16,37 @@ namespace EntSys
     {
         VagueObject master;
         bool forTest = false;
-        objType type;
+        objSpecificType specificType;
         Global.Bus bus = Global.Bus.Instance;
         AbilityStore AS = AbilityStore.Instance;
         //this class belongs to an Ent, it takes in triggers and commences proper events
         List<Func<VagueObject, BodyMechanics, Ground, AERetType>> BmGActions;
-        List<Func<VagueObject, Explosion, Ground, AERetType>> ExpGActions;
         List<Func<VagueObject, BodyMechanics, Explosion, AERetType>> BmExpActions;
+
+        
+        List<Func<VagueObject, Explosion, Ground, AERetType>> ExpGActions;
         List<Func<VagueObject, KeyboardState, AERetType>> KeyActions;
 
+        List<Func<VagueObject, BodyPart, Ground, AERetType>> BodypartGroundActions;
+        List<Func<VagueObject, BodyPart, Explosion, AERetType>> BodypartExpActions;
 
         public ActionEvent(VagueObject vo)
         {
-            this.type = vo.type;
+            this.specificType = vo.specificType;
             master = vo;
             BmGActions = new List<Func<VagueObject, BodyMechanics, Ground, AERetType>>();
+            BodypartGroundActions = new List<Func<VagueObject, BodyPart, Ground, AERetType>>();
             ExpGActions = new List<Func<VagueObject, Explosion, Ground, AERetType>>();
             BmExpActions = new List<Func<VagueObject, BodyMechanics, Explosion, AERetType>>();
             KeyActions = new List<Func<VagueObject, KeyboardState, AERetType>>();
-            AS.RegAbilityPack((int)type, BmGActions, ExpGActions, BmExpActions,KeyActions);
+            BodypartExpActions = new List<Func<VagueObject, BodyPart, Explosion, AERetType>>();
+            AS.RegAbilityPack((int)specificType, BmGActions, ExpGActions, BmExpActions, KeyActions, BodypartGroundActions, BodypartExpActions);
         }
 
         //atm unique checking is NOT a thing! ability to have some ability mutiple times
         public void RegAbilityPack(int num)
         {
-            AS.RegAbilityPack((int)type, BmGActions, ExpGActions, BmExpActions, KeyActions);
+            AS.RegAbilityPack(num, BmGActions, ExpGActions, BmExpActions, KeyActions, BodypartGroundActions, BodypartExpActions);
         }
 
         
@@ -50,6 +57,16 @@ namespace EntSys
             foreach (Func<VagueObject, BodyMechanics, Ground, AERetType> func in BmGActions)
             {
                 func(master,bod, ground);
+            }
+            return true;
+        }
+
+        public bool TriggerEvent(BodyPart bod, Ground ground)
+        {
+            //cycle through events
+            foreach (Func<VagueObject, BodyPart, Ground, AERetType> func in BodypartGroundActions)
+            {
+                func(master, bod, ground);
             }
             return true;
         }
@@ -83,7 +100,16 @@ namespace EntSys
             }
             return true;
         }
-        
+
+        public bool TriggerEvent(BodyPart bp, Explosion exp)
+        {
+            foreach (Func<VagueObject, BodyPart, Explosion, AERetType> func in BodypartExpActions)
+            {
+                func(master, bp, exp);
+            }
+            return true;
+
+        }
 
         
 

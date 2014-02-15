@@ -5,15 +5,20 @@ using System.Text;
 using Structs;
 using EntStructEnum;
 using BodyParts;
+using Microsoft.Xna.Framework;
 
 namespace EntSys
 {
+    
+
+
     class Body : Sprite
     {
         protected Global.Timers UniResponseT = new Global.Timers();//this way until dna
         protected List<BodyPart> bodyParts;
         //body vars
         protected int moveForce;
+        protected int totalMass;
         
 
 
@@ -33,12 +38,32 @@ namespace EntSys
             
         }
 
+        public void AddBodyPart(BodyPart bpToAdd)
+        {
+            
+            //not sure how to go about this yet since dont have sutures, but in the
+            //mean time, get the total mass
+            _UpdateBodyPartRelatedInfo();
+        }
+
+        private void _UpdateBodyPartRelatedInfo()
+        {
+            totalMass = this.mass;
+            foreach (BodyPart bp in bodyParts)
+            {
+                bp.UnlockAllConnections();
+                totalMass += bp.getTotalMass();
+            }
+            EI.totalMass = totalMass;
+        }
+
         protected void ForceCnstr(DNA EntDNA, DNA SprDNA, DNA dna)
         {
             bodyParts = new List<BodyPart>();
-
+            
             base.ForceCnstr(EntDNA,SprDNA);
             _DNADecoder(dna);
+            _UpdateBodyPartRelatedInfo();
         }
 
         public void Update(float rt)
@@ -50,15 +75,22 @@ namespace EntSys
 
         private void _UpdateBodyParts(float rt)
         {
+
             foreach (BodyPart bp in bodyParts)
+            {
+                bp.UnlockAllConnections();
                 bp.Update(rt);
+            }
 
         }
 
         public void Draw()
         {
             foreach (BodyPart bp in bodyParts)
+            {
+                bp.UnlockAllConnections();
                 bp.Draw();
+            }
             base.Draw();//pass draw down to sprite class
         }
 

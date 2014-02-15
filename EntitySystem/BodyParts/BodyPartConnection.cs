@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework.Input;
 
 namespace BodyParts
 {
@@ -47,6 +48,18 @@ namespace BodyParts
 
         }
 
+        public void Input(BodyPart typeThis, KeyboardState ks)
+        {
+            if (!Lock)
+            {
+                if (typeThis == p1)
+                    p2.Input(ks);
+                else
+                    p1.Input(ks);
+                Lock = true;
+            }
+        }
+
         public bool SealConnection(BodyPart p1, ColiSys.Node c1, BodyPart p2, ColiSys.Node c2)
         {
             //Attempt to seal two body parts
@@ -90,8 +103,19 @@ namespace BodyParts
                     p1.UnlockAllConnections();
                 Lock = false;
             }
-            
+        }
 
+        public int getTotalMass(BodyPart typeThis)
+        {
+            if (!Lock)
+            {
+                if (typeThis == p1)
+                    return p2.getTotalMass();
+                else
+                    return p1.getTotalMass();
+                Lock = true;
+            }
+            return 0;
         }
 
 

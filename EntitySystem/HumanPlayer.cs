@@ -38,8 +38,7 @@ namespace EntSys
             UniResponseT = new Global.Timers(0, 250, 251);
 
             //This should be in DNA passed down to Body//
-            Wings wing = new Wings();
-            bodyParts.Add(wing);
+            
             /////////////////////////////////////////////
         }
 
@@ -49,23 +48,34 @@ namespace EntSys
         {
             AE = new ActionEvent(new VagueObject(this));
 
+            
+
             acceptedSColi = new List<objSpecificType>();
             acceptedColi = new List<objType>();
 
             acceptedColi.Add(objType.Ground);
             acceptedColi.Add(objType.Explosion);
             acceptedColi.Add(objType.Body);
+
             
 
             base.ForceCnstr(EntDNA,SprDNA,BodDNA,MekDNA);
             _DNADecoder(dna);
             _DebugSetKeyMap();
+
+            Wings wing = new Wings(this, null, null);
+            bodyParts.Add(wing);
         }
 
         public void Input()
         {
+            KeyboardState ks = Keyboard.GetState();
             if(Keyboard.GetState().GetPressedKeys().Length > 0)
-                 AE.TriggerEvent(Keyboard.GetState());
+                 AE.TriggerEvent(ks);
+
+            foreach (BodyPart bp in bodyParts)
+                bp.Input(ks);
+
             /*
             KeyboardState keys = Keyboard.GetState();
             if (UniResponseT.ready && keys.GetPressedKeys().Length != 0)

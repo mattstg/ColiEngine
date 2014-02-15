@@ -32,11 +32,12 @@ namespace EntSys
         }
 
         public void RegAbilityPack(int packNum, List<Func<VagueObject, BodyMechanics, Ground, AERetType>> BmGActions, List<Func<VagueObject, Explosion, Ground, AERetType>> ExpGActions
-                                    , List<Func<VagueObject, BodyMechanics, Explosion, AERetType>> BmExpActions, List<Func<VagueObject, KeyboardState, AERetType>> KeyActions)
+                                    , List<Func<VagueObject, BodyMechanics, Explosion, AERetType>> BmExpActions, List<Func<VagueObject, KeyboardState, AERetType>> KeyActions,
+                                      List<Func<VagueObject, BodyPart, Ground, AERetType>> BodypartGroundActions, List<Func<VagueObject, BodyPart, Explosion, AERetType>> BodypartExpActions)
         {
             switch(packNum)
             {
-                case 0: //Bm
+                case 4: //Human
                     BmGActions.Add(BmGCreateExp);  
                     BmGActions.Add(callG);
                     BmExpActions.Add(BmColiExp);
@@ -44,15 +45,24 @@ namespace EntSys
                    // BmGActions.Add(BodyHitsGround);
                     return;
                     
-                case 1: //Exp
+                case 5: //Exp
                     ExpGActions.Add(ExpGAlterPath);
                     ExpGActions.Add(callG);
                     BmExpActions.Add(ExpColiBm);
                     return;
                 
-                case 2: //Ground
+                case 6: //Ground
                     ExpGActions.Add(GcoliExp);
                     BmGActions.Add(GcoliBm);
+                    return;
+
+                case 7: //Body Part
+                    
+                    return;
+
+                case 10: //Wings!
+                    KeyActions.Add(HumanWingsInput);
+                    BodypartGroundActions.Add(BodypartHitsGround);
                     return;
 
 
@@ -93,10 +103,7 @@ namespace EntSys
             if (ks.IsKeyDown(human.keymap.right))
                 human.MoveInDir(dir.right);
             if (ks.IsKeyDown(human.keymap.left))
-                human.MoveInDir(dir.left);
-            if(human.HasBodyPart(BodyPartType.Wings))
-                 if (ks.IsKeyDown(human.keymap.up))
-                     human.MoveInDir(dir.up);
+                human.MoveInDir(dir.left);           
 
             return new AERetType();
         }
@@ -104,6 +111,12 @@ namespace EntSys
         private AERetType BodyHitsGround(VagueObject callingObj, BodyMechanics Bm, Ground ground)
         {
 
+
+            return new AERetType();
+        }
+
+        private AERetType BodypartHitsGround(VagueObject callingObj, BodyPart bp, Ground ground)
+        {
 
             return new AERetType();
         }
@@ -184,6 +197,22 @@ namespace EntSys
              //Apply Forces or check if breaks
              return new AERetType();
          }
+
+
+
+        private AERetType HumanWingsInput(VagueObject callingObj, KeyboardState ks)
+        {
+            //The calling object here must be of type BodyPart
+            //keyboard input events do not have that fault security
+            BodyPart bp = callingObj.getObj<BodyPart>();
+            BodyMechanics bm = bp.Master;    
+            
+            if (ks.IsKeyDown(Keys.Up))
+                    bm.ApplyForce(Enums.Force.ForceTypes.Internal,new Vector2(0,-10));
+
+                return new AERetType(); 
+        }
+        
 
 
     }

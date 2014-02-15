@@ -11,7 +11,7 @@ namespace EntSys
 {
     class BodyMechanics:Body
     {
-        protected ActionEvent AE;
+        
         Global.Bus bus = Global.Bus.Instance;
         private PhysSys.Physics phys = PhysSys.Physics.Instance;
         //private ColiSys.NodeManipulator nami = ColiSys.NodeManipulator.Instance;
@@ -152,30 +152,35 @@ namespace EntSys
             return movePartsByOffset;
         }
 
-        private bool[] _GetDirCol(Vector2 turnVelo,VagueObject ht)
-        {
+        private bool[] _GetDirCol(Vector2 turnVelo,VagueObject ht,ColiSys.Node colibox)
+        {      
+            if (turnVelo.X == 0)
+                return new bool[] { false, true };
+            if (turnVelo.Y == 0)
+                return new bool[] { true, false };
+
             bool[] toRet = new bool[]{false,false};
-            if (turnVelo.X != 0)
-            {
-                ColiSys.DiagMotion d = new ColiSys.DiagMotion((int)(Math.Abs(turnVelo.X) / turnVelo.X), 0, this.coliBox);
-                if (ht.Coli(d.RetNextBox()))
-                {
-                    toRet[0] = true;
-                }
-            }
-            if (turnVelo.Y != 0)
-            {
-                ColiSys.DiagMotion d2 = new ColiSys.DiagMotion(0, (int)(Math.Abs(turnVelo.Y) / turnVelo.Y), this.coliBox);
-                if (ht.Coli(d2.RetNextBox()))
-                {
-                    toRet[1] = true;
-                }
-               
-            }
+            
+            ColiSys.DiagMotion d = new ColiSys.DiagMotion((int)(Math.Abs(turnVelo.X) / turnVelo.X), 0, colibox);
+            if (ht.Coli(d.RetNextBox()))
+                  toRet[0] = true;
+                
+            
+            ColiSys.DiagMotion d2 = new ColiSys.DiagMotion(0, (int)(Math.Abs(turnVelo.Y) / turnVelo.Y), colibox);
+            if (ht.Coli(d2.RetNextBox()))
+                  toRet[1] = true;
+
             return toRet;
 
         }
 
+        private bool[] _GetDirCol(S_XY turnVelo, VagueObject ht, ColiSys.Node colibox)
+        {
+            return _GetDirCol(new Vector2(turnVelo.x, turnVelo.y), ht, colibox);
+        }
+        
+        ///Old move func
+        /*
         private void _MoveAndCheckVelo(float rt)
         {
             bool[] ColiHV = new bool[] { false, false };
@@ -273,6 +278,8 @@ namespace EntSys
             }
             
         }
+        */
+
 
 
         
@@ -309,8 +316,76 @@ namespace EntSys
                                 bp.CheckColi(checkHere.loc - offset,connecter,collidedParts);
                             if(thisCollided || collidedParts.Count != 0)
                             {
+                                //COLI HAS OCCURED// Since bodyparts and Ent were handled seperatly unfortunatly, do
+                                //two sets of calculations
+                                EI.PointsOfContact = collidedParts.Count;
+                                if (thisCollided)
+                                {
+                                    EI.PointsOfContact++;
+                                    EI.coliHV = _GetDirCol(veloThisCycle, connecter, this.coliBox);  //i should be snaped to location, so i just need to check around me
+
+                                    switch (connecter.specificType)
+                                    {
+                                        case objSpecificType.Bm:
+                                            break;
+                                        case objSpecificType.Body:
+                                            break;
+                                        case objSpecificType.Ent:
+                                            break;
+                                        case objSpecificType.Exp:
+                                            AE.TriggerEvent(this, connecter.getObj<Explosion>());
+                                            break;
+                                        case objSpecificType.Ground:
+                                            AE.TriggerEvent(this, connecter.getObj<Ground>());
+                                            break;
+                                        case objSpecificType.Human:
+                                            break;
+                                        case objSpecificType.Sprite:
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                }
+
+                                foreach (BodyPart bp in collidedParts)
+                                {
+                                    bp.EI.totalMass = EI.totalMass / EI.PointsOfContact;
+                                    bp.EI.momentum = velo * bp.EI.totalMass;
+                                    bp.EI.coliHV = _GetDirCol(veloThisCycle, connecter, bp.coliBox);
+
+                                    switch (connecter.specificType)
+                                    {
+                                        case objSpecificType.Bm:
+                                            break;
+                                        case objSpecificType.Body:
+                                            break;
+                                        case objSpecificType.Ent:
+                                            break;
+                                        case objSpecificType.Exp:
+                                            bp.AE.TriggerEvent(bp, connecter.getObj<Explosion>());
+                                            break;
+                                        case objSpecificType.Ground:
+                                            bp.AE.TriggerEvent(bp, connecter.getObj<Ground>());
+                                            break;
+                                        case objSpecificType.Human:
+                                            break;
+                                        case objSpecificType.Sprite:
+                                            break;
+                                        default:
+                                            break;
+                                    }
+
+
+                                }
+
+
+
+
+
+
+                                //ColiHV = _GetDirCol(turnVelo, connecter);
                                 ColiHappend = true;
-                                ApplyForce(ForceTypes.Internal, new Vector2(0, -(float)Math.Abs(velo.Y * mass * 2)));
+                                //ApplyForce(ForceTypes.Internal, new Vector2(0, -(float)Math.Abs(velo.Y * mass * 2)));
                                 //debug reaction, bounce up
                                 //Multiple coli dectected on same turn can stack odly, example the -,
                                 //In here, the action events will be called
@@ -324,7 +399,6 @@ namespace EntSys
                     {
                         //cause a coli happened, we need to reapply the forces that happened above
                         
-
                         _ApplyForceToVelo();
                         veloThisCycle.x = (int)((trem / 1000) * velo.X);
                         veloThisCycle.y = (int)((trem / 1000) * velo.Y);

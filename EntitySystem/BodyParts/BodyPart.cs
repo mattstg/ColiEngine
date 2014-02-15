@@ -5,6 +5,7 @@ using System.Text;
 using EntSys;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 //addition of all mass!
 //When creating new bodyParts, please ensure it has an Update
 
@@ -14,7 +15,7 @@ namespace BodyParts
     public struct BodyPulse
     {
         long energy;
-        int trigger;
+        int trigger;        
 
         public BodyPulse split(int splitBy)
         {
@@ -27,13 +28,20 @@ namespace BodyParts
 
     abstract class BodyPart : Sprite
     {
+        
         List<BodyPartConnection> connecters;
         public BodyPartType partType;
-
+        public BodyMechanics Master;
         public BodyPart()
         {
+            
+            
+        }
+
+        public void ForceCnstr(DNA d1, DNA d2)
+        {
             connecters = new List<BodyPartConnection>();
-        
+            base.ForceCnstr(d1, d2);
         }
         protected void Update(float rt)
         {
@@ -91,6 +99,23 @@ namespace BodyParts
                 //Need to reverse the pulse? or pulse just ends here... hmm
 
             }
+
+        }
+
+        public int getTotalMass()
+        {
+            int toRet = this.mass;
+            foreach (BodyPartConnection bpc in connecters)
+                toRet += bpc.getTotalMass(this);
+            return toRet;
+
+        }
+
+        public void Input(KeyboardState ks)
+        {
+            AE.TriggerEvent(ks);
+            foreach (BodyPartConnection bpc in connecters)
+                bpc.Input(this,ks);
 
         }
 

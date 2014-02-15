@@ -54,6 +54,15 @@ namespace EntSys
 
         }
 
+        public VagueObject(BodyParts.BodyPart bp)
+        {
+            obj = bp;
+            type = objType.Body;
+            baseType = objBaseType.Ent;
+            specificType = objSpecificType.BodyPart;
+
+        }
+
         
 
 

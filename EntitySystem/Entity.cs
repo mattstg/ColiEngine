@@ -10,7 +10,18 @@ namespace EntSys
 {
     class Entity
     {
+        public struct EventInfo //for body and bodyparts
+        {
+            public ColiSys.Node ColiBox { get { return this.ColiBox; } }
+            public bool[] coliHV;
+            public int totalMass;
+            public Vector2 momentum;
+            public int PointsOfContact;
 
+        }
+
+        public ActionEvent AE;
+        public EventInfo EI;
         protected ColiSys.NodeManipulator nami = ColiSys.NodeManipulator.Instance;
         protected ColiSys.Hashtable HashTrueEntShape;
         public ColiSys.Node trueEntShape { get { return HashTrueEntShape.RetMainNode(); } }
@@ -80,6 +91,7 @@ namespace EntSys
             _DNADecoder(dna);
             timerOncePerSec = new Global.Timers(1000, 1001);
             timerOncePerSec.curT = 1000; //start it at ready
+            EI = new EventInfo();
             //_SetSizeInNodeForm();
         }
 
