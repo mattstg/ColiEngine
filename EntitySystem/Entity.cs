@@ -12,7 +12,7 @@ namespace EntSys
     {
         public struct EventInfo //for body and bodyparts
         {
-            public ColiSys.Node ColiBox { get { return this.ColiBox; } }
+            //public ColiSys.Node GetColiBox { get { return this.coliBox; } }
             public bool[] coliHV;
             public int totalMass;
             public Vector2 momentum;

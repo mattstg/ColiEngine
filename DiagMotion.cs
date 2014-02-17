@@ -115,6 +115,9 @@ namespace ColiSys
             {
                 c = -1;
             }
+            
+
+
             if (y < 0)
             {
                b = -1;
@@ -124,11 +127,13 @@ namespace ColiSys
             {
                 d = -1;
             }
+            
 
 
             S_Box i = new S_Box(E.loc.x + a, E.loc.y + b, E.size.x + c + 1, E.size.y + d + 1);
             return i;
         }
+
         private S_Box VelToBox(int xx, int yy)
         {
             int a = 0, b = 0, c = 0, d = 0;
@@ -141,14 +146,19 @@ namespace ColiSys
                 c = -1;
             }
 
-            if (yy > 0)
+
+
+            if (yy < 0)
             {
-                b = 1;
+                b = -1;
+                // d = -1;
             }
             else if (yy == 0)
             {
                 d = -1;
             }
+
+
 
             S_Box i = new S_Box(E.loc.x + a, E.loc.y + b, E.size.x + c + 1, E.size.y + d + 1);
             return i;

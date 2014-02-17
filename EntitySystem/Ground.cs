@@ -43,24 +43,33 @@ namespace EntSys
             htable.Draw(sb);
         }
 
-        public float GetBounceForce(float force)
+        public float GetBounceForce(float tforce, ColiSys.Node coliBox)
         {
             float fMult = 1;
+            float force = Math.Abs(tforce);
+            int mag = (int)(Math.Abs(tforce) / tforce);
 
             if (force < hp * bounceThreshold)
-                return force + 1; //not enough force to trigger break or bounce, return his force as ground Normal balancing out
+                return -1*mag*force + -1*mag; //not enough force to trigger break or bounce, return his force as ground Normal balancing out
             else
             {
                 if (force < hp)
                 {           //doesnt break it but bounces    
                     fMult = (bounceForceMultUB - bounceForceMultLB) * (force / hp - bounceThreshold) + bounceForceMultLB;
-                    return force + force * fMult;
+                    return -1*mag*(force + force * fMult);
                 }
                 else  //breaks it
+                {
+                    htable.HashSubtractor(coliBox); //subtract colibox from ground
+
                     if (force > hp * absorb)
-                        return hp * absorb; //max force returnable
+                        return (hp * absorb)*-1*mag; //max force returnable
                     else
-                        return force + 1;  //less than max, returns current force since all absorbed --future if dirt is object, return energy abosrded to the Material/Metals/Earth object
+                        return -1 * mag * force + -1 * mag;   //less than max, returns current force since all absorbed --future if dirt is object, return energy abosrded to the Material/Metals/Earth object
+                //break the ground using vo colibox                  
+                
+                }
+
             }
 
         }

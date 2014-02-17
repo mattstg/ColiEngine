@@ -119,13 +119,14 @@ namespace EntSys
             S_XY movePartsByOffset = new S_XY();
             if (lastColiCheck != null)
             {
-                if (lastColiCheck.loc.x < offset.x)
+                
+                if (lastColiCheck.loc.x != offset.x)
                 {
                     //offset.x = lastColiCheck.loc.x;
                     movePartsByOffset.x = -1;
 
                 }
-                else if (size.x < lastColiCheck.size.x) //going to right
+                else if (size.x != lastColiCheck.size.x) //going to right
                 {
                     //offset.x++;
                     movePartsByOffset.x = 1;
@@ -133,13 +134,15 @@ namespace EntSys
                 else if (lastColiCheck.loc.x != offset.x)
                     Console.Out.Write("unexpected value");
 
-                if (lastColiCheck.loc.y < offset.y)
+
+
+                if (lastColiCheck.loc.y != offset.y)
                 {
                    // offset.y = lastColiCheck.loc.y; //up
                     movePartsByOffset.y = -1;
 
                 }
-                else if (size.y < lastColiCheck.size.y) //going down
+                else if (size.y != lastColiCheck.size.y) //going down
                 {
                     //offset.y++;
                     movePartsByOffset.y = 1;
@@ -323,7 +326,7 @@ namespace EntSys
                                 {
                                     EI.PointsOfContact++;
                                     EI.coliHV = _GetDirCol(veloThisCycle, connecter, this.coliBox);  //i should be snaped to location, so i just need to check around me
-
+                                    EI.momentum = velo * (totalMass / EI.PointsOfContact);
                                     switch (connecter.specificType)
                                     {
                                         case objSpecificType.Bm:
@@ -349,39 +352,40 @@ namespace EntSys
 
                                 foreach (BodyPart bp in collidedParts)
                                 {
-                                    bp.EI.totalMass = EI.totalMass / EI.PointsOfContact;
-                                    bp.EI.momentum = velo * bp.EI.totalMass;
+                                    bp.EI.totalMass = EI.totalMass;
+                                    bp.EI.PointsOfContact = EI.PointsOfContact;
+                                    bp.EI.momentum = velo * (totalMass / EI.PointsOfContact);
                                     bp.EI.coliHV = _GetDirCol(veloThisCycle, connecter, bp.coliBox);
 
-                                    switch (connecter.specificType)
+                                    if (bp.EI.coliHV[0] || bp.EI.coliHV[1])
+                                        switch (connecter.specificType)
+                                        {
+                                            case objSpecificType.Bm:
+                                                break;
+                                            case objSpecificType.Body:
+                                                break;
+                                            case objSpecificType.Ent:
+                                                break;
+                                            case objSpecificType.Exp:
+                                                bp.AE.TriggerEvent(bp, connecter.getObj<Explosion>());
+                                                break;
+                                            case objSpecificType.Ground:                                                
+                                                bp.AE.TriggerEvent(bp, connecter.getObj<Ground>());
+                                                break;
+                                            case objSpecificType.Human:
+                                                break;
+                                            case objSpecificType.Sprite:
+                                                break;
+                                            default:
+                                                break;
+                                        }
+                                    else //something went really weird, no coli detected
                                     {
-                                        case objSpecificType.Bm:
-                                            break;
-                                        case objSpecificType.Body:
-                                            break;
-                                        case objSpecificType.Ent:
-                                            break;
-                                        case objSpecificType.Exp:
-                                            bp.AE.TriggerEvent(bp, connecter.getObj<Explosion>());
-                                            break;
-                                        case objSpecificType.Ground:
-                                            bp.AE.TriggerEvent(bp, connecter.getObj<Ground>());
-                                            break;
-                                        case objSpecificType.Human:
-                                            break;
-                                        case objSpecificType.Sprite:
-                                            break;
-                                        default:
-                                            break;
+                                        Console.Out.WriteLine("no coli detected second time round");
                                     }
 
 
                                 }
-
-
-
-
-
 
                                 //ColiHV = _GetDirCol(turnVelo, connecter);
                                 ColiHappend = true;
@@ -417,19 +421,17 @@ namespace EntSys
                             trem -= tTick;
 
                             //debug test
-                            if (offset.y != dMot.RetLast().loc.y + 1 && dMot.RetLast().size.y != 15 && dMot.RetLast().size.x != 5)
-                                Console.Out.WriteLine("breakpoint");
+                            //if (offset.y != dMot.RetLast().loc.y + 1 && dMot.RetLast().size.y != 15 && dMot.RetLast().size.x != 5)
+                              //  Console.Out.WriteLine("breakpoint");
                             if (checkHere != null)
                             {
                                 S_XY movePartsBy = _diffToColiSpot(checkHere);
+                               // S_XY movePartsBy = Statics.Converter.getMag(velo
                                 MoveAllBy(movePartsBy);
                                 rawOffSet += velo* (tTick / 1000);
                                 //rawOffSet.X += movePartsBy.x;
                                 //rawOffSet.Y += movePartsBy.y;
                             }
-                        
-
-
                     }
                 }
               else //else there was not enough velo to go foward

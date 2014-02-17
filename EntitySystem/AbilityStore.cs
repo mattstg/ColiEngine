@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using BodyParts;
+using Structs;
 /*
  * Pack 0, default pack for player
  * Pack 1, default pack for explosions
@@ -15,7 +16,7 @@ namespace EntSys
     class AbilityStore
     {
         Global.Bus bus = Global.Bus.Instance;
-
+        ColiSys.NodeManipulator nami = ColiSys.NodeManipulator.Instance;
 
         private static AbilityStore instance;
         private AbilityStore() { }
@@ -38,8 +39,9 @@ namespace EntSys
             switch(packNum)
             {
                 case 4: //Human
-                    BmGActions.Add(BmGCreateExp);  
+                   // BmGActions.Add(BmGCreateExp);  create debug exp when hit ground
                     BmGActions.Add(callG);
+                    BmGActions.Add(BodyHitsGround);
                     BmExpActions.Add(BmColiExp);
                     KeyActions.Add(HumanKeyMove);
                    // BmGActions.Add(BodyHitsGround);
@@ -110,6 +112,44 @@ namespace EntSys
 
         private AERetType BodyHitsGround(VagueObject callingObj, BodyMechanics Bm, Ground ground)
         {
+            Vector2 dir = Statics.Converter.getMag(Bm.EI.momentum);
+            
+            //we now have direction/magnitude vector for movement
+            //cases, direct collision, movement not covered by coli
+            if (Bm.EI.coliHV[0])
+            {
+                //bounce in x direction & break ground
+                Bm.ApplyForce(Enums.Force.ForceTypes.Dirt, new Vector2(ground.GetBounceForce(Bm.EI.momentum.X, nami.MoveTableByOffset(callingObj.coliBox,new S_XY((int)dir.X,0))), 0));
+                
+                
+                //collision happened directly
+            }
+            else if(!Bm.EI.coliHV[0] && dir.X != 0) //indirect coli, apply friction
+            {
+                
+
+
+            }
+
+
+            if (Bm.EI.coliHV[1])
+            {
+                //bounce in x direction & break ground
+                //ColiSys.Node node = callingObj.coliBox;
+               // ColiSys.Node node = nami.MoveTableByOffset(callingObj.coliBox, new S_XY(0, (int)dir.Y));
+               // Bm.ApplyForce(Enums.Force.ForceTypes.Dirt, new Vector2(0, ground.GetBounceForce(Bm.momentum.Y, node)));
+                Bm.ApplyForce(Enums.Force.ForceTypes.Dirt, new Vector2(0, ground.GetBounceForce(Bm.EI.momentum.Y, nami.MoveTableByOffset(callingObj.coliBox, new S_XY(0, (int)dir.Y)))));
+                //some reason, one of the pointers gets lost in the resulting Nami. transform when called inside the func, but not otherwise^
+
+
+                //collision happened directly
+            }
+            else if (!Bm.EI.coliHV[1] && dir.Y != 0) //indirect coli, apply friction
+            {
+
+
+
+            }
 
 
             return new AERetType();
@@ -117,6 +157,45 @@ namespace EntSys
 
         private AERetType BodypartHitsGround(VagueObject callingObj, BodyPart bp, Ground ground)
         {
+            Vector2 dir = Statics.Converter.getMag(bp.EI.momentum);
+            
+
+            //we now have direction/magnitude vector for movement
+            //cases, direct collision, movement not covered by coli
+            if (bp.EI.coliHV[0])
+            {
+                //bounce in x direction & break ground
+                bp.Master.ApplyForce(Enums.Force.ForceTypes.Dirt, new Vector2(ground.GetBounceForce(bp.EI.momentum.X, nami.MoveTableByOffset(callingObj.coliBox, new S_XY((int)dir.X, 0))), 0));
+
+
+                //collision happened directly
+            }
+            else if (!bp.EI.coliHV[0] && dir.X != 0) //indirect coli, apply friction
+            {
+
+
+
+            }
+
+
+            if (bp.EI.coliHV[1])
+            {
+                //bounce in x direction & break ground
+                //ColiSys.Node node = callingObj.coliBox;
+                // ColiSys.Node node = nami.MoveTableByOffset(callingObj.coliBox, new S_XY(0, (int)dir.Y));
+                // Bm.ApplyForce(Enums.Force.ForceTypes.Dirt, new Vector2(0, ground.GetBounceForce(Bm.momentum.Y, node)));
+                bp.Master.ApplyForce(Enums.Force.ForceTypes.Dirt, new Vector2(0, ground.GetBounceForce(bp.EI.momentum.Y, nami.MoveTableByOffset(callingObj.coliBox, new S_XY(0, (int)dir.Y)))));
+                //some reason, one of the pointers gets lost in the resulting Nami. transform when called inside the func, but not otherwise^
+
+
+                //collision happened directly
+            }
+            else if (!bp.EI.coliHV[1] && dir.Y != 0) //indirect coli, apply friction
+            {
+
+
+
+            }
 
             return new AERetType();
         }

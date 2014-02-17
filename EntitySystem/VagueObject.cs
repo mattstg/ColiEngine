@@ -16,9 +16,9 @@ namespace EntSys
        // public ColiSys.Hashtable hashTable;
         public objBaseType baseType;
         public objType type;
-        public objSpecificType specificType;
-
+        public objSpecificType specificType;        
         public object obj;
+        public ColiSys.Node coliBox { get { return _GetColiBox(); } }
 
         public VagueObject()
         { //calling this when using it as a pointer for GetNext
@@ -180,6 +180,29 @@ namespace EntSys
                 Console.Out.WriteLine("Error: Vague object Destroy called Misc");
                 return false;
             }
+
+
+        }
+        private ColiSys.Node _GetColiBox()
+        {
+            switch (baseType)
+            {
+                case objBaseType.Ent:
+                    Entity t = (Entity)obj;
+                    return t.coliBox; 
+                    
+                case objBaseType.Ground:
+                    Ground g = (Ground)obj;
+                    return g.htable.RetMainNode();
+                    
+                default:
+                    Console.Out.WriteLine("Default type asked for colibox");
+                    break;
+            }
+
+                    return new ColiSys.Node(0, 0);
+
+            
 
 
         }

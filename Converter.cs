@@ -64,6 +64,26 @@ namespace Statics
 
         }
 
+        public static Vector2 getMag(Vector2 v)
+        {
+            Vector2 tr = new Vector2();
+
+            if (v.X == 0)
+                tr.X = 0;
+            else
+                tr.X = (Math.Abs(v.X) / v.X);
+
+            if (v.Y == 0)
+                tr.Y = 0;
+            else
+                tr.Y = (Math.Abs(v.Y) / v.Y);
+
+
+            return tr;
+
+
+
+        }
 
     }
 }
