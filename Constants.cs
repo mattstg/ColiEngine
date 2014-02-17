@@ -6,7 +6,7 @@ using Structs;
 //guess ground will extend materials, a factory pattern will create these materials, so although there are some saved natural ones, we can make custom materials too
 
 namespace Consts {
-    class Ground
+    /*class Ground
     {
         
         //so single object with these vars, a type, energy, 
@@ -22,13 +22,13 @@ namespace Consts {
         }
 
 
-    }
+    }*/
 
      
 
     class World
     {
-        public const float gravity = .1f;
+        public const float gravity = 60f;
 
 
     }

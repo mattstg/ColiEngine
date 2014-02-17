@@ -4,14 +4,16 @@ using System.Linq;
 using System.Text;
 using Structs.EntStructs;
 
+
 namespace EntSys
 {
     class Ground
     {
+        ColiSys.NodeManipulator nami = ColiSys.NodeManipulator.Instance;
         public bool destroy { get { return (htable.RetMainNode() == null); } }
         //so single object with these vars, a type, energy, 
-        float hp = 15;
-        float bounceThreshold = .33f; //bounce within 90-100%
+        float hp = 300;
+        float bounceThreshold = .33f; //bounce within -100%
         float bounceForceMultLB = .2f;
         float bounceForceMultUB = 1f;
         float absorb = 3; //times it own health worth of force repelling        \
@@ -43,8 +45,9 @@ namespace EntSys
             htable.Draw(sb);
         }
 
-        public float GetBounceForce(float tforce, ColiSys.Node coliBox)
+        public float GetBounceForce(float tforce,  ColiSys.Node coliBox)
         {
+            coliBox = nami.StretchSquareTableByXY(coliBox, new Structs.S_XY(-1, 1));   
             float fMult = 1;
             float force = Math.Abs(tforce);
             int mag = (int)(Math.Abs(tforce) / tforce);

@@ -48,12 +48,15 @@ namespace EntSys
         public void Update(float rt)
         {
             //things that apply force
-            _UpdatePerSec(rt);
-            _ApplyForceToVelo();
+           // _UpdatePerSec(rt);
+           // _ApplyForceToVelo();
+            phys.applyNaturalLaws(this, mass, rt);
 
            // _CheckAllColi();
            // _ApplyForceToVelo();
            // _MoveAndCheckVelo(rt);
+
+            _ApplyForceToVelo();
             newColiAndMoveFunc(rt);
             //things that mod velo
                   
@@ -65,15 +68,16 @@ namespace EntSys
             base.Update(rt);
         }
 
-        private void _UpdatePerSec(float rt)
+       /* private void _UpdatePerSec(float rt)
         {
-            if (timerOncePerSec.ready)
-            {
+            
+           // if (timerOncePerSec.ready)
+           // {
 
-                phys.applyNaturalLaws(this, mass); //applys force
+            //    phys.applyNaturalLaws(this, mass); //applys force
 
-            }
-        }
+           // }
+        }*/
 
         private Vector2 _ApplyForceToVelo()
         {
