@@ -402,7 +402,9 @@ namespace EntSys
                     if (ColiHappend)
                     {
                         //cause a coli happened, we need to reapply the forces that happened above
-                        
+                        rawOffSet.X = offset.x;
+                        rawOffSet.Y = offset.y;
+
                         _ApplyForceToVelo();
                         veloThisCycle.x = (int)((trem / 1000) * velo.X);
                         veloThisCycle.y = (int)((trem / 1000) * velo.Y);
@@ -429,6 +431,7 @@ namespace EntSys
                                // S_XY movePartsBy = Statics.Converter.getMag(velo
                                 MoveAllBy(movePartsBy);
                                 rawOffSet += velo* (tTick / 1000);
+                                
                                 //rawOffSet.X += movePartsBy.x;
                                 //rawOffSet.Y += movePartsBy.y;
                             }
