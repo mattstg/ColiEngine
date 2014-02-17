@@ -173,6 +173,9 @@ namespace EntSys
             if (ht.Coli(d2.RetNextBox()))
                   toRet[1] = true;
 
+            if (!toRet[0] && !toRet[1])
+                return new bool[] { true, true };
+
             return toRet;
 
         }
