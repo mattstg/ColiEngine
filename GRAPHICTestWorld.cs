@@ -20,6 +20,7 @@ namespace ColiSys
         
         Hashtable toAdd;
         NodeManipulator nami = NodeManipulator.Instance;
+        MaterialFactory forge = MaterialFactory.Instance;
         float inputTimer;
         const float inputRefreshTimer = 50;
         ShapeGenerator shapeGen;
@@ -29,10 +30,9 @@ namespace ColiSys
             shapeGen = ShapeGenerator.Instance; 
 
             masterList = new List<VagueObject>();
-            theGround = new Ground();
-            theGround.htable = new Hashtable(shapeGen.GenShape(Shape.Square, new S_XY(0, Consts.TopScope.WORLD_SIZE_Y / 2), new S_XY(Consts.TopScope.WORLD_SIZE_X, Consts.TopScope.WORLD_SIZE_Y / 2)));
+            theGround = forge.CreateMaterial(0); //Reason created seperatly is for the mouse adding to specificlly this hash table
             masterList.Add(new VagueObject(theGround));
-            
+            masterList.Add(new VagueObject(forge.CreateMaterial(1)));
 
 
             inputTimer = 0;
@@ -43,12 +43,13 @@ namespace ColiSys
 	
 	public void ResetWorld()
 	{
-        theGround.htable = new Hashtable(shapeGen.GenShape(Shape.Square, new S_XY(0, Consts.TopScope.WORLD_SIZE_Y), new S_XY(Consts.TopScope.WORLD_SIZE_X, Consts.TopScope.WORLD_SIZE_Y)));
+        
+      //  theGround.htable = new Hashtable(shapeGen.GenShape(Shape.Square, new S_XY(0, Consts.TopScope.WORLD_SIZE_Y),));
 	}
 
     public void LoadWorldTexture(Texture2D texture)
     {
-        theGround.htable.LoadTexture(texture,Color.White);
+       
         toAdd.LoadTexture(texture, Color.GreenYellow);
     }
 	
@@ -91,40 +92,41 @@ namespace ColiSys
                     toAdd.HashAdder(tempx); //Error that can occur, reason so far unknown
                 else
                     Console.Out.WriteLine("Error clicking outside monogame");
-                Console.Out.WriteLine("///////////////////////////////CURRENT ADDITION theGround.htable/////////////////////");
-                Console.Out.WriteLine(nami.GenString(toAdd));
+                /*Console.Out.WriteLine("///////////////////////////////CURRENT ADDITION theGround.htable/////////////////////");
+                Console.Out.WriteLine(nami.GenString(toAdd));*/
                 
             }
             if (mouse.RightButton == ButtonState.Pressed)
             {
-                
+                /*
                 Console.Out.WriteLine("///////////////////////////////////////////////////////////////////");
                 Console.Out.WriteLine("///////////////////////////////HASH SUBTRACTOR/////////////////////");
                 Console.Out.WriteLine(nami.GenString(theGround.htable));
 
                 Console.Out.WriteLine("////////Original ^////////////////////SUBTRACTION v  /////////////");
                 Console.Out.WriteLine(nami.GenString(toAdd));
-                
+                */
                 theGround.htable.HashSubtractor(toAdd);
                 toAdd.EmptyTable();                
                 
-                Console.Out.WriteLine("////////////////////////// vvv Result vvv//////////////////////////");
-                Console.Out.WriteLine(nami.GenString(theGround.htable));
+               /* Console.Out.WriteLine("////////////////////////// vvv Result vvv//////////////////////////");
+                Console.Out.WriteLine(nami.GenString(theGround.htable));*/
             }
             if (mouse.MiddleButton == ButtonState.Pressed || keys.IsKeyDown(Keys.A))
             {
+                /*
                 Console.Out.WriteLine("///////////////////////////////////////////////////////////////////");
                 Console.Out.WriteLine("///////////////////////////////HASH ADDER//////////////////////////");
                 Console.Out.WriteLine(nami.GenString(theGround.htable));
 
                 Console.Out.WriteLine("////////Original ^////////////////////ADDITION v  /////////////////");
                 Console.Out.WriteLine(nami.GenString(toAdd));
-
+                */
                 theGround.htable.HashAdder(toAdd);
                 toAdd.EmptyTable();
-
+                /*
                 Console.Out.WriteLine("////////////////////////// vvv Result vvv//////////////////////////");
-                Console.Out.WriteLine(nami.GenString(theGround.htable));
+                Console.Out.WriteLine(nami.GenString(theGround.htable));*/
 
             }
             if (keys.IsKeyDown(Keys.I))

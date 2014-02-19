@@ -2,37 +2,52 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Structs.EntStructs;
 
 
 namespace EntSys
 {
+    public struct MaterialResistances
+    {
+        //should name other kinds of materials
+        public float dirt;
+        public float steel;
+        public float Indestructable;
+
+
+    }
+    //////Please update vBOTH^ when you update ONE!!
+    public enum MaterialTypes
+    {
+        dirt,steel,Indestructible
+    }
+
     class Ground
     {
         ColiSys.NodeManipulator nami = ColiSys.NodeManipulator.Instance;
         public bool destroy { get { return (htable.RetMainNode() == null); } }
         //so single object with these vars, a type, energy, 
-        float hp = 300;
+        float hp = 1000;
         float bounceThreshold = .33f; //bounce within -100%
         float bounceForceMultLB = .2f;
         float bounceForceMultUB = 1f;
-        float absorb = 3; //times it own health worth of force repelling        \
-        ArmorResistance armor;
+        float absorb = 1; //times it own health worth of force repelling        \
+        MaterialResistances matRez;
+        MaterialTypes matType;
         float friction;
         float thornDmg = 0;  //0-inf percent dmg back
         float stickyness = 0; //not sure yet
         public ColiSys.Hashtable htable;
         public ActionEvent AE; //public because other objects will call Grounds event since ground does not update
         //I imagine a ground factory object that creates types of ground
-        public Ground(float hp, float bounceForceMultLB, float bounceForceMultUB, float bounceThreshold, float absorb, float thornDmg, float stickyness, ArmorResistance armor, ColiSys.Hashtable htable, float friction)
+        public Ground(float hp, float bounceForceMultLB, float bounceForceMultUB, float bounceThreshold, float absorb, float thornDmg, float stickyness, MaterialResistances matRez, ColiSys.Hashtable htable, float friction, MaterialTypes type)
         {
             this.hp = hp; this.bounceForceMultLB = bounceForceMultLB; this.bounceForceMultUB = bounceForceMultUB; this.bounceThreshold = bounceThreshold;
             this.absorb = absorb; this.thornDmg = thornDmg; this.stickyness = stickyness; //armor struct
-            this.armor = armor; this.htable = htable; this.friction = friction;
+            this.matRez = matRez; this.htable = htable; this.friction = friction; this.matType = type;
             AE = new ActionEvent(new VagueObject(this));
         }
 
-        public Ground() { AE = new ActionEvent(new VagueObject(this)); }
+        public Ground() { }//AE = new ActionEvent(new VagueObject(this)); }
 
         public bool ColiWithGround(ColiSys.Hashtable coliBox)
         {

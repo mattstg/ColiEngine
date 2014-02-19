@@ -59,7 +59,7 @@ namespace Consts {
 
 
         //private internal classes
-    class _Internal
+   /* class _Internal
     {//The bounce force can be calculated using real physics if need be, then user can alter those constants :D  
         public static float getBounceForce(float force,float hp,float lb, float ub, float thresh, float absorb)
         {
@@ -84,7 +84,7 @@ namespace Consts {
 
 
 
-    }
+    }*/
 }
 
 

@@ -38,10 +38,10 @@ namespace BodyParts
             
         }
 
-        public void ForceCnstr(DNA d1, DNA d2)
+        public void ForceCnstr(DNA dna)
         {
             connecters = new List<BodyPartConnection>();
-            base.ForceCnstr(d1, d2);
+            base.ForceCnstr(dna);
         }
         protected void Update(float rt)
         {

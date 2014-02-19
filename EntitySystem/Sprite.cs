@@ -20,9 +20,9 @@ namespace EntSys
 
         public Sprite() { }
 
-        public Sprite(DNA EntDNA,DNA dna)
+        public Sprite(DNA dna)
         {
-            ForceCnstr(EntDNA);
+            ForceCnstr(dna);
             
         }
 

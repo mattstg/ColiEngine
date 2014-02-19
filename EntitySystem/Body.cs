@@ -23,11 +23,11 @@ namespace EntSys
 
 
         public Body() { }
-        public Body(DNA EntDNA,DNA SprDNA, DNA dna)
+        public Body(DNA dna)
         {
             //set the instructor to be prepped as if being fed a string of values
             //some things only affected by full ints, so passing doubles can make a good scope/buffer level
-            ForceCnstr(EntDNA,SprDNA,dna);
+            ForceCnstr(dna);
             
         }
 
@@ -57,11 +57,11 @@ namespace EntSys
             EI.totalMass = totalMass;
         }
 
-        protected void ForceCnstr(DNA EntDNA, DNA SprDNA, DNA dna)
+        protected void ForceCnstr(DNA dna)
         {
             bodyParts = new List<BodyPart>();
             
-            base.ForceCnstr(EntDNA,SprDNA);
+            base.ForceCnstr(dna);
             _DNADecoder(dna);
             _UpdateBodyPartRelatedInfo();
         }

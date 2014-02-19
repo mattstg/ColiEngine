@@ -24,11 +24,11 @@ namespace EntSys
 
 
         public HumanPlayer() { }
-        public HumanPlayer(DNA EntDNA, DNA SprDNA, DNA BodDNA, DNA MekDNA, DNA dna)
+        public HumanPlayer(DNA dna)
         {
             //set the instructor to be prepped as if being fed a string of values
             //some things only affected by full ints, so passing doubles can make a good scope/buffer level
-            ForceCnstr(EntDNA,SprDNA,BodDNA,MekDNA,dna);
+            ForceCnstr(dna);
             
         }
 
@@ -44,12 +44,12 @@ namespace EntSys
 
         
 
-        protected void ForceCnstr(DNA EntDNA, DNA SprDNA, DNA BodDNA, DNA MekDNA, DNA dna)
+        protected void ForceCnstr(DNA dna)
         {
             AE = new ActionEvent(new VagueObject(this));
 
             
-
+            base.ForceCnstr(dna);
             acceptedSColi = new List<objSpecificType>();
             acceptedColi = new List<objType>();
 
@@ -59,11 +59,11 @@ namespace EntSys
 
             
 
-            base.ForceCnstr(EntDNA,SprDNA,BodDNA,MekDNA);
+           
             _DNADecoder(dna);
             _DebugSetKeyMap();
 
-            Wings wing = new Wings(this, null, null);
+            Wings wing = new Wings(this,null);
             bodyParts.Add(wing);
         }
 
@@ -109,7 +109,8 @@ namespace EntSys
               
            
             LoadTexture(tc.dirt,Color.Blue);
-            SetEntShape(new ColiSys.Hashtable(sgen.GenShape(ColiSys.Shape.Human,new S_XY(), new S_XY(5,15))));           
+            
+            SetEntShape(new ColiSys.Hashtable(sgen.GenShape(ColiSys.Shape.Human,new S_XY(5,15))));           
             S_XY tOff = new S_XY(50, 50);
             offset = tOff;
             rawOffSet = new Vector2(tOff.x, tOff.y);

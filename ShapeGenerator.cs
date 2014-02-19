@@ -9,7 +9,12 @@ using Structs;
 
 namespace ColiSys
 {
-    public enum Shape { Circle, Square, ConsoleIn, Human };
+    public enum Shape { HollowSqaure, Circle, Square, ConsoleIn, Human }
+    public struct AdditionalInfo{
+        
+        public int width;
+       
+    };
     public class ShapeGenerator
     {
        
@@ -33,7 +38,7 @@ namespace ColiSys
                 return instance;
             }
         }
-        public Node GenShape(Shape shape)
+       /* public Node GenShape(Shape shape)
         {
             if (shape != Shape.ConsoleIn)
                 return GenShape(shape, new S_XY(10, 10), new S_XY(5, 5));
@@ -42,19 +47,19 @@ namespace ColiSys
 
 
 
-        }
-      
-        public Node GenShape(Shape shape, S_XY loc, S_XY size)
+        }*/
+
+        public Node GenShape(Shape shape, S_XY size, AdditionalInfo Ai)
         {
             Node toRet = new Node(); //Dud node to make compiler happy..
 
             switch (shape)
             {
                 case Shape.Circle:
-                    toRet = _MakeCircle(loc, size);  //Not functional atm
+                    toRet = _MakeCircle(size);  //Not functional atm
                     break;
                 case Shape.Square:
-                    toRet = _MakeSquare(loc, size);
+                    toRet = _MakeSquare(size);
                     break;
                 case Shape.ConsoleIn:
                     toRet = _MakeConsoleIn();
@@ -62,6 +67,37 @@ namespace ColiSys
                 case Shape.Human:
                     toRet = _MakeHuman(size);
                     break;
+                case Shape.HollowSqaure:
+                    toRet = _MakeHollowSquare(size, Ai);
+                    break;
+
+                default:
+                    break;
+
+
+            }
+            return toRet;
+        }
+
+       public Node GenShape(Shape shape, S_XY size)
+        {
+            Node toRet = new Node(); //Dud node to make compiler happy..
+            
+            switch (shape)
+            {
+                case Shape.Circle:
+                    toRet = _MakeCircle(size);  //Not functional atm
+                    break;
+                case Shape.Square:
+                    toRet = _MakeSquare(size);
+                    break;
+                case Shape.ConsoleIn:
+                    toRet = _MakeConsoleIn();
+                    break;
+                case Shape.Human:
+                    toRet = _MakeHuman(size);
+                    break;
+                
 
                 default:
                     break;
@@ -72,28 +108,23 @@ namespace ColiSys
 
 
 
+
             return toRet;
         }
 
         private Node _MakeHuman(S_XY size)
         {
-            Node toRet = _MakeSquare(new S_XY(0,0),new S_XY(size.x,size.y /2));
-            Node EndNode = null;
+            Node toRet = _MakeSquare(new S_XY(10,10));
+           // Node EndNode = null;
 
-            for (Node x = toRet; x != null; x = x.Adj())
-            {
-                if (x.Adj() == null) //last x
-                {
-                    EndNode = x;
-                }
-            }
-
-            EndNode.Adj(_MakeSquare(new S_XY((int)((size.x/2)+.5), 0), new S_XY(1, size.y)));
+            
+            
+            //EndNode.Adj(_MakeSquare(new S_XY((int)((size.x/2)+.5), 0), new S_XY(1, size.y)));
             return toRet;
         }
 
         //Need to complete 
-        private Node _MakeCircle(S_XY loc, S_XY size)
+        private Node _MakeCircle(S_XY size)
         {
             Node toRet = new Node(1, 1, null, null);
 
@@ -101,11 +132,11 @@ namespace ColiSys
             return toRet;
         }
 
-        private Node _MakeSquare(S_XY loc, S_XY size)
+        private Node _MakeSquare(S_XY size)
         {
 
-            Node yCompenent = new Node(loc.y, loc.y + size.y - 1, null, null);
-            Node toRet = new Node(loc.x, loc.x + size.x - 1, null, yCompenent);
+            Node yCompenent = new Node(0, size.y-1, null, null);
+            Node toRet = new Node(0,size.x - 1, null, yCompenent);
             return toRet;
 
         }
@@ -198,6 +229,36 @@ namespace ColiSys
 
             return toRet;
 
+        }
+
+        private Node _MakeHollowSquare(S_XY size,AdditionalInfo Ai)
+        {
+            int width = 2;
+            if (Ai.width > 0)                
+               if(Ai.width < (size.x/2) && Ai.width < (size.y/2))
+               {                            
+                     width = Ai.width;
+               } else {
+                   //is one gaint node
+                   size.x--; size.y--;
+                   Node yy1 = new Node(0,size.y,null,null);
+                   Node xx1 = new Node(0,size.x,null,yy1);
+                   return xx1;
+               }
+
+            size.x--; size.y--;
+            Node y3 = new Node(0, size.y);
+            Node x3 = new Node(size.x - width + 1, size.x,null,y3);
+
+            Node y22 = new Node(size.y - width - 1, size.y, null, null);
+            Node y21 = new Node(0, width, y22, null);            
+            Node x2 = new Node(width, size.x - width, x3, y21);
+
+            Node y1 = new Node(0, size.y);
+            Node x1 = new Node(0, width - 1, x2 , y1);
+
+
+            return x1;
         }
 
     }

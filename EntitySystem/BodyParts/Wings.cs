@@ -9,14 +9,14 @@ namespace BodyParts
     class Wings : BodyPart
     {
         ColiSys.TestContent tc;
-        public Wings( BodyMechanics master,EntSys.DNA EntDNA, EntSys.DNA SpriteDNA)
+        public Wings( BodyMechanics master, EntSys.DNA dna)
         {
             tc = ColiSys.TestContent.Instance;            
             partType = BodyPartType.Wings;
             LoadBodyPart(DefaultShapeGen());           
             AE = new ActionEvent(new VagueObject(this));
             AE.RegAbilityPack(10);
-            base.ForceCnstr(EntDNA, SpriteDNA);
+            base.ForceCnstr(dna);
             Master = master;
         }
 

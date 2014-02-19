@@ -17,11 +17,11 @@ namespace EntSys
         //private ColiSys.NodeManipulator nami = ColiSys.NodeManipulator.Instance;
 
         public BodyMechanics() { }
-        public BodyMechanics(DNA EntDNA, DNA SprDNA, DNA BodDNA, DNA dna)
+        public BodyMechanics(DNA dna)
         {
             //set the instructor to be prepped as if being fed a string of values
             //some things only affected by full ints, so passing doubles can make a good scope/buffer level
-            ForceCnstr(EntDNA,SprDNA,BodDNA,dna);
+            ForceCnstr(dna);
             
         }
 
@@ -39,9 +39,9 @@ namespace EntSys
 
         }
 
-        protected void ForceCnstr(DNA EntDNA, DNA SprDNA, DNA BodDNA, DNA dna)
+        protected void ForceCnstr(DNA dna)
         {
-            base.ForceCnstr(EntDNA,SprDNA,BodDNA);
+            base.ForceCnstr(dna);
             _DNADecoder(dna);
         }
 
@@ -334,6 +334,7 @@ namespace EntSys
                                     EI.PointsOfContact++;
                                     EI.coliHV = _GetDirCol(veloThisCycle, connecter, this.coliBox);  //i should be snaped to location, so i just need to check around me
                                     EI.momentum = velo * (totalMass / EI.PointsOfContact);
+                                    Console.Out.WriteLine(velo);
                                     switch (connecter.specificType)
                                     {
                                         case objSpecificType.Bm:

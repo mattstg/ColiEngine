@@ -69,10 +69,10 @@ namespace ColiSys
             cheats = DebugCheatCodes.Instance;
             world = new GRAPHICTestWorld();
             
-            MattDriver d = new MattDriver();
+            //MattDriver d = new MattDriver();
             dnaBuilder = new DNABuilder();
             shapeGen = ShapeGenerator.Instance;
-            human = new HumanPlayer(dnaBuilder.buildEntDNA(new S_XY(300, 360), new S_XY(50, 50)), null, null, null, null);
+            human = new HumanPlayer(dnaBuilder.buildEntDNA(new S_XY(300, 360), new S_XY(50, 50)));
            // RockList = new Rock[5];
            // for (int i = 0; i < 5; i++)
              //   RockList[i] = new Rock(null, null, null, null, null);
