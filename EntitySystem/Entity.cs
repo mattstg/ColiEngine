@@ -23,8 +23,8 @@ namespace EntSys
         public ActionEvent AE;
         public EventInfo EI;
         protected ColiSys.NodeManipulator nami = ColiSys.NodeManipulator.Instance;
-        protected ColiSys.Hashtable HashTrueEntShape;
-        public ColiSys.Node trueEntShape { get { return HashTrueEntShape.RetMainNode(); } }
+        protected ColiSys.Hashtable EntHashtable;
+        public ColiSys.Node trueEntShape { get { return EntHashtable.RetMainNode(); } }
         protected Global.Timers timerOncePerSec;
         public ColiSys.Node trueEntShapeOffset { get { return nami.MoveTableByOffset(trueEntShape, offset); } }
         public ColiSys.Node coliBox { get { return nami.MoveTableByOffset(nami.ComplexNodeToSquareNode(trueEntShape), offset); } }
@@ -66,12 +66,12 @@ namespace EntSys
 
         public void SetEntShape(ColiSys.Hashtable tempTrueEntShape)
         {            
-            HashTrueEntShape = tempTrueEntShape;
+            EntHashtable = tempTrueEntShape;
         }
 
         protected bool ifBodyEmpty()
         {
-            return (HashTrueEntShape == null);
+            return (EntHashtable == null);
 
         }
 

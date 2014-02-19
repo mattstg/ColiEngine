@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using ColiSys;
+using Structs;
 
 namespace EntSys
 {
@@ -30,7 +31,7 @@ namespace EntSys
             }
         }
 
-        public Ground CreateMaterial(int pattern)
+        public Material CreateMaterial(int pattern)
         {
            
         //so single object with these vars, a type, energy, 
@@ -44,12 +45,13 @@ namespace EntSys
         float friction;
         float thornDmg;
         float stickyness;
+        S_XY loc;
         ColiSys.Hashtable htable = new ColiSys.Hashtable();
         AdditionalInfo addInfo = new AdditionalInfo();
-        
 
 
-            Ground tr = new Ground();
+
+        Material tr = new Material();
             switch (pattern)
             {
                 case 0: //normal dirt
@@ -63,14 +65,16 @@ namespace EntSys
                     armor.steel = 1;
                     matType  = MaterialTypes.dirt;
                     friction = .5f;
+                    loc = new S_XY(0, Consts.TopScope.WORLD_SIZE_Y / 2);
                     thornDmg = 0;  //0-inf percent dmg back
                     stickyness = 0; //not sure yet
                     //addInfo = new AdditionalInfo();
 
 
                     htable = new ColiSys.Hashtable(sgen.GenShape(ColiSys.Shape.Square, new Structs.S_XY(Consts.TopScope.WORLD_SIZE_X, Consts.TopScope.WORLD_SIZE_Y / 2), addInfo));
-                    htable.LoadTexture(tc.dirt, Color.White);
-                    tr = new Ground(hp, bounceForceMultLB, bounceForceMultUB, bounceThreshold, absorb, thornDmg, stickyness, armor, htable, friction,matType);
+                   // htable.LoadTexture(tc.dirt, Color.White);
+                    tr = new Material(hp, bounceForceMultLB, bounceForceMultUB, bounceThreshold, absorb, thornDmg, stickyness, armor, htable, friction,matType,true,null,loc);
+                    tr.LoadTexture(tc.dirt, Color.White);
                     break;
 
                 case 1: //Indestructible wall
@@ -85,15 +89,16 @@ namespace EntSys
                     matType  = MaterialTypes.Indestructible;
                     friction = .5f;
                     addInfo.width = 5;
+                    loc = new S_XY(0, 0);
                     thornDmg = 0;  //0-inf percent dmg back
                     stickyness = 0; //not sure yet
                     
                    
                     htable = new ColiSys.Hashtable(sgen.GenShape(ColiSys.Shape.HollowSqaure, new Structs.S_XY(Consts.TopScope.WORLD_SIZE_X, Consts.TopScope.WORLD_SIZE_Y),addInfo));
-                    htable.LoadTexture(tc.dirt, Color.SteelBlue);
-
-                    tr = new Ground(hp, bounceForceMultLB, bounceForceMultUB, bounceThreshold, absorb, thornDmg, stickyness, armor, htable, friction,matType);
                     
+
+                    tr = new Material(hp, bounceForceMultLB, bounceForceMultUB, bounceThreshold, absorb, thornDmg, stickyness, armor, htable, friction, matType,true,null,loc);
+                    tr.LoadTexture(tc.dirt, Color.SteelBlue);
                     break;
 
                 default:

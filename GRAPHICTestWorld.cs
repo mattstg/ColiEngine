@@ -15,7 +15,7 @@ namespace ColiSys
     {
         Global.Bus bus = Global.Bus.Instance;
         int boxSize;
-        Ground theGround;
+        Material theGround;
         List<VagueObject> masterList;
         
         Hashtable toAdd;
@@ -53,15 +53,9 @@ namespace ColiSys
         toAdd.LoadTexture(texture, Color.GreenYellow);
     }
 	
-	public void AddNodeToWorld(Hashtable hasht)
-	{
-        theGround.htable.HashAdder(hasht.RetMainNode());		
-	}
+	
 
-    public void SubNodeFromWorld(Hashtable hasht)
-    {
-        theGround.htable.HashSubtractor(hasht.RetMainNode());
-    }
+ 
 
     public void Draw(SpriteBatch sb)
     {
@@ -106,8 +100,10 @@ namespace ColiSys
                 Console.Out.WriteLine("////////Original ^////////////////////SUBTRACTION v  /////////////");
                 Console.Out.WriteLine(nami.GenString(toAdd));
                 */
-                theGround.htable.HashSubtractor(toAdd);
-                toAdd.EmptyTable();                
+                Hashtable ht = new Hashtable(theGround.trueEntShapeOffset);
+                ht.HashSubtractor(toAdd);
+                theGround.SetEntShape(new Hashtable(nami.MoveTableByOffset(ht.RetMainNode(),theGround.offsetCopy*-1)));
+                toAdd.EmptyTable();               
                 
                /* Console.Out.WriteLine("////////////////////////// vvv Result vvv//////////////////////////");
                 Console.Out.WriteLine(nami.GenString(theGround.htable));*/
@@ -122,8 +118,10 @@ namespace ColiSys
                 Console.Out.WriteLine("////////Original ^////////////////////ADDITION v  /////////////////");
                 Console.Out.WriteLine(nami.GenString(toAdd));
                 */
-                theGround.htable.HashAdder(toAdd);
-                toAdd.EmptyTable();
+                Hashtable ht = new Hashtable(theGround.trueEntShapeOffset);
+                ht.HashAdder(toAdd);
+                theGround.SetEntShape(new Hashtable(nami.MoveTableByOffset(ht.RetMainNode(), theGround.offsetCopy * -1)));
+                toAdd.EmptyTable();   
                 /*
                 Console.Out.WriteLine("////////////////////////// vvv Result vvv//////////////////////////");
                 Console.Out.WriteLine(nami.GenString(theGround.htable));*/
@@ -131,6 +129,7 @@ namespace ColiSys
             }
             if (keys.IsKeyDown(Keys.I))
             {
+                /*
                 Console.Out.WriteLine("////////////////////////// vvv Before Inverse vvv//////////////////////////");
                 Console.Out.WriteLine(nami.GenString(theGround.htable));
                 Node temp = nami.Inverser(theGround.htable.RetMainNode());
@@ -138,7 +137,7 @@ namespace ColiSys
                 Console.Out.WriteLine("////////////////////////// vv After Inverse vvv//////////////////////////");
                 Console.Out.WriteLine(nami.GenString(theGround.htable));
                 
-
+                */
             }
             inputTimer = inputRefreshTimer;
         }

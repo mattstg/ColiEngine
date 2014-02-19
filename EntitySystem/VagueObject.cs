@@ -63,7 +63,14 @@ namespace EntSys
 
         }
 
-        
+        public VagueObject(Material m)
+        {
+            obj = m;
+            type = objType.Ground;
+            baseType = objBaseType.Ent;
+            specificType = objSpecificType.Material;
+
+        }
 
 
 

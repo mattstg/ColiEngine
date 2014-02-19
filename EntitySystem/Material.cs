@@ -5,7 +5,7 @@ using System.Text;
 
 
 namespace EntSys
-{/*
+{
     public struct MaterialResistances
     {
         //should name other kinds of materials
@@ -19,12 +19,10 @@ namespace EntSys
     public enum MaterialTypes
     {
         dirt,steel,Indestructible
-    }*/
+    }
 
-    class Ground
+    class Material : Sprite
     {
-        ColiSys.NodeManipulator nami = ColiSys.NodeManipulator.Instance;
-        public bool destroy { get { return (htable.RetMainNode() == null); } }
         //so single object with these vars, a type, energy, 
         float hp = 1000;
         float bounceThreshold = .33f; //bounce within -100%
@@ -36,30 +34,38 @@ namespace EntSys
         float friction;
         float thornDmg = 0;  //0-inf percent dmg back
         float stickyness = 0; //not sure yet
-        public ColiSys.Hashtable htable;
-        public ActionEvent AE; //public because other objects will call Grounds event since ground does not update
+       // public ColiSys.Hashtable htable;
+        //public ActionEvent AE; //public because other objects will call Grounds event since ground does not update
         //I imagine a ground factory object that creates types of ground
-        public Ground(float hp, float bounceForceMultLB, float bounceForceMultUB, float bounceThreshold, float absorb, float thornDmg, float stickyness, MaterialResistances matRez, ColiSys.Hashtable htable, float friction, MaterialTypes type)
+        public Material(float hp, float bounceForceMultLB, float bounceForceMultUB, float bounceThreshold, float absorb, float thornDmg, float stickyness, MaterialResistances matRez, ColiSys.Hashtable htable, float friction, MaterialTypes type, bool isTopScope, DNA dna, Structs.S_XY loc)
         {
             this.hp = hp; this.bounceForceMultLB = bounceForceMultLB; this.bounceForceMultUB = bounceForceMultUB; this.bounceThreshold = bounceThreshold;
             this.absorb = absorb; this.thornDmg = thornDmg; this.stickyness = stickyness; //armor struct
-            this.matRez = matRez; this.htable = htable; this.friction = friction; this.matType = type;
-            AE = new ActionEvent(new VagueObject(this));
+            this.matRez = matRez; SetEntShape(htable); this.friction = friction; this.matType = type;
+            offset = new Structs.S_XY(loc);
+            rawOffSet.X = offset.x;
+            rawOffSet.Y = offset.y;
+
+            if(isTopScope) //if this is the highest scope, it creates the action event, otherise it gets created elsewhere
+                 AE = new ActionEvent(new VagueObject(this));
+            base.ForceCnstr(dna);
         }
 
-        public Ground() { }//AE = new ActionEvent(new VagueObject(this)); }
-
-        public bool ColiWithGround(ColiSys.Hashtable coliBox)
+        private void _ForceCnstr(DNA dna)
         {
-            return htable.Coli(coliBox.RetMainNode());
-
+            base.ForceCnstr(dna);
         }
 
-        public void Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch sb)
+        private void _DecodeDNA(DNA dna)
         {
-            htable.Draw(sb);
-        }
 
+
+
+        }
+        public Material() { }
+        public Material(DNA dna) { _ForceCnstr(dna); }//AE = new ActionEvent(new VagueObject(this)); }
+       
+            
         public float GetBounceForce(float tforce,  ColiSys.Node coliBox)
         {
             coliBox = nami.StretchSquareTableByXY(coliBox, new Structs.S_XY(-1, 1));   
@@ -78,7 +84,10 @@ namespace EntSys
                 }
                 else  //breaks it
                 {
-                    htable.HashSubtractor(coliBox); //subtract colibox from ground
+                    //Hashtable needs to be moved by offset!!!!
+                    //EntHashtable.HashSubtractor(coliBox); //subtract colibox from ground
+                    EntHashtable = new ColiSys.Hashtable(nami.MoveTableByOffset(nami.SubtractNodes(trueEntShapeOffset, coliBox),offset*-1));
+                    SetEntShape(EntHashtable);
 
                     if (force > hp * absorb)
                         return (hp * absorb)*-1*mag; //max force returnable

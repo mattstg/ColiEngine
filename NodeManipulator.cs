@@ -140,9 +140,10 @@ namespace ColiSys
 
         public Node CleanNode(Node a)
         {
-            Node toRet = a.CopySelf(copyTypes.copyBoth);
+            //Node toRet = a.CopySelf(copyTypes.copyBoth);
             //toRet = _MergeAllX(toRet);
-            toRet = _DeleteAllEmptyX(toRet);
+            Node toRet = _DeleteAllEmptyX(a);
+            toRet = _FinalXMerger(toRet);
 
             return toRet;
         }
@@ -174,10 +175,153 @@ namespace ColiSys
             return -1;
         }
 
-     
-       
+
+
+
+        public Node SubtractNodes(Node O, Node Ax)
+        {          
+
+            Node Oit = O.CopySelf(copyTypes.copyBoth);
+            Node toRet = Oit;
+
+            while (Oit != null && Ax != null)
+            {
+
+
+                OverlapType compared = RetOverlap(Oit, Ax, false);
+
+
+                switch (compared)
+                {
+                    case OverlapType.Equals:
+
+                        ////Console.Out.WriteLine(GenString());					
+                        //good case, do Y ADDER
+                        Oit.Dwn(YSubtractor(Oit.Dwn(), Ax.Dwn())); //merge the Ys of A into Oit
+
+                        Oit = Oit.Adj();
+                        Ax = Ax.Adj();
+
+                        break;
+
+                    case OverlapType.Before:
+
+                        //If it comes OverlapType.Before, no need to subtract it
+                        Ax = Ax.Adj();
+
+                        break;
+
+                    case OverlapType.After:
+
+                        Oit = Oit.Adj();
+                        break;
+
+                    case OverlapType.Right:
+                    case OverlapType.Left:
+                        _OverlapSplitter(Oit, Ax);
+                        break;
+
+                    case OverlapType.OEA:
+                        _SubsetSplitter(Ax, Oit);
+                        break;
+
+                    case OverlapType.AEO:
+                        _SubsetSplitter(Oit, Ax);
+                        break;
+
+                }
+
+            }
+            //if A!= null, then there is sitll some A OverlapType.Left, since nothing to subtract, a becomes null
+            Ax = null;
+
+            return CleanNode(toRet);
+        }
+        
+        private Node _FinalXMerger(Node mainNode)
+        {
+            //iterates through the list and checks if adj X are identical and merges them
+            Node it = mainNode;
+            if (it == null)
+                return it;
+            Node itt = it.Adj();
+            if (itt == null)
+                return it;
+
+            bool again = false;
+            Node xit;
+            Node xitt;
+
+
+
+            while (it != null && itt != null)
+            {
+                bool valid = true;
+                if (it.Ret(Bounds.u) == itt.Ret(Bounds.l) - 1)
+                {
+                    //if connected side by side 3-4 ex
+                    xit = it.Dwn();  //should not be null
+                    xitt = itt.Dwn();//should not be null
+
+
+                    while (valid)
+                    {
+                        if (xit == null || xitt == null)
+                        {
+                            valid = false;
+                        }
+                        else
+                        {
+                            if (xit.EqualBounds(xitt))
+                            {
+                                //good, iterate to the enxt
+                                xit = xit.Adj();
+                                xitt = xitt.Adj();
+                            }
+                            else
+                            {
+                                valid = false;
+                            }
+
+                        }
+
+                    }
+
+                    if (xit == null && xitt == null) //this should only occur when they exit simotanouesly through all
+                    {
+
+                        it.Set(itt.Ret(Bounds.u), Bounds.u);
+                        it.Adj(itt.Adj()); //overwrite the one in front since its identical
+                        itt.ClearLink();
+                        itt = it.Adj();
+                        again = true;
+                    }
+
+
+
+                }
+                if (!again)
+                {
+                    it = it.Adj();
+                    itt = itt.Adj();
+                }
+                else
+                    again = false;
+            }
+
+
+
+            return mainNode;
+
+        }
 
         
+
+
+
+
+
+
 
         public bool AlreadyExists(Node tO, Node tA)
         {

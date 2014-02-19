@@ -10,7 +10,7 @@ namespace EntSys
 {
     /*
 
-     current order: BodyMech, Explosion, Ground
+     current order: BodyMech, Explosion, Material
     */
     class ActionEvent
     {
@@ -20,53 +20,53 @@ namespace EntSys
         Global.Bus bus = Global.Bus.Instance;
         AbilityStore AS = AbilityStore.Instance;
         //this class belongs to an Ent, it takes in triggers and commences proper events
-        List<Func<VagueObject, BodyMechanics, Ground, AERetType>> BmGActions;
+        List<Func<VagueObject, BodyMechanics, Material, AERetType>> BmMatActions;
         List<Func<VagueObject, BodyMechanics, Explosion, AERetType>> BmExpActions;
 
         
-        List<Func<VagueObject, Explosion, Ground, AERetType>> ExpGActions;
+        List<Func<VagueObject, Explosion, Material, AERetType>> ExpMatActions;
         List<Func<VagueObject, KeyboardState, AERetType>> KeyActions;
 
-        List<Func<VagueObject, BodyPart, Ground, AERetType>> BodypartGroundActions;
+        List<Func<VagueObject, BodyPart, Material, AERetType>> BodypartMaterialActions;
         List<Func<VagueObject, BodyPart, Explosion, AERetType>> BodypartExpActions;
 
         public ActionEvent(VagueObject vo)
         {
             this.specificType = vo.specificType;
             master = vo;
-            BmGActions = new List<Func<VagueObject, BodyMechanics, Ground, AERetType>>();
-            BodypartGroundActions = new List<Func<VagueObject, BodyPart, Ground, AERetType>>();
-            ExpGActions = new List<Func<VagueObject, Explosion, Ground, AERetType>>();
+            BmMatActions = new List<Func<VagueObject, BodyMechanics, Material, AERetType>>();
+            BodypartMaterialActions = new List<Func<VagueObject, BodyPart, Material, AERetType>>();
+            ExpMatActions = new List<Func<VagueObject, Explosion, Material, AERetType>>();
             BmExpActions = new List<Func<VagueObject, BodyMechanics, Explosion, AERetType>>();
             KeyActions = new List<Func<VagueObject, KeyboardState, AERetType>>();
             BodypartExpActions = new List<Func<VagueObject, BodyPart, Explosion, AERetType>>();
-            AS.RegAbilityPack((int)specificType, BmGActions, ExpGActions, BmExpActions, KeyActions, BodypartGroundActions, BodypartExpActions);
+            AS.RegAbilityPack((int)specificType, BmMatActions, ExpMatActions, BmExpActions, KeyActions, BodypartMaterialActions, BodypartExpActions);
         }
 
         //atm unique checking is NOT a thing! ability to have some ability mutiple times
         public void RegAbilityPack(int num)
         {
-            AS.RegAbilityPack(num, BmGActions, ExpGActions, BmExpActions, KeyActions, BodypartGroundActions, BodypartExpActions);
+            AS.RegAbilityPack(num, BmMatActions, ExpMatActions, BmExpActions, KeyActions, BodypartMaterialActions, BodypartExpActions);
         }
 
         
 
-        public bool TriggerEvent(BodyMechanics bod,Ground ground)
+        public bool TriggerEvent(BodyMechanics bod,Material Material)
         {
             //cycle through events
-            foreach (Func<VagueObject, BodyMechanics, Ground, AERetType> func in BmGActions)
+            foreach (Func<VagueObject, BodyMechanics, Material, AERetType> func in BmMatActions)
             {
-                func(master,bod, ground);
+                func(master,bod, Material);
             }
             return true;
         }
 
-        public bool TriggerEvent(BodyPart bod, Ground ground)
+        public bool TriggerEvent(BodyPart bod, Material Material)
         {
             //cycle through events
-            foreach (Func<VagueObject, BodyPart, Ground, AERetType> func in BodypartGroundActions)
+            foreach (Func<VagueObject, BodyPart, Material, AERetType> func in BodypartMaterialActions)
             {
-                func(master, bod, ground);
+                func(master, bod, Material);
             }
             return true;
         }
@@ -81,12 +81,12 @@ namespace EntSys
             return true;
         }
 
-        public bool TriggerEvent(Explosion exp, Ground ground)
+        public bool TriggerEvent(Explosion exp, Material Material)
         {
             //cycle through events
-            foreach (Func<VagueObject, Explosion, Ground, AERetType> func in ExpGActions)
+            foreach (Func<VagueObject, Explosion, Material, AERetType> func in ExpMatActions)
             {
-                func(master, exp, ground);
+                func(master, exp, Material);
             }
             return true;
         }

@@ -32,30 +32,30 @@ namespace EntSys
             }
         }
 
-        public void RegAbilityPack(int packNum, List<Func<VagueObject, BodyMechanics, Ground, AERetType>> BmGActions, List<Func<VagueObject, Explosion, Ground, AERetType>> ExpGActions
-                                    , List<Func<VagueObject, BodyMechanics, Explosion, AERetType>> BmExpActions, List<Func<VagueObject, KeyboardState, AERetType>> KeyActions,
-                                      List<Func<VagueObject, BodyPart, Ground, AERetType>> BodypartGroundActions, List<Func<VagueObject, BodyPart, Explosion, AERetType>> BodypartExpActions)
+        public void RegAbilityPack(int packNum, List<Func<VagueObject, BodyMechanics, Material, AERetType>> BodyMechVsMaterial, List<Func<VagueObject, Explosion, Material, AERetType>> ExpVsMaterial
+                                    , List<Func<VagueObject, BodyMechanics, Explosion, AERetType>> BodyMechVsExp, List<Func<VagueObject, KeyboardState, AERetType>> KeyActions,
+                                      List<Func<VagueObject, BodyPart, Material, AERetType>> BodyPartVsMaterial, List<Func<VagueObject, BodyPart, Explosion, AERetType>> BodyPartVsExp)
         {
             switch(packNum)
             {
                 case 4: //Human
-                   // BmGActions.Add(BmGCreateExp);  create debug exp when hit ground
-                    BmGActions.Add(callG);
-                    BmGActions.Add(BodyHitsGround);
-                    BmExpActions.Add(BmColiExp);
+                   // BmGActions.Add(BmGCreateExp);  create debug exp when hit Material
+                    BodyMechVsMaterial.Add(callG);
+                    BodyMechVsMaterial.Add(BodyHitsGround);
+                    BodyMechVsExp.Add(BmColiExp);
                     KeyActions.Add(HumanKeyMove);
                    // BmGActions.Add(BodyHitsGround);
                     return;
                     
                 case 5: //Exp
-                    ExpGActions.Add(ExpGAlterPath);
-                    ExpGActions.Add(callG);
-                    BmExpActions.Add(ExpColiBm);
+                    ExpVsMaterial.Add(ExpGAlterPath);
+                    ExpVsMaterial.Add(callG);
+                    BodyMechVsExp.Add(ExpColiBm);
                     return;
                 
-                case 6: //Ground
-                    ExpGActions.Add(GcoliExp);
-                    BmGActions.Add(GcoliBm);
+                case 6: //Material
+                    ExpVsMaterial.Add(GcoliExp);
+                    BodyMechVsMaterial.Add(GcoliBm);
                     return;
 
                 case 7: //Body Part
@@ -64,7 +64,7 @@ namespace EntSys
 
                 case 10: //Wings!
                     KeyActions.Add(HumanWingsInput);
-                    BodypartGroundActions.Add(BodypartHitsGround);
+                    BodyPartVsMaterial.Add(BodypartHitsGround);
                     return;
 
 
@@ -84,11 +84,11 @@ namespace EntSys
 
 
         /////For now, all Events will be created here, they should be created elsewhere i guess... this way for custom skill generation
-        private AERetType BmGCreateExp(VagueObject callingObj, BodyMechanics bm, Ground ground)
+        private AERetType BmGCreateExp(VagueObject callingObj, BodyMechanics bm, Material Material)
         {          
-                //used in body hitting ground, create explosion, apply on ground effects, or do nothing
-                //Not used to exert normal forces on body, ground should do that, but most likely, this function, or another ground function, should call
-                //grounds func since ground doesnt do coli testing
+                //used in body hitting Material, create explosion, apply on Material effects, or do nothing
+                //Not used to exert normal forces on body, Material should do that, but most likely, this function, or another Material function, should call
+                //grounds func since Material doesnt do coli testing
                 bus.LoadPassenger(new Explosion(bm.trueEntShape, new Structs.S_XY(bm.offsetCopy.x, bm.offsetCopy.y + 14),50,null));
                 Console.Out.Write("YO SHIT BE HAPPENING");
                 return new AERetType();
@@ -110,7 +110,7 @@ namespace EntSys
             return new AERetType();
         }
 
-        private AERetType BodyHitsGround(VagueObject callingObj, BodyMechanics Bm, Ground ground)
+        private AERetType BodyHitsGround(VagueObject callingObj, BodyMechanics Bm, Material Material)
         {
             Vector2 dir = Statics.Converter.getMag(Bm.EI.momentum);
             
@@ -118,8 +118,8 @@ namespace EntSys
             //cases, direct collision, movement not covered by coli
             if (Bm.EI.coliHV[0])
             {
-                //bounce in x direction & break ground
-                Bm.ApplyForce(Enums.Force.ForceTypes.Dirt, new Vector2(ground.GetBounceForce(Bm.EI.momentum.X, nami.MoveTableByOffset(callingObj.coliBox,new S_XY((int)dir.X,0))), 0));
+                //bounce in x direction & break Material
+                Bm.ApplyForce(Enums.Force.ForceTypes.Dirt, new Vector2(Material.GetBounceForce(Bm.EI.momentum.X, nami.MoveTableByOffset(callingObj.coliBox,new S_XY((int)dir.X,0))), 0));
                 
                 
                 //collision happened directly
@@ -134,11 +134,11 @@ namespace EntSys
 
             if (Bm.EI.coliHV[1])
             {
-                //bounce in x direction & break ground
+                //bounce in x direction & break Material
                 //ColiSys.Node node = callingObj.coliBox;
                // ColiSys.Node node = nami.MoveTableByOffset(callingObj.coliBox, new S_XY(0, (int)dir.Y));
-               // Bm.ApplyForce(Enums.Force.ForceTypes.Dirt, new Vector2(0, ground.GetBounceForce(Bm.momentum.Y, node)));
-                Bm.ApplyForce(Enums.Force.ForceTypes.Dirt, new Vector2(0, ground.GetBounceForce(Bm.EI.momentum.Y, nami.MoveTableByOffset(callingObj.coliBox, new S_XY(0, (int)dir.Y)))));
+               // Bm.ApplyForce(Enums.Force.ForceTypes.Dirt, new Vector2(0, Material.GetBounceForce(Bm.momentum.Y, node)));
+                Bm.ApplyForce(Enums.Force.ForceTypes.Dirt, new Vector2(0, Material.GetBounceForce(Bm.EI.momentum.Y, nami.MoveTableByOffset(callingObj.coliBox, new S_XY(0, (int)dir.Y)))));
                 //some reason, one of the pointers gets lost in the resulting Nami. transform when called inside the func, but not otherwise^
 
 
@@ -155,7 +155,7 @@ namespace EntSys
             return new AERetType();
         }
 
-        private AERetType BodypartHitsGround(VagueObject callingObj, BodyPart bp, Ground ground)
+        private AERetType BodypartHitsGround(VagueObject callingObj, BodyPart bp, Material Material)
         {
             Vector2 dir = Statics.Converter.getMag(bp.EI.momentum);
             
@@ -164,8 +164,8 @@ namespace EntSys
             //cases, direct collision, movement not covered by coli
             if (bp.EI.coliHV[0])
             {
-                //bounce in x direction & break ground
-                bp.Master.ApplyForce(Enums.Force.ForceTypes.Dirt, new Vector2(ground.GetBounceForce(bp.EI.momentum.X, nami.MoveTableByOffset(callingObj.coliBox, new S_XY((int)dir.X, 0))), 0));
+                //bounce in x direction & break Material
+                bp.Master.ApplyForce(Enums.Force.ForceTypes.Dirt, new Vector2(Material.GetBounceForce(bp.EI.momentum.X, nami.MoveTableByOffset(callingObj.coliBox, new S_XY((int)dir.X, 0))), 0));
 
 
                 //collision happened directly
@@ -180,11 +180,11 @@ namespace EntSys
 
             if (bp.EI.coliHV[1])
             {
-                //bounce in x direction & break ground
+                //bounce in x direction & break Material
                 //ColiSys.Node node = callingObj.coliBox;
                 // ColiSys.Node node = nami.MoveTableByOffset(callingObj.coliBox, new S_XY(0, (int)dir.Y));
-                // Bm.ApplyForce(Enums.Force.ForceTypes.Dirt, new Vector2(0, ground.GetBounceForce(Bm.momentum.Y, node)));
-                bp.Master.ApplyForce(Enums.Force.ForceTypes.Dirt, new Vector2(0, ground.GetBounceForce(bp.EI.momentum.Y, nami.MoveTableByOffset(callingObj.coliBox, new S_XY(0, (int)dir.Y)))));
+                // Bm.ApplyForce(Enums.Force.ForceTypes.Dirt, new Vector2(0, Material.GetBounceForce(Bm.momentum.Y, node)));
+                bp.Master.ApplyForce(Enums.Force.ForceTypes.Dirt, new Vector2(0, Material.GetBounceForce(bp.EI.momentum.Y, nami.MoveTableByOffset(callingObj.coliBox, new S_XY(0, (int)dir.Y)))));
                 //some reason, one of the pointers gets lost in the resulting Nami. transform when called inside the func, but not otherwise^
 
 
@@ -200,34 +200,34 @@ namespace EntSys
             return new AERetType();
         }
 
-        private AERetType ExpGAlterPath(VagueObject callingObj, Explosion exp, Ground ground)
+        private AERetType ExpGAlterPath(VagueObject callingObj, Explosion exp, Material Material)
         {
             //Exp
-            //Exp hitting the ground
-            //explosion hits ground, possibility of altering explosion path?
-          //  Console.Out.Write("EXPLOSION HIT GROUND!");
+            //Exp hitting the Material
+            //explosion hits Material, possibility of altering explosion path?
+          //  Console.Out.Write("EXPLOSION HIT Material!");
             //nah should just be absorded, but bouncing would be cool if it doesnt break it, like
-            //how ground bounces
+            //how Material bounces
             return new AERetType();
 
         }
 
-        private AERetType callG(VagueObject callingObj, BodyMechanics bm, Ground ground)
+        private AERetType callG(VagueObject callingObj, BodyMechanics bm, Material Material)
         {
             //Bm            
-            //When body hits ground, body needs to call grounds AE
-            ground.AE.TriggerEvent(bm,ground);
+            //When body hits Material, body needs to call grounds AE
+            Material.AE.TriggerEvent(bm,Material);
 
 
             return new AERetType();
 
         }
 
-        private AERetType callG(VagueObject callingObj, Explosion exp, Ground ground)
+        private AERetType callG(VagueObject callingObj, Explosion exp, Material Material)
         {
             //Exp
-            //When exp hits ground, exp needs to call grounds AE
-            ground.AE.TriggerEvent(exp,ground);
+            //When exp hits Material, exp needs to call grounds AE
+            Material.AE.TriggerEvent(exp,Material);
 
 
             return new AERetType();
@@ -257,21 +257,21 @@ namespace EntSys
 
         }
 
-        private AERetType GcoliExp(VagueObject callingObj, Explosion exp, Ground ground)
+        private AERetType GcoliExp(VagueObject callingObj, Explosion exp, Material Material)
         {
-            //Ground:
-            //When the explosion hits the ground
+            //Material:
+            //When the explosion hits the Material
             //Subtract dirt or do nothing
 
             return new AERetType();
 
         }
 
-        private AERetType GcoliBm(VagueObject callingObj, BodyMechanics bm, Ground ground)
+        private AERetType GcoliBm(VagueObject callingObj, BodyMechanics bm, Material Material)
          {
-             //Ground being hit by body, apply normal Forces back on bod,  or destroy and subtract from ground
-             //this AE belongs to ground, but ground will not call it since it doesnt have coli check on update, 
-             //the body that collides with ground should call this
+             //Material being hit by body, apply normal Forces back on bod,  or destroy and subtract from Material
+             //this AE belongs to Material, but Material will not call it since it doesnt have coli check on update, 
+             //the body that collides with Material should call this
 
              //Apply Forces or check if breaks
              return new AERetType();

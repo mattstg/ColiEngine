@@ -53,7 +53,7 @@ namespace EntSys
 {
     enum objType { Body = 0, Explosion = 1, Ground = 2, None = 99 };
     enum objBaseType { Ground, Ent, Misc };
-    enum objSpecificType { Ent=0, Sprite=1, Body=2, Bm=3, Human=4, Exp=5, Ground=6, BodyPart=7 };
+    enum objSpecificType { Ent=0, Sprite=1, Body=2, Bm=3, Human=4, Exp=5, Ground=6, BodyPart=7, Material=8 };
     enum dir { up =0 , right = 1, down = 2, left = 3 }
     
 }

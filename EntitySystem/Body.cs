@@ -12,7 +12,7 @@ namespace EntSys
     
 
 
-    class Body : Sprite
+    class Body : Material
     {
         protected Global.Timers UniResponseT = new Global.Timers();//this way until dna
         protected List<BodyPart> bodyParts;

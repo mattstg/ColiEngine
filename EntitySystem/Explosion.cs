@@ -33,8 +33,8 @@ namespace EntSys
             acceptedColi.Add(objType.Ground);
             acceptedColi.Add(objType.Explosion);
             acceptedColi.Add(objType.Body);
-            HashTrueEntShape = new ColiSys.Hashtable(newHeadNode);
-            htable = HashTrueEntShape;
+            EntHashtable = new ColiSys.Hashtable(newHeadNode);
+            htable = EntHashtable;
             this.offset = offset;
             lifeSpan = new Global.Timers(32);
             this.force = force;
@@ -63,7 +63,7 @@ namespace EntSys
 
         public void _CheckAllColi()
         {
-            objType coliOccur = objType.None;
+            /*objType coliOccur = objType.None;
             VagueObject connecter = new VagueObject(); //need to assign?
             Collidables.ResetIT();
             while (Collidables.GetNext(connecter))
@@ -87,17 +87,17 @@ namespace EntSys
                             break;
                         }
                     }            
-            }
+            }*/
         }
         
-        private void _ColiWithGround(Ground g)
+        /*private void _ColiWithGround(Material g)
         {
             
             //explosion hits ground, tears through it, add feature to lessen explosion later
             AE.TriggerEvent(this, g);
             g.htable.HashSubtractor(trueEntShapeOffset); //eventaually just call Ground.DmgArea() or sumtin
 
-        }
+        }*/
         
 
     }

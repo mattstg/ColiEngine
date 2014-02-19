@@ -334,7 +334,7 @@ namespace EntSys
                                     EI.PointsOfContact++;
                                     EI.coliHV = _GetDirCol(veloThisCycle, connecter, this.coliBox);  //i should be snaped to location, so i just need to check around me
                                     EI.momentum = velo * (totalMass / EI.PointsOfContact);
-                                    Console.Out.WriteLine(velo);
+                                    //Console.Out.WriteLine(velo);
                                     switch (connecter.specificType)
                                     {
                                         case objSpecificType.Bm:
@@ -346,8 +346,8 @@ namespace EntSys
                                         case objSpecificType.Exp:
                                             AE.TriggerEvent(this, connecter.getObj<Explosion>());
                                             break;
-                                        case objSpecificType.Ground:
-                                            AE.TriggerEvent(this, connecter.getObj<Ground>());
+                                        case objSpecificType.Material:
+                                            AE.TriggerEvent(this, connecter.getObj<Material>());
                                             break;
                                         case objSpecificType.Human:
                                             break;
@@ -377,8 +377,8 @@ namespace EntSys
                                             case objSpecificType.Exp:
                                                 bp.AE.TriggerEvent(bp, connecter.getObj<Explosion>());
                                                 break;
-                                            case objSpecificType.Ground:                                                
-                                                bp.AE.TriggerEvent(bp, connecter.getObj<Ground>());
+                                            case objSpecificType.Material:                                                
+                                                bp.AE.TriggerEvent(bp, connecter.getObj<Material>());
                                                 break;
                                             case objSpecificType.Human:
                                                 break;
@@ -402,11 +402,8 @@ namespace EntSys
                                 //Multiple coli dectected on same turn can stack odly, example the -,
                                 //In here, the action events will be called
 
-                            } else {//has not collided with anything 
-                                ColiHappend = false; //allready dont, just ensuring atm
-                           
                             }
-                        }
+                    }
                     if (ColiHappend)
                     {
                         //cause a coli happened, we need to reapply the forces that happened above
