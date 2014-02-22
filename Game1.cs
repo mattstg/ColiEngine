@@ -20,7 +20,8 @@ namespace ColiSys
     /// </summary>
     public class Game1 : Game
     {
-        
+        enum GameState { mainGame, BodyDesigner }
+        GameState gameState;
         GraphicsDeviceManager graphics;
         TestContent tc;  
         DebugCheatCodes cheats;
@@ -28,6 +29,7 @@ namespace ColiSys
         GRAPHICTestWorld world;
         DNABuilder dnaBuilder;
         HumanPlayer human;
+        BPDesign.BodyPartDesigner bpDesigner;
         ShapeGenerator shapeGen;
         Global.Bus bus = Global.Bus.Instance;
         NodeManipulator nami;
@@ -38,6 +40,7 @@ namespace ColiSys
         public Game1()
             : base()
         {
+            gameState = GameState.mainGame;
             Shape shapo;
             graphics = new GraphicsDeviceManager(this);
             graphics.PreferredBackBufferHeight = 720;
@@ -64,6 +67,7 @@ namespace ColiSys
             tc = TestContent.Instance;
             nami = NodeManipulator.Instance;
             tc.LoadContent(Content);
+            bpDesigner = new BPDesign.BodyPartDesigner();
             /////////////
 
            
@@ -96,20 +100,13 @@ namespace ColiSys
             human.DebugLoadHuman();
            // int c = 0;
            // foreach (Rock rock in RockList)
-           // {
+           // {-
            //     rock.DebugLoadSprite(tc.dirt, shapeGen.GenShape(Shape.Square, new S_XY(), new S_XY(10, 10)), new S_XY(40*c, 40*c), Color.LightSlateGray);
            //     c++;
            // }
             //human.DebugLoadSprite(tc.dirt, shapeGen.GenShape(Shape.Square, new S_XY(10, 10), new S_XY(3, 6)), Color.Blue);
             // TODO: use this.Content to load your game content here
-            Node y = new Node(5, 5, null, null);
-            Node x = new Node(5, 5, null, y);
-
-            Node y2 = new Node(0, 0, null, null);
-            Node x2 = new Node(0, 0, null, y2);
-
-            Node result = nami.DrawNodeLine2(x, x2);
-            result.GenString();
+            
         }
 
         /// <summary>
@@ -132,12 +129,23 @@ namespace ColiSys
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
             Input(rt);
-                        
-            human.Update(rt);
-           // foreach (Rock rock in RockList)
-           //     rock.Update(rt);
 
-            world.Update(rt);
+            switch (gameState)
+            {
+                case GameState.BodyDesigner:
+                    bpDesigner.Update(rt);
+                    break;
+                case GameState.mainGame:
+                    human.Update(rt);
+                    world.Update(rt);
+                    break;
+
+
+            }
+
+
+
+            
                        
             base.Update(gameTime);
            
@@ -145,9 +153,20 @@ namespace ColiSys
 
         protected void Input(float rt)
         {
-            world.Input();
-            cheats.Input();
-            human.Input();
+            switch (gameState)
+            {
+                case GameState.BodyDesigner:
+                    cheats.Input();
+                    break;
+                case GameState.mainGame:
+                    world.Input();
+                    cheats.Input();
+                    human.Input();
+                    break;
+
+
+            }
+            
         }
 
         /// <summary>
@@ -158,12 +177,21 @@ namespace ColiSys
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin();
-            world.Draw(spriteBatch);
-            human.Draw();
-          //  foreach (Rock rock in RockList)
-          //      rock.Draw(spriteBatch);
-            // TODO: Add your drawing code here
+
+            switch (gameState)
+            {
+                case GameState.BodyDesigner:
+                    bpDesigner.Draw();
+                    break;
+                case GameState.mainGame:
+                     world.Draw(spriteBatch);
+                     human.Draw();
+                    break;
+
+
+            }
             spriteBatch.End();
+           
             base.Draw(gameTime);
             
         }

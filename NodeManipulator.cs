@@ -179,8 +179,8 @@ namespace ColiSys
         {
             ///Step1, validate input
             ///
-        
 
+            bool valid = true;
             int xmod = 0;
             int ymod = 0;
             int xdif = p2.Ret(Bounds.l) - p1.Ret(Bounds.l);
@@ -223,6 +223,71 @@ namespace ColiSys
 
 
         }
+
+
+        public Node DrawLineInsideTable(Node p1, Node p2,Hashtable insideOf)
+        {
+            ///Step1, validate input
+            ///
+
+            bool valid = true;
+            int xmod = 0;
+            int ymod = 0;
+            int xdif = p2.Ret(Bounds.l) - p1.Ret(Bounds.l);
+            int ydif = p2.Dwn().Ret(Bounds.l) - p1.Dwn().Ret(Bounds.l);
+            int basex = p1.Ret(Bounds.l);
+            int basey = p1.Dwn().Ret(Bounds.l);
+
+            if (!(xdif == 0 || ydif == 0 || (Math.Abs(xdif) == Math.Abs(ydif))))
+                return null; //invalid input
+
+
+
+            if (xdif < 0)
+                xmod = -1;
+            else if (xdif > 0)
+                xmod = 1;
+
+            if (ydif < 0)
+                ymod = -1;
+            else if (ydif > 0)
+                ymod = 1;
+
+
+
+
+            Node mainy = new Node(p1.Dwn().Ret(Bounds.l), p1.Dwn().Ret(Bounds.l), null, null);
+            Node main = new Node(p1.Ret(Bounds.l), p1.Ret(Bounds.l), null, mainy);
+            if (!insideOf.Coli(main))
+                valid = false;
+
+            Hashtable ht = new Hashtable(main);
+            Node it = main;
+            int c = 1;
+            while ((!it.EqualBounds(p2) || !it.Dwn().EqualBounds(p2.Dwn())) && c < 150 && valid)
+            {
+                Node y = new Node(basey + c * ymod, basey + c * ymod);
+                Node x = new Node(basex + c * xmod, basex + c * xmod, null, y);
+                ht.HashAdder(x);
+                it = x;
+                c++;
+                if (!insideOf.Coli(x))
+                    valid = false;
+            }
+
+            if (valid)
+                return ht.RetMainNode();
+            else
+            {
+                Console.Out.WriteLine("Line did not fully collide with body");
+                return null;
+            }
+
+
+        }
+
+
+
         public bool DoesNodeExistFullyInOtherNode(Node mainNode, Node subNode)
         {
 

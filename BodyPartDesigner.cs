@@ -16,13 +16,18 @@ namespace BPDesign
         Hashtable toAdd;
         List<Hashtable> SutureSpots;
         NodeManipulator nami = NodeManipulator.Instance;
-
+        TestContent tc = TestContent.Instance;
+        
         public BodyPartDesigner()
         {
-            inputTimer = new Timers(250);
+            inputTimer = new Timers(50);
             BpHt = new Hashtable();
             toAdd = new Hashtable();
             SutureSpots = new List<Hashtable>();
+
+            BpHt.LoadTexture(tc.dirt, Color.Chartreuse);
+            toAdd.LoadTexture(tc.dirt, Color.Yellow);
+            
 
         }
 
@@ -50,7 +55,6 @@ namespace BPDesign
                 }
                 if (mouse.RightButton == ButtonState.Pressed)
                 {
-
                     BpHt.HashSubtractor(toAdd);
                     toAdd.EmptyTable();
                 }
@@ -61,6 +65,25 @@ namespace BPDesign
                 }
                 if (keys.IsKeyDown(Keys.Enter))
                     ValidateAndFinalizeBodyPart();
+                if (keys.IsKeyDown(Keys.S))
+                {
+                    if (toAdd.RetMainNode() != null)
+                    {
+                        Node t = nami.DrawLineInsideTable(toAdd.RetMainNode(), toAdd.RetMainNode().Adj(), BpHt);
+                        if (t != null)
+                        {
+                            Hashtable tt = new Hashtable(t);
+                            tt.LoadTexture(tc.dirt, Color.Red);
+                            SutureSpots.Add(tt);
+
+                        }
+                        toAdd.EmptyTable();
+                    }
+                }
+
+                if (keys.IsKeyDown(Keys.E))
+                    toAdd.EmptyTable();
+                
 
 
 
