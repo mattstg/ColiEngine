@@ -9,7 +9,7 @@ using BodyParts;
 
 namespace EntSys
 {
-    class BodyMechanics:Body
+    public class BodyMechanics : Body
     {
         
         Global.Bus bus = Global.Bus.Instance;

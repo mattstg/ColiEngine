@@ -7,7 +7,7 @@ namespace Enums
 {
     namespace Force
     {
-        enum ForceTypes{Internal,NaturalLaw,Dirt}
+        public enum ForceTypes { Internal, NaturalLaw, Dirt }
 
 
 
@@ -29,7 +29,7 @@ namespace Enums
 
      namespace Node
     {
-        public enum Bounds { l, u };
+         public enum Bounds { l, u };
         public enum ENode { adj, dwn };
         public enum copyTypes { copyNode, copyDwn, copyAdj, copyBoth };
         public enum OverlapType { Right, Left, OEA, AEO, Equals, Before, After };
@@ -51,9 +51,9 @@ namespace Enums
 
 namespace EntSys
 {
-    enum objType { Body = 0, Explosion = 1, Ground = 2, None = 99 };
-    enum objBaseType { Ground, Ent, Misc };
-    enum objSpecificType { Ent=0, Sprite=1, Body=2, Bm=3, Human=4, Exp=5, Ground=6, BodyPart=7, Material=8 };
-    enum dir { up =0 , right = 1, down = 2, left = 3 }
+    public enum objType { Body = 0, Explosion = 1, Ground = 2, None = 99 };
+    public enum objBaseType { Ground, Ent, Misc };
+    public enum objSpecificType { Ent = 0, Sprite = 1, Body = 2, Bm = 3, Human = 4, Exp = 5, Ground = 6, BodyPart = 7, Material = 8 };
+    public enum dir { up = 0, right = 1, down = 2, left = 3 }
     
 }

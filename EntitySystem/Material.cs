@@ -21,7 +21,7 @@ namespace EntSys
         dirt,steel,Indestructible
     }
 
-    class Material : Sprite
+    public class Material : Sprite
     {
         //so single object with these vars, a type, energy, 
         float hp = 1000;

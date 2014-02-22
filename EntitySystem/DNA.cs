@@ -6,7 +6,7 @@ using Structs;
 
 namespace EntSys
 {
-    class DNA
+    public class DNA
     {
         public S_XY[] dDNA;
 

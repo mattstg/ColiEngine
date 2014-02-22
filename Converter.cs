@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
-using Enums.Node;
+ 
 using Structs;
 using EntSys;
-
+using Enums.Node;
 namespace Statics
 {
     class Converter

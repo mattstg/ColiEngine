@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework;
 
 namespace EntSys
 {
-    class Entity
+    public class Entity
     {
         public struct EventInfo //for body and bodyparts
         {

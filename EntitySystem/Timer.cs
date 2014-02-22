@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Global
 {
-    class Timers
+    public class Timers
     {
         bool pause = false;
         float minT;

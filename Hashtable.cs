@@ -1,8 +1,7 @@
 using Microsoft.Xna.Framework.Graphics;  
 using Microsoft.Xna.Framework;
+ using Structs;
 using Enums.Node;
-using Structs;
-
 namespace ColiSys
 {
     public class Hashtable
@@ -41,8 +40,9 @@ namespace ColiSys
                 return null;
         }
 
-        public void Draw(SpriteBatch sb)
+        public void Draw()
         {
+            SpriteBatch sb = Game1.spriteBatch;
             spriteTable.Draw(sb,mainNode,color);
         }
 

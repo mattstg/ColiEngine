@@ -1,6 +1,6 @@
-using Enums.Node;
+using System;
 using Structs;
-
+using Enums.Node;
 
 namespace ColiSys
 {
@@ -175,6 +175,59 @@ namespace ColiSys
             return -1;
         }
 
+        public Node DrawNodeLine2(Node p1, Node p2)
+        {
+            ///Step1, validate input
+            ///
+        
+
+            int xmod = 0;
+            int ymod = 0;
+            int xdif = p2.Ret(Bounds.l) - p1.Ret(Bounds.l);
+            int ydif = p2.Dwn().Ret(Bounds.l) - p1.Dwn().Ret(Bounds.l);
+            int basex = p1.Ret(Bounds.l);
+            int basey = p1.Dwn().Ret(Bounds.l);
+
+            if (!(xdif == 0 || ydif == 0 || (Math.Abs(xdif) == Math.Abs(ydif))))
+                return null; //invalid input
+
+
+
+            if (xdif < 0)
+                xmod = -1;
+            else if (xdif > 0)
+                xmod = 1;
+
+            if (ydif < 0)
+                ymod = -1;
+            else if (ydif > 0)
+                ymod = 1;
+           
+
+
+
+            Node mainy = new Node(p1.Dwn().Ret(Bounds.l), p1.Dwn().Ret(Bounds.l), null, null);
+            Node main = new Node(p1.Ret(Bounds.l), p1.Ret(Bounds.l), null, mainy);
+            Hashtable ht = new Hashtable(main);
+            Node it = main;
+            int c = 1;
+            while ((!it.EqualBounds(p2) || !it.Dwn().EqualBounds(p2.Dwn())) && c < 150)
+            {
+                Node y = new Node(basey + c * ymod, basey + c * ymod);
+                Node x = new Node(basex + c * xmod, basex + c * xmod, null, y);
+                ht.HashAdder(x);
+                it = x;
+                c++;
+            }
+            return ht.RetMainNode();
+
+
+        }
+        public bool DoesNodeExistFullyInOtherNode(Node mainNode, Node subNode)
+        {
+
+            return true;
+        }
 
 
 

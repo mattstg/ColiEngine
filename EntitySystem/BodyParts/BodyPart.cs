@@ -6,6 +6,7 @@ using EntSys;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Structs;
 //addition of all mass!
 //When creating new bodyParts, please ensure it has an Update
 
@@ -25,8 +26,46 @@ namespace BodyParts
             return bp;
         }
     }
+    public enum FuncPulseType
+    {
+       ///<summary>Cast Function as INT </summary>
+        getTotalMass,
+        ///<summary>Cast as anything Nullable (obj, int, w/e) </summary>
+       MovePartsBy,
+        ///<summary>Cast as Bool </summary>
+        CheckColiInDir,
+        ///<summary>Cast as anything Nullable (obj, int, w/e) </summary>
+        PassBodyPulse,
+        ///<summary>Cast as FeedbackPulse </summary>
+        PassInput
 
-    abstract class BodyPart : Sprite
+    }
+    public struct FuncPulse
+    {
+        public FuncPulseType funcCalling;
+        public S_XY byOffest;
+        public VagueObject coliObj;
+        public List<BodyPart> coliParts;
+        public KeyboardState keyState;
+        public BodyPulse pulse;
+        public float rt;
+
+    }
+    public struct FeedbackPulse
+    {
+        public int TotalWeight;
+
+
+        public static FeedbackPulse operator +(FeedbackPulse v1, FeedbackPulse v2)
+        {
+            FeedbackPulse fp = new FeedbackPulse();
+            fp.TotalWeight = v1.TotalWeight + v2.TotalWeight;
+           return fp;
+
+        }
+    }
+
+    public abstract class BodyPart : Sprite
     {
         
         List<BodyPartConnection> connecters;
@@ -40,6 +79,7 @@ namespace BodyParts
 
         public void ForceCnstr(DNA dna)
         {
+           
             connecters = new List<BodyPartConnection>();
             base.ForceCnstr(dna);
         }
@@ -61,22 +101,50 @@ namespace BodyParts
 
         }
 
-
-        public void MovePartBy(Structs.S_XY moveBy)
+        
+        public FeedbackPulse SendFuncPulse(FuncPulseType funcPulseType,FuncPulse funcPulse)
         {
-            offset += moveBy;
-            foreach (BodyPartConnection bpc in connecters)
-                bpc.MovePartBy(this, moveBy);
+            FeedbackPulse toRet = new FeedbackPulse();
+
+
+            switch (funcPulseType)
+            {
+                case FuncPulseType.CheckColiInDir:
+                    if (funcPulse.coliObj.Coli(nami.MoveTableByOffset(coliBox, funcPulse.byOffest)))
+                        funcPulse.coliParts.Add(this);
+                    break;
+                case FuncPulseType.getTotalMass:
+                    toRet.TotalWeight = mass;
+                    break;
+                case FuncPulseType.MovePartsBy:
+                    offset += funcPulse.byOffest;
+                    break;
+                case FuncPulseType.PassBodyPulse:
+                    DecodePulse(funcPulse.pulse);
+                    break;
+                case FuncPulseType.PassInput:
+                    AE.TriggerEvent(funcPulse.keyState);
+                    break;
+                default:
+                    Console.Out.WriteLine("error, unhandled funcPulseType");
+                    break;
+            }
+
+
+            toRet += _SendPulseToEachBp(funcPulseType, funcPulse);
+
+            return toRet;
         }
 
-        public void CheckColi(Structs.S_XY byOffset, VagueObject coliObj, List<BodyPart> coliParts)
-        {
-            //check if coli has happened if move by this ammount, if yes, add itself to the list of parts that have colided this tick
-            if (coliObj.Coli(nami.MoveTableByOffset(coliBox, byOffset)))
-                coliParts.Add(this);
-            foreach (BodyPartConnection bpc in connecters)
-                bpc.CheckColi(this,byOffset, coliObj, coliParts);
-        }
+
+
+
+
+
+
+        
+
+        
 
         public void SutureBodyPart()
         {
@@ -85,20 +153,12 @@ namespace BodyParts
 
         }
 
-        public void Recieve(BodyPulse bp)
+        private FeedbackPulse _SendPulseToEachBp(FuncPulseType funcPulseType, FuncPulse funcPulse)
         {
-            bool hasChild = false;
-            DecodePulse(bp);
+            FeedbackPulse fp = new FeedbackPulse();
             foreach (BodyPartConnection bpc in connecters)
-            {
-                hasChild = true;
-                bpc.Send(this, bp.split(connecters.Count));                
-            }
-            if (!hasChild)
-            {
-                //Need to reverse the pulse? or pulse just ends here... hmm
-
-            }
+                fp += bpc.SendPulse(this, funcPulseType,funcPulse);
+            return fp;
 
         }
 
@@ -118,6 +178,40 @@ namespace BodyParts
                 bpc.Input(this,ks);
 
         }
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////should be done
+        public void CheckColi(Structs.S_XY byOffset, VagueObject coliObj, List<BodyPart> coliParts)
+        {
+            //check if coli has happened if move by this ammount, if yes, add itself to the list of parts that have colided this tick
+            if (coliObj.Coli(nami.MoveTableByOffset(coliBox, byOffset)))
+                coliParts.Add(this);
+            foreach (BodyPartConnection bpc in connecters)
+                bpc.CheckColi(this, byOffset, coliObj, coliParts);
+        }
+
+        public void MovePartBy(Structs.S_XY moveBy)
+        {
+            offset += moveBy;
+            foreach (BodyPartConnection bpc in connecters)
+                bpc.MovePartBy(this, moveBy);
+        }
+
+        public void Recieve(BodyPulse bp)
+        {
+            bool hasChild = false;
+            DecodePulse(bp);
+            foreach (BodyPartConnection bpc in connecters)
+            {
+                hasChild = true;
+                bpc.Send(this, bp.split(connecters.Count));
+            }
+            if (!hasChild)
+            {
+                //Need to reverse the pulse? or pulse just ends here... hmm
+
+            }
+
+        }
+
 
         public abstract void DecodePulse(BodyPulse bp);
        

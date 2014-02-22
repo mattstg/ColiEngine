@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace EntStructEnum
 {
-    
-    struct keyMap { public Keys up, down, left, right, jump;  }
-    enum ForceType { Internal }
+
+    public struct keyMap { public Keys up, down, left, right, jump;  }
+    public enum ForceType { Internal }
 }

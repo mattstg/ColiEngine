@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Storage;
 using Microsoft.Xna.Framework.GamerServices;
-using Enums.Node;
+ 
 using EntStructEnum;
 using Structs;
 using EntSys;
@@ -30,7 +30,7 @@ namespace ColiSys
         HumanPlayer human;
         ShapeGenerator shapeGen;
         Global.Bus bus = Global.Bus.Instance;
-        
+        NodeManipulator nami;
 
 
 
@@ -62,6 +62,7 @@ namespace ColiSys
             //loading content
             spriteBatch = new SpriteBatch(GraphicsDevice);
             tc = TestContent.Instance;
+            nami = NodeManipulator.Instance;
             tc.LoadContent(Content);
             /////////////
 
@@ -101,6 +102,14 @@ namespace ColiSys
            // }
             //human.DebugLoadSprite(tc.dirt, shapeGen.GenShape(Shape.Square, new S_XY(10, 10), new S_XY(3, 6)), Color.Blue);
             // TODO: use this.Content to load your game content here
+            Node y = new Node(5, 5, null, null);
+            Node x = new Node(5, 5, null, y);
+
+            Node y2 = new Node(0, 0, null, null);
+            Node x2 = new Node(0, 0, null, y2);
+
+            Node result = nami.DrawNodeLine2(x, x2);
+            result.GenString();
         }
 
         /// <summary>

@@ -5,9 +5,10 @@ using System.Text;
 using Microsoft.Xna.Framework.Graphics;   //   for Texture2D
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using Enums.Node;
+ 
 using Structs;
 using EntSys;
+using Enums.Node;
 //Next version of graphic world needs to take into account zooming in and out and the not drawing of things outside
 namespace ColiSys
 {
@@ -63,7 +64,7 @@ namespace ColiSys
         foreach (VagueObject vo in masterList)
             vo.Draw();
 
-        toAdd.Draw(sb);
+        toAdd.Draw();
 
     }
 

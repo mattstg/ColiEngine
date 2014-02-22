@@ -11,7 +11,7 @@ namespace EntSys
      * require changes to be made to GetNext in VOContainer because of the weird pointer problem
      */ 
 
-    class VagueObject
+    public class VagueObject
     {
        // public ColiSys.Hashtable hashTable;
         public objBaseType baseType;

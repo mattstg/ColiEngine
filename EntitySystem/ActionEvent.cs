@@ -12,7 +12,7 @@ namespace EntSys
 
      current order: BodyMech, Explosion, Material
     */
-    class ActionEvent
+    public class ActionEvent
     {
         VagueObject master;
         bool forTest = false;

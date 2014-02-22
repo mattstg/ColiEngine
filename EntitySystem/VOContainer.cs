@@ -18,7 +18,7 @@ using System.Text;
 
 namespace EntSys
 {
-    class VOContainer
+    public class VOContainer
     {
         List<VagueObject> voList;
         Object ntAllowed;

@@ -11,7 +11,7 @@ using Enums.Node;
 
 namespace EntSys
 {
-    class Sprite : Entity
+    public class Sprite : Entity
     {
 
 

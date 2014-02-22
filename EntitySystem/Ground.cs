@@ -21,7 +21,7 @@ namespace EntSys
         dirt,steel,Indestructible
     }*/
 
-    class Ground
+    public class Ground
     {
         ColiSys.NodeManipulator nami = ColiSys.NodeManipulator.Instance;
         public bool destroy { get { return (htable.RetMainNode() == null); } }
@@ -57,7 +57,7 @@ namespace EntSys
 
         public void Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch sb)
         {
-            htable.Draw(sb);
+            htable.Draw();
         }
 
         public float GetBounceForce(float tforce,  ColiSys.Node coliBox)

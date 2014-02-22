@@ -10,6 +10,8 @@ using Structs;
 
 namespace ColiSys
 {
+
+
     public class Node
     {
         //Our Nodes Variables

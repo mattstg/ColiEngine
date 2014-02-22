@@ -118,6 +118,15 @@ namespace BodyParts
             return 0;
         }
 
+        public FeedbackPulse SendPulse(BodyPart typeThis, FuncPulseType funcPulseType, FuncPulse funcPulse)
+        {
+
+                if (typeThis == p1)
+                    return p2.SendFuncPulse(funcPulseType, funcPulse);
+                else
+                    return p1.SendFuncPulse(funcPulseType, funcPulse);
+             
+        }
 
     }
 }

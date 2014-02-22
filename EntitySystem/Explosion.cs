@@ -5,7 +5,7 @@ using System.Text;
 
 namespace EntSys
 {
-    struct unTargetables
+    public struct unTargetables
     {
         VagueObject obj;
         Global.Timers timer;
@@ -13,7 +13,7 @@ namespace EntSys
     }
 
 
-    class Explosion : Sprite
+    public class Explosion : Sprite
     {
         Global.Timers lifeSpan;
         ColiSys.NodeManipulator nami = ColiSys.NodeManipulator.Instance;

@@ -12,7 +12,7 @@ using BodyParts;
 //remove later^^
 namespace EntSys
 {
-    class HumanPlayer : BodyMechanics
+    public class HumanPlayer : BodyMechanics
     {
         ColiSys.TestContent tc = ColiSys.TestContent.Instance;
         ColiSys.ShapeGenerator sgen = ColiSys.ShapeGenerator.Instance;
