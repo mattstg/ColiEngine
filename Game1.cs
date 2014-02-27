@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Storage;
 using Microsoft.Xna.Framework.GamerServices;
- 
+using BodyParts;
 using EntStructEnum;
 using Structs;
 using EntSys;
@@ -20,8 +20,8 @@ namespace ColiSys
     /// </summary>
     public class Game1 : Game
     {
-        enum GameState { mainGame, BodyDesigner }
-        GameState gameState;
+        public enum GameState { mainGame, BodyDesigner, BpStore }
+        public static GameState gameState;
         GraphicsDeviceManager graphics;
         TestContent tc;  
         DebugCheatCodes cheats;
@@ -29,11 +29,11 @@ namespace ColiSys
         GRAPHICTestWorld world;
         DNABuilder dnaBuilder;
         HumanPlayer human;
-        BPDesign.BodyPartDesigner bpDesigner;
+        BodyPartDesigner bpDesigner;
         ShapeGenerator shapeGen;
         Global.Bus bus = Global.Bus.Instance;
         NodeManipulator nami;
-
+        BodyPartSaveLoader bpSaveLoader;
 
 
 
@@ -62,21 +62,32 @@ namespace ColiSys
         /// </summary>
         protected override void Initialize()
         {
+            tc = TestContent.Instance;
+            tc.LoadContent(Content);
+
+
+            cheats = DebugCheatCodes.Instance;
+            bpSaveLoader = BodyPartSaveLoader.Instance;
+            
+            nami = NodeManipulator.Instance;
+            shapeGen = ShapeGenerator.Instance;
+            
             //loading content
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            tc = TestContent.Instance;
-            nami = NodeManipulator.Instance;
-            tc.LoadContent(Content);
-            bpDesigner = new BPDesign.BodyPartDesigner();
+            
+            
+            bpDesigner = new BodyPartDesigner();
+            world = new GRAPHICTestWorld();
             /////////////
 
+           //singletons
            
-            cheats = DebugCheatCodes.Instance;
-            world = new GRAPHICTestWorld();
+
+
+           
             
             //MattDriver d = new MattDriver();
             dnaBuilder = new DNABuilder();
-            shapeGen = ShapeGenerator.Instance;
             human = new HumanPlayer(dnaBuilder.buildEntDNA(new S_XY(300, 360), new S_XY(50, 50)));
            // RockList = new Rock[5];
            // for (int i = 0; i < 5; i++)
@@ -85,6 +96,9 @@ namespace ColiSys
             world.LinkColiLists(human); //link human to world! Very important!
            // foreach (Rock rock in RockList)
            //     world.LinkColiLists(rock);
+
+
+
             base.Initialize();
         }
 

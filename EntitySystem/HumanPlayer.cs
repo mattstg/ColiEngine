@@ -63,7 +63,7 @@ namespace EntSys
             _DNADecoder(dna);
             _DebugSetKeyMap();
 
-            Wings wing = new Wings(this,null);
+            BodyPart wing = new BodyPart(this, null);
             bodyParts.Add(wing);
         }
 

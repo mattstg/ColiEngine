@@ -12,7 +12,6 @@ using Structs;
 
 namespace BodyParts
 {
-    public enum BodyPartType { Wings };
     public struct BodyPulse
     {
         long energy;
@@ -50,6 +49,7 @@ namespace BodyParts
         public BodyPulse pulse;
         public float rt;
 
+
     }
     public struct FeedbackPulse
     {
@@ -65,16 +65,62 @@ namespace BodyParts
         }
     }
 
-    public abstract class BodyPart : Sprite
+    public class BodyPart : Sprite
     {
         
         List<BodyPartConnection> connecters;
-        public BodyPartType partType;
         public BodyMechanics Master;
-        public BodyPart()
+        ColiSys.TestContent tc;
+        public BpConstructor bpDNA;
+
+
+        //given a bodypart to clone from
+        public BodyPart(BpConstructor bpC)
         {
+            bpDNA = bpC;
+            tc = ColiSys.TestContent.Instance;
+            SetEntShape(bpC.shape);
+            AE = new ActionEvent(new VagueObject(this));
+            foreach (int i in bpC.regPacks)            
+                AE.RegAbilityPack(i);
+            connecters = new List<BodyPartConnection>();
+            base.ForceCnstr(null);
+
+        }
+
+        public void SetMaster(BodyMechanics master)
+        {
+            Master = master;
+        }
+
+
+
+
+        // default made without bodyPartDesigner, makes wings
+        public BodyPart(BodyMechanics master, EntSys.DNA dna)
+        {
+            tc = ColiSys.TestContent.Instance;  
+            SetEntShape(DefaultShapeGen());           
+            AE = new ActionEvent(new VagueObject(this));
+            AE.RegAbilityPack(10);
+            connecters = new List<BodyPartConnection>();
+            base.ForceCnstr(dna);
+            Master = master;
             
-            
+        }
+
+        public ColiSys.Hashtable DefaultShapeGen()
+        {
+
+            ColiSys.Node nodey2 = new ColiSys.Node(57, 57);
+            ColiSys.Node nodey1 = new ColiSys.Node(54, 55, nodey2, null);
+            ColiSys.Node nodex2 = new ColiSys.Node(55, 62, null, nodey1);
+            ColiSys.Node nodex1 = new ColiSys.Node(43, 50, nodex2, nodey1);
+
+
+            LoadTexture(tc.dirt, Microsoft.Xna.Framework.Color.GhostWhite);
+
+            return new ColiSys.Hashtable(nodex1);
         }
 
         public void ForceCnstr(DNA dna)
@@ -213,7 +259,11 @@ namespace BodyParts
         }
 
 
-        public abstract void DecodePulse(BodyPulse bp);
+        public void DecodePulse(BodyPulse bp)
+        {
+
+
+        }
        
     }
 }

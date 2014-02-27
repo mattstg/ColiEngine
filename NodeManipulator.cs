@@ -1,9 +1,20 @@
 using System;
 using Structs;
 using Enums.Node;
+using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
+
+
 
 namespace ColiSys
 {
+    public struct TableAndOffset
+    {
+        public S_XY offset;
+        public Node ht;
+
+    }
+
     public class NodeManipulator
     {
         OverlapType[,] overlapTable = { { OverlapType.Right, OverlapType.AEO, OverlapType.AEO }, { OverlapType.OEA, OverlapType.Equals, OverlapType.AEO }, { OverlapType.OEA, OverlapType.OEA, OverlapType.Left } };
@@ -30,6 +41,26 @@ namespace ColiSys
             return E;
         }
 
+        public Node CreateNodeFromClick(MouseState mouse)
+        {
+            if (mouse.LeftButton == ButtonState.Pressed)
+            {
+                int m = (mouse.X / Consts.TopScope.GAME_SCALE.x) - Consts.TopScope.BRUSH_SIZE;
+                Node tempx = new Node((mouse.X / Consts.TopScope.GAME_SCALE.x) - Consts.TopScope.BRUSH_SIZE + 1, (mouse.X / Consts.TopScope.GAME_SCALE.x) + Consts.TopScope.BRUSH_SIZE - 1);
+                Node tempy = new Node((mouse.Y / Consts.TopScope.GAME_SCALE.x) - Consts.TopScope.BRUSH_SIZE + 1, (mouse.Y / Consts.TopScope.GAME_SCALE.x) + Consts.TopScope.BRUSH_SIZE - 1);
+                tempx.Dwn(tempy);
+                if (tempx.Ret(Bounds.l) >= 0 && tempy.Ret(Bounds.l) >= 0 && tempx.Ret(Bounds.u) < Consts.TopScope.WORLD_SIZE_X && tempy.Ret(Bounds.u) < Consts.TopScope.WORLD_SIZE_Y)
+                    return tempx; //clicking outside of monogames^^
+                else
+                    Console.Out.WriteLine("Error clicking outside monogame");
+            }
+
+            return null;
+
+
+
+
+        }
 
         public Node Inverser(Node n)
         {
@@ -288,6 +319,7 @@ namespace ColiSys
 
 
 
+
         public bool DoesNodeExistFullyInOtherNode(Node mainNode, Node subNode)
         {
 
@@ -433,9 +465,42 @@ namespace ColiSys
 
         }
 
-        
 
 
+        public TableAndOffset SeperateOffsetFromHt(Node a)
+        {
+            TableAndOffset toRet = new TableAndOffset();
+            int lowestX;
+            int lowestY = int.MaxValue;
+
+
+
+            if (a != null)
+            {                
+                Node itx = a;
+                Node ity;
+                lowestX = itx.Ret(Bounds.l);
+
+                while (itx != null)
+                {
+                    ity = itx.Dwn();
+                    while (ity != null)
+                    {
+                        lowestY = (ity.Ret(Bounds.l) < lowestY) ? ity.Ret(Bounds.l) : lowestY;
+                        ity = ity.Adj();
+                    }
+                    itx = itx.Adj();
+                }
+
+            }
+            else            
+                throw new NullNodeException();
+
+
+            toRet.offset = new S_XY(lowestX, lowestY);
+            toRet.ht = MoveTableByOffset(a, toRet.offset * -1);
+            return toRet;
+        }
 
 
 
@@ -905,6 +970,95 @@ namespace ColiSys
 
         }
 
+        public Node CreateNodesFromBox(S_Box box)
+        {
+            Node y = new Node(box.loc.y, box.loc.y + box.size.y - 1, null, null);
+            Node x = new Node(box.loc.x, box.loc.x + box.size.x - 1, null, y);
+            return x;
+
+
+        }
+
+
+
+
+        //////////////IN PROGRESS//////////////////////////////////////////
+
+        private void _CheckTrueAllAround(Node main, Node it, List<Node> nList)
+        {
+
+
+
+
+        }
+
+        public bool IsHtFullyConnected(Node a)
+        {
+            //starting at the first node, all nodes should be connected
+            Node firstNode = a.Dwn();
+            firstNode.visited = true;
+            List<Node> checkThese = new List<Node>();
+            checkThese.Add(firstNode);
+
+            while(checkThese.Count > 0)
+            foreach (Node n in checkThese)
+                _CheckTrueAllAround(firstNode, n, checkThese);
+            //branch from here
+
+
+
+
+            if (a != null)
+            {
+                Node itx = a;
+                Node ity;
+
+                while (itx != null)
+                {
+                    ity = itx.Dwn();
+                    while (ity != null)
+                    {
+                        
+
+
+
+
+
+                        ity = ity.Adj();
+                    }
+                    itx = itx.Adj();
+                }
+
+            }
+
+            return false;
+
+        }
+
+        private void _SetTreeVistedFalse(Node a)
+        {
+            //visits through a tree and sets all visited to false
+            if (a != null)
+            {
+                Node itx = a;
+                Node ity;
+
+                while (itx != null)
+                {
+                    ity = itx.Dwn();                    
+                    while (ity != null)
+                    {
+                        ity.visited = false;
+                        ity = ity.Adj();
+                    }
+                    itx = itx.Adj();
+                }
+
+            }
+        }
+        // ////////////////////////////////////////////////////////
+
+        
 
         public Node MoveTableByOffset(Node a, S_XY offset)
         {

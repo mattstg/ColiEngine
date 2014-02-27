@@ -42,7 +42,7 @@ namespace BodyParts
 
         }
 
-        public override void DecodePulse(BodyPulse bp)
+        public void DecodePulse(BodyPulse bp)
         {
             //break apart the bodyPulse and use it
         }

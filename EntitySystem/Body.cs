@@ -95,16 +95,6 @@ namespace EntSys
         }
 
 
-        //This func prob wont be needed since abilities will be done inside the bodyparts now
-        public bool HasBodyPart(BodyPartType type)
-        {
-            foreach (BodyPart bp in bodyParts)            
-                if (bp.partType == type)
-                    return true;
-            
-            return false;
-        }
-
         
 
 

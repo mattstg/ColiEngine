@@ -31,6 +31,11 @@ namespace ColiSys
             spriteTable = new SpriteHTable();
         }
 
+        public Hashtable(Hashtable ht)
+        {
+            mainNode = ht.RetMainNode();
+            spriteTable = new SpriteHTable();            
+        }
 
         public Node RetMainNode()  //Delete this function later, mainNode should stay in hashtable to avoid security/consistency issues
         {
@@ -216,6 +221,8 @@ namespace ColiSys
 
         public bool Coli(Node hashTree)  //WORKS UNDER ASSUMPTION THAT hashTree CONTAINS 1 x and 1 y!!!!!, please grow algo if needed
         {
+            if (hashTree == null)
+                return false;
             OverlapType[] result = ColiType(hashTree);
             if (result[0] == OverlapType.Before)
                 return false;

@@ -17,7 +17,7 @@ namespace ColiSys
         //Our Nodes Variables
         int u; //upper bound
         int l; //lower bound
-
+        public bool visited; //used for connection checking
         // yNode and xNode are the nodes which are "pointed to", or more appropriately birthed or stemming from this Node.
         Node dwnNode = null; //the adjacent node connection (if there is any)
         Node adjNode = null; //the down node connection		   '' 
@@ -26,6 +26,7 @@ namespace ColiSys
         public Node()
         {
             Set(0, 0);
+            
 
         } //useful for creating dud nodes to make compiler happy
 
