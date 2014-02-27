@@ -984,6 +984,39 @@ namespace ColiSys
 
         //////////////IN PROGRESS//////////////////////////////////////////
 
+        /// <summary>
+        /// Given a node, returns a string representation
+        /// </summary>
+        /// <param name="a"></param>
+        /// <returns>Format returns Xlb-Xub|Ylb-yub,ylb-yub,.... newLine,repeat ends with && standalone</returns>
+        public string TurnHtIntoString(Node a)
+        {
+            string toRet = "";
+            if (a != null)
+            {
+                Node itx = a;
+                Node ity;
+
+                while (itx != null)
+                {
+                    toRet += itx.Ret(Bounds.l) + "-" + itx.Ret(Bounds.u);
+                    ity = itx.Dwn();
+                    while (ity != null)
+                    {
+                        toRet += "|";
+                        toRet += ity.Ret(Bounds.l) + "-" + ity.Ret(Bounds.u) + ",";
+                        ity = ity.Adj();
+                    }
+                    itx = itx.Adj();
+                    toRet += "\n\r";
+                }
+
+            }
+            toRet += "&&";
+            return toRet;
+        }
+
+
         private void _CheckTrueAllAround(Node main, Node it, List<Node> nList)
         {
 

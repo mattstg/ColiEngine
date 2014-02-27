@@ -9,7 +9,7 @@ namespace BodyParts
     public class BodyPartSaveLoader
     {
         List<int> bodyIDs;
-
+        ColiSys.NodeManipulator nami = ColiSys.NodeManipulator.Instance;
 
         private static BodyPartSaveLoader instance;
         private BodyPartSaveLoader()
@@ -93,7 +93,16 @@ namespace BodyParts
                 // Compose a string that consists of three lines.
                 List<string> s_regpack = new List<string>();
                 foreach (int i in bp.regPacks)
-                    s_regpack.Add(i + ",");               
+                    s_regpack.Add(i + ",");
+                s_regpack.Add("&&");
+
+                string s_ht = nami.TurnHtIntoString(bp.shape.RetMainNode());
+                List<string> s_sutures = new List<string>();
+
+                foreach (ColiSys.Hashtable ht in bp.sutureSpots)
+                    s_sutures.Add(nami.TurnHtIntoString(ht.RetMainNode()));
+
+
 
 
                 string lines = "RegPack:\r\nSecond line.\r\nThird line.";
@@ -102,7 +111,13 @@ namespace BodyParts
                 try
                 {
                     System.IO.StreamWriter file = new System.IO.StreamWriter(Environment.CurrentDirectory + "/SavedBodyParts/" + id);
-                    file.WriteLine(lines);
+                    foreach (string s in s_regpack)
+                        file.Write(s);
+                    file.WriteLine("");
+                    file.WriteLine(s_ht);
+                    foreach (string s in s_sutures)
+                        file.WriteLine(s);
+                    file.WriteLine("");
                     file.Close();
                     bodyIDs.Add(id);
                 }
