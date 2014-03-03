@@ -56,15 +56,15 @@ namespace EntSys
             acceptedColi.Add(objType.Ground);
             acceptedColi.Add(objType.Explosion);
             acceptedColi.Add(objType.Body);
+            acceptedSColi.Add(objSpecificType.Human);
+            
 
             
 
            
             _DNADecoder(dna);
-            _DebugSetKeyMap();
 
-            BodyPart wing = new BodyPart(this, null);
-            bodyParts.Add(wing);
+            
         }
 
         public void Input()
@@ -76,24 +76,7 @@ namespace EntSys
             foreach (BodyPart bp in bodyParts)
                 bp.Input(ks);
 
-            /*
-            KeyboardState keys = Keyboard.GetState();
-            if (UniResponseT.ready && keys.GetPressedKeys().Length != 0)
-            {
-                
-                if (keys.IsKeyDown(keymap.left))
-                    ApplyForce(Enums.Force.ForceTypes.Internal,new Vector2(-moveForce, 0));
-                if (keys.IsKeyDown(keymap.right))
-                    ApplyForce(Enums.Force.ForceTypes.Internal, new Vector2(moveForce, 0));
-                if (keys.IsKeyDown(keymap.up))
-                    ApplyForce(Enums.Force.ForceTypes.Internal, new Vector2(0, -moveForce));
-                if (keys.IsKeyDown(keymap.down))
-                    ApplyForce(Enums.Force.ForceTypes.Internal, new Vector2(0, moveForce));
-
-
-                UniResponseT.Dec(true);
-                //setColiBox();
-            }*/
+            
         }
 
         public void Update(float rt)
@@ -104,16 +87,34 @@ namespace EntSys
 
         }
 
-          public void DebugLoadHuman() //eventaully will be in dna
+          public void DebugLoadHuman(int defaultPack) //eventaully will be in dna
         {
-              
-           
-            LoadTexture(tc.dirt,Color.Blue);
+
+            switch (defaultPack)
+            {
+                case 1:
+                    LoadTexture(tc.dirt,Color.Blue);            
+                    SetEntShape(new ColiSys.Hashtable(sgen.GenShape(ColiSys.Shape.Human,new S_XY(5,15))));           
+                    S_XY tOff = new S_XY(50, 50);
+                    offset = tOff;
+                    rawOffSet = new Vector2(tOff.x, tOff.y);
+                    break;
+
+                case 2:
+                    LoadTexture(tc.dirt,Color.Red);            
+                    SetEntShape(new ColiSys.Hashtable(sgen.GenShape(ColiSys.Shape.Human,new S_XY(5,15))));           
+                    S_XY ttOff = new S_XY(250, 50);
+                    offset = ttOff;
+                    rawOffSet = new Vector2(ttOff.x, ttOff.y);
+                    break;
+
+
+            }
+
+            _DebugSetKeyMap(defaultPack);
+            BodyPart wing = new BodyPart(this, null); //default creation, only used temp, add BpC later
+            bodyParts.Add(wing);
             
-            SetEntShape(new ColiSys.Hashtable(sgen.GenShape(ColiSys.Shape.Human,new S_XY(5,15))));           
-            S_XY tOff = new S_XY(50, 50);
-            offset = tOff;
-            rawOffSet = new Vector2(tOff.x, tOff.y);
 
         }
         
@@ -124,14 +125,31 @@ namespace EntSys
 
         }
 
-        private void _DebugSetKeyMap()
+        private void _DebugSetKeyMap(int playerNum)
         {
-            keymap = new keyMap();
-            keymap.jump = Keys.Space;
-            keymap.left = Keys.Left;
-            keymap.right = Keys.Right;
-            keymap.down = Keys.Down;
-            keymap.up = Keys.Up;
+            switch (playerNum)
+            {
+                case 1:
+                    keymap = new keyMap();
+                    keymap.jump = Keys.Space;
+                    keymap.left = Keys.Left;
+                    keymap.right = Keys.Right;
+                    keymap.down = Keys.Down;
+                    keymap.up = Keys.Up;
+                    break;
+
+                case 2:
+                    keymap = new keyMap();
+                    keymap.jump = Keys.W;
+                    keymap.left = Keys.A;
+                    keymap.right = Keys.D;
+                    keymap.down = Keys.S;
+                    keymap.up = Keys.Q;
+                    break;
+
+            }
+
+
         }
 
 

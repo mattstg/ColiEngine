@@ -28,7 +28,7 @@ namespace ColiSys
         public static SpriteBatch spriteBatch;
         GRAPHICTestWorld world;
         DNABuilder dnaBuilder;
-        HumanPlayer human;
+        //HumanPlayer human;
         BodyPartDesigner bpDesigner;
         ShapeGenerator shapeGen;
         Global.Bus bus = Global.Bus.Instance;
@@ -40,7 +40,7 @@ namespace ColiSys
         public Game1()
             : base()
         {
-            gameState = GameState.BodyDesigner;
+            gameState = GameState.mainGame;
             Shape shapo;
             graphics = new GraphicsDeviceManager(this);
             graphics.PreferredBackBufferHeight = 720;
@@ -88,12 +88,12 @@ namespace ColiSys
             
             //MattDriver d = new MattDriver();
             dnaBuilder = new DNABuilder();
-            human = new HumanPlayer(dnaBuilder.buildEntDNA(new S_XY(300, 360), new S_XY(50, 50)));
+            //human = new HumanPlayer(dnaBuilder.buildEntDNA(new S_XY(300, 360), new S_XY(50, 50)));
            // RockList = new Rock[5];
            // for (int i = 0; i < 5; i++)
              //   RockList[i] = new Rock(null, null, null, null, null);
             
-            world.LinkColiLists(human); //link human to world! Very important!
+            //world.LinkColiLists(human); //link human to world! Very important!
            // foreach (Rock rock in RockList)
            //     world.LinkColiLists(rock);
 
@@ -111,7 +111,7 @@ namespace ColiSys
             // Create a new SpriteBatch, which can be used to draw textures.
             
             world.LoadWorldTexture(tc.dirt);
-            human.DebugLoadHuman();
+            //human.DebugLoadHuman();
            // int c = 0;
            // foreach (Rock rock in RockList)
            // {-
@@ -150,7 +150,7 @@ namespace ColiSys
                     bpDesigner.Update(rt);
                     break;
                 case GameState.mainGame:
-                    human.Update(rt);
+                    //human.Update(rt);
                     world.Update(rt);
                     break;
 
@@ -175,7 +175,7 @@ namespace ColiSys
                 case GameState.mainGame:
                     world.Input();
                     cheats.Input();
-                    human.Input();
+                    //human.Input();
                     break;
 
 
@@ -199,7 +199,7 @@ namespace ColiSys
                     break;
                 case GameState.mainGame:
                      world.Draw(spriteBatch);
-                     human.Draw();
+                     //human.Draw();
                     break;
 
 

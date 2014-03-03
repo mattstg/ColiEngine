@@ -110,7 +110,12 @@ namespace EntSys
         //Needs a .draw and a .update and .destroy
         public void Draw()
         {
-            if (baseType == objBaseType.Ent)
+            if (specificType == objSpecificType.Human)
+            {
+                HumanPlayer h = (HumanPlayer)obj;
+                h.Draw();
+
+            } else if (baseType == objBaseType.Ent)
             {
                 Sprite t = (Sprite)obj;
                 t.Draw();

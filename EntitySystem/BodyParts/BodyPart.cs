@@ -106,16 +106,21 @@ namespace BodyParts
             connecters = new List<BodyPartConnection>();
             base.ForceCnstr(dna);
             Master = master;
+            offset = master.offsetCopy;
+            offset.x -= 5;
+            rawOffSet.X = offset.x;
+            rawOffSet.Y = offset.y;
+
             
         }
 
         public ColiSys.Hashtable DefaultShapeGen()
         {
 
-            ColiSys.Node nodey2 = new ColiSys.Node(57, 57);
-            ColiSys.Node nodey1 = new ColiSys.Node(54, 55, nodey2, null);
-            ColiSys.Node nodex2 = new ColiSys.Node(55, 62, null, nodey1);
-            ColiSys.Node nodex1 = new ColiSys.Node(43, 50, nodex2, nodey1);
+            ColiSys.Node nodey2 = new ColiSys.Node(3, 4);
+            ColiSys.Node nodey1 = new ColiSys.Node(0, 1, nodey2, null);
+            ColiSys.Node nodex2 = new ColiSys.Node(12, 19, null, nodey1);
+            ColiSys.Node nodex1 = new ColiSys.Node(0, 7, nodex2, nodey1);
 
 
             LoadTexture(tc.dirt, Microsoft.Xna.Framework.Color.GhostWhite);

@@ -18,7 +18,7 @@ namespace ColiSys
         int boxSize;
         Material theGround;
         List<VagueObject> masterList;
-        
+        List<HumanPlayer> humanList;
         Hashtable toAdd;
         NodeManipulator nami = NodeManipulator.Instance;
         MaterialFactory forge = MaterialFactory.Instance;
@@ -28,13 +28,23 @@ namespace ColiSys
 
         public GRAPHICTestWorld()
         {
-            shapeGen = ShapeGenerator.Instance; 
+            shapeGen = ShapeGenerator.Instance;
+            humanList = new List<HumanPlayer>();
 
             masterList = new List<VagueObject>();
             theGround = forge.CreateMaterial(0); //Reason created seperatly is for the mouse adding to specificlly this hash table
             masterList.Add(new VagueObject(theGround));
             masterList.Add(new VagueObject(forge.CreateMaterial(1)));
-
+            HumanPlayer h1 = new HumanPlayer(null);
+            HumanPlayer h2 = new HumanPlayer(null);
+            h1.DebugLoadHuman(1);
+            h2.DebugLoadHuman(2);
+            masterList.Add(new VagueObject(h1));
+            masterList.Add(new VagueObject(h2));
+            LinkColiLists(h1);
+            LinkColiLists(h2);
+            humanList.Add(h1);
+            humanList.Add(h2);
 
             inputTimer = 0;
             boxSize = 50;
@@ -64,6 +74,8 @@ namespace ColiSys
         foreach (VagueObject vo in masterList)
             vo.Draw();
 
+        
+
         toAdd.Draw();
 
     }
@@ -72,6 +84,10 @@ namespace ColiSys
     {
         if (inputTimer <= 0)
         {
+            foreach (HumanPlayer h in humanList)
+                h.Input();
+
+
             MouseState mouse = Mouse.GetState();
             KeyboardState keys = Keyboard.GetState();
             if (mouse.LeftButton == ButtonState.Pressed)
@@ -221,7 +237,7 @@ namespace ColiSys
     {
         foreach(VagueObject vo in masterList)
         {
-            if (ent.acceptsColiType(vo.type))
+            if (ent.acceptsColiType(vo.type) || ent.acceptsColiType(vo.specificType))
                 ent.AddCollidables(vo);
         }
     }

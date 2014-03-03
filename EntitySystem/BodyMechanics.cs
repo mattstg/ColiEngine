@@ -57,7 +57,7 @@ namespace EntSys
            // _MoveAndCheckVelo(rt);
 
             _ApplyForceToVelo();
-            newColiAndMoveFunc(rt);
+            ColiAndMoveFunc(rt);
             //things that mod velo
                   
             //_MoveUpdate();
@@ -189,116 +189,10 @@ namespace EntSys
             return _GetDirCol(new Vector2(turnVelo.x, turnVelo.y), ht, colibox);
         }
         
-        ///Old move func
-        /*
-        private void _MoveAndCheckVelo(float rt)
-        {
-            bool[] ColiHV = new bool[] { false, false };
-            bool coliOccured = false;
-            float tr = rt;
-            float timeStep;
-            Vector2 tempRawOffset = new Vector2(rawOffSet.X, rawOffSet.Y);
-            Enums.Navigation.Compass dirHeading;
-            Vector2 scaledVelo = velo * (rt / 1000);
-            tempRawOffset += scaledVelo;
-            Vector2 turnVelo = new Vector2((int)(tempRawOffset.X - offset.x),(int)(tempRawOffset.Y-offset.y));
-            timeStep = tr*(1/_RetHighest(turnVelo));
-            if (turnVelo.X != 0 || turnVelo.Y != 0)
-            {
-                //so movement is occuring
-                ColiSys.DiagMotion diagMot = new ColiSys.DiagMotion((int)turnVelo.X, (int)turnVelo.Y, this.coliBox);
-                S_Box checkHere = diagMot.RetNextBox();
 
-                while (tr > 0 && (turnVelo.X != 0 || turnVelo.Y != 0) && checkHere != null) 
-                { 
-                    coliOccured = false;
-                    tr -= timeStep;
-
-                    VagueObject connecter = new VagueObject(); //need to assign?
-                    Collidables.ResetIT();                   
-                    while (Collidables.GetNext(connecter))
-                    {                        
-
-                        if (connecter.Coli(checkHere)) //find type of coli that occured w/ x,y respects
-                        {
-                             //if coli occur, find out direction of the coli                            
-                            ColiHV = _GetDirCol(turnVelo, connecter);  //i should be snaped to location, so i just need to check around me
-                            coliOccured = true;     
-
-                            switch (connecter.type) //switch->type object bodymech has colided with, and call their reactions based on that
-                            {
-                                case objType.Explosion:
-                                    break;
-
-                                case objType.Ground:
-                                    AE.TriggerEvent(this, connecter.getObj<Ground>());
-                                    break;
-
-
-                                default:
-                                    Console.Out.WriteLine("You hit default case in checking connector type in colision!");
-                                    break;
-                            }
-                        }
-                        //remember at end to snap to location
-
-
-                    }
-                    if (coliOccured)  //since a coli occured, need to reset tv,velo,timestep,"temprawoff",
-                    {
-                        //some forces have been applied, need to apply those forces to velo, returns velo the was added
-                        
-                        Vector2 addedVelo = _ApplyForceToVelo();
-                        if (tr > 0)
-                        {
-                            //raw velo not updated cause its not spouse to move, only update rawoffset when move is possible
-                            turnVelo += addedVelo * (1 / tr);
-                            timeStep = (1 / _RetHighest(turnVelo));
-                           // _SnapToColiSpot(diagMot);
-                            diagMot = new ColiSys.DiagMotion((int)turnVelo.X, (int)turnVelo.Y, this.coliBox);                             
-                            checkHere = diagMot.RetNextBox();
-                        }
-                        else //no time left, end the loop
-                        {
-                           // _SnapToColiSpot(diagMot);
-                            checkHere = null;
-                        }
-                    }
-                    else
-                    {
-                        checkHere = diagMot.RetNextBox();
-                        rawOffSet += scaledVelo; //increase rawOffset
-                        S_XY temps = new S_XY(diagMot.RetLast().loc.x, diagMot.RetLast().loc.y) ;
-                        if (Math.Abs(offset.y - temps.y) != 1)
-                             Console.Out.WriteLine("see, thats a lil odd");
-                        offset = temps; //move offset foward
-                       // _SnapToColiSpot(diagMot); //Sets offset then resets rawOffset
-
-                    }
-
-
-                }
-
-
-            }
-            else
-            {
-                rawOffSet += scaledVelo;
-
-            }
-            
-        }
-        */
-
-
-
-        
-
-
-        public void newColiAndMoveFunc(float rt)
+        public void ColiAndMoveFunc(float rt)
         {
             int expectedNumOfCycles;
-            int NumOfCyclesCounter = 0;
             Vector2 tRawOffset = rawOffSet + velo * (rt / 1000);
             //Vector2 tRawOffset = rawOffSet + new Vector2(3,1);
             Vector2 tROdiff = tRawOffset - rawOffSet;
@@ -318,7 +212,7 @@ namespace EntSys
 
                     Collidables.ResetIT();
                     if(checkHere != null)
-                        while (Collidables.GetNext(connecter))
+                        while (Collidables.GetNext(ref connecter))
                         { //checking against each Collidable in bodyMechs list
                             bool thisCollided = connecter.Coli(checkHere);
                             List<BodyPart> collidedParts = new List<BodyPart>();
@@ -381,6 +275,7 @@ namespace EntSys
                                                 bp.AE.TriggerEvent(bp, connecter.getObj<Material>());
                                                 break;
                                             case objSpecificType.Human:
+                                                //Collision with another human occured
                                                 break;
                                             case objSpecificType.Sprite:
                                                 break;

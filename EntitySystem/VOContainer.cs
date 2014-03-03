@@ -33,8 +33,16 @@ namespace EntSys
 
         public void Add(VagueObject vo)
         {
-            if(vo.obj != null && vo.obj != ntAllowed)
-               voList.Add(vo);
+            bool isUnique = true;
+            if (vo.obj != null && vo.obj != ntAllowed)
+            {
+                foreach (VagueObject v in voList)
+                    if (vo == v)
+                        isUnique = false;
+                if (isUnique)
+                    voList.Add(vo);
+            }
+            
           
         }
 
@@ -48,7 +56,7 @@ namespace EntSys
             
             VagueObject tvo = new VagueObject();
             voc.ResetIT();
-            while (voc.GetNext(tvo))
+            while (voc.GetNext(ref tvo))
             {
                 Add(tvo);
             }
@@ -73,7 +81,7 @@ namespace EntSys
 
         }
 
-        public bool GetNext(VagueObject o)
+        public bool GetNext(ref VagueObject o)
         {
             if (it < 0)
                 return false;
@@ -81,15 +89,15 @@ namespace EntSys
             {
                 voList.RemoveAt(it);
                 it--;
-                return GetNext(o);
+                return GetNext(ref o);
             }
             else
             {
-                //o = voList[it];
+                o = voList[it];/*
                 o.type = voList[it].type;
                 o.specificType = voList[it].specificType;
                 o.baseType = voList[it].baseType;
-                o.obj = voList[it].obj; //oddly, it loses internal ptrs
+                o.obj = voList[it].obj; //oddly, it loses internal ptrs*/
                 it--;
                 return true;
             }           
