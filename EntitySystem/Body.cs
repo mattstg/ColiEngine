@@ -19,6 +19,7 @@ namespace EntSys
         //body vars
         protected int moveForce;
         protected int totalMass;
+        public bool RegisterNewParts; //New parts have been added and need to be registered with the world
         
 
 
@@ -60,7 +61,7 @@ namespace EntSys
         protected void ForceCnstr(DNA dna)
         {
             bodyParts = new List<BodyPart>();
-            
+            RegisterNewParts = false;
             base.ForceCnstr(dna);
             _DNADecoder(dna);
             _UpdateBodyPartRelatedInfo();
@@ -72,6 +73,26 @@ namespace EntSys
             base.Update(rt);
         }
 
+        public List<VagueObject> GetAllParts()
+        {
+            List<VagueObject> toRet = new List<VagueObject>();
+            FuncPulse fp = new FuncPulse();
+            fp.coliParts = new List<BodyPart>();
+            foreach (BodyPart b in bodyParts)
+                b.SendFuncPulse(FuncPulseType.CollectAllParts, fp);
+
+            
+            //the return coliParts can be used as a list of all parts
+            foreach (BodyPart b in fp.coliParts)
+            {
+                VagueObject vo = new VagueObject(b);
+                toRet.Add(vo);
+            }
+
+            return toRet;
+
+
+        }
 
         private void _UpdateBodyParts(float rt)
         {

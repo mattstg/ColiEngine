@@ -114,7 +114,7 @@ namespace EntSys
             _DebugSetKeyMap(defaultPack);
             BodyPart wing = new BodyPart(this, null); //default creation, only used temp, add BpC later
             bodyParts.Add(wing);
-            
+            RegisterNewParts = true;
 
         }
         

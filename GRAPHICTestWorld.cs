@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Input;
 using Structs;
 using EntSys;
 using Enums.Node;
+using BodyParts;
 //Next version of graphic world needs to take into account zooming in and out and the not drawing of things outside
 namespace ColiSys
 {
@@ -18,6 +19,7 @@ namespace ColiSys
         int boxSize;
         Material theGround;
         List<VagueObject> masterList;
+        VOContainer bodyPartList;
         List<HumanPlayer> humanList;
         Hashtable toAdd;
         NodeManipulator nami = NodeManipulator.Instance;
@@ -30,7 +32,7 @@ namespace ColiSys
         {
             shapeGen = ShapeGenerator.Instance;
             humanList = new List<HumanPlayer>();
-
+            bodyPartList = new VOContainer(this);
             masterList = new List<VagueObject>();
             theGround = forge.CreateMaterial(0); //Reason created seperatly is for the mouse adding to specificlly this hash table
             masterList.Add(new VagueObject(theGround));
@@ -63,9 +65,45 @@ namespace ColiSys
        
         toAdd.LoadTexture(texture, Color.GreenYellow);
     }
-	
-	
 
+    public void CheckForNewBodyParts()
+    {
+        bool atLeastOneAdded = false;
+        foreach (VagueObject vo in masterList)
+        {
+            if (vo.type == objType.Body)
+            {
+                Body b = vo.getObj<Body>();
+                if (b.RegisterNewParts)
+                {
+                    //Moot
+                    bodyPartList.Add(b.GetAllParts());
+                    //Get List from body of all body parts, 
+                    //add list of VOs to VOContatiner BodyPartList
+                    b.RegisterNewParts = false;
+                    atLeastOneAdded = true;
+                }
+
+            }
+        }
+        if(atLeastOneAdded)
+            AddAllBpToMasterList(); //add the bodyPartList to all the objects that will accept it in the masterlist
+
+
+    }
+
+
+    public void AddAllBpToMasterList()
+    {
+        foreach (VagueObject vo in masterList)
+            if (vo.baseType == objBaseType.Ent && vo.type == objType.Body) //is base type ent, and is not ground
+                if(vo.getObj<EntSys.Entity>().acceptsColiType(objType.Body) || vo.getObj<EntSys.Entity>().acceptsColiType(objSpecificType.BodyPart)) //as an ent, accepts the types body or bodyparts
+                    foreach (VagueObject bp in bodyPartList.ReturnList())
+                        if (vo.getObj<EntSys.Entity>() != (EntSys.Entity)(bp.getObj<BodyPart>().Master)) //if the current object does not equal to the toAdd bodyParts master
+                           vo.getObj<EntSys.Entity>().AddCollidables(bp);
+                        else
+                            Console.WriteLine("Blocked!");
+    }
  
 
     public void Draw(SpriteBatch sb)
@@ -168,6 +206,7 @@ namespace ColiSys
         if (inputTimer < 0)
             inputTimer = 0;
         _UnloadBus();
+        CheckForNewBodyParts();
         foreach (VagueObject vo in masterList)
             vo.Update(rt);
         //Unload explosions and turn them back into them
@@ -236,10 +275,15 @@ namespace ColiSys
     public void LinkColiLists(EntSys.Entity ent)
     {
         foreach(VagueObject vo in masterList)
-        {
-            if (ent.acceptsColiType(vo.type) || ent.acceptsColiType(vo.specificType))
+             if (ent.acceptsColiType(vo.type) || ent.acceptsColiType(vo.specificType))
                 ent.AddCollidables(vo);
-        }
+
+        foreach (VagueObject bp in bodyPartList.ReturnList())
+            if (ent.acceptsColiType(objType.Body) || ent.acceptsColiType(objSpecificType.BodyPart))
+                if (ent != (EntSys.Entity)(bp.getObj<BodyPart>().Master)) //if the entity does not equal to the master ofthe body part (casted)                    
+                    ent.AddCollidables(bp);
+                else
+                    Console.WriteLine("proof that blocked adding own part");
     }
 
     

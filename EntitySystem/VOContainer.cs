@@ -31,6 +31,15 @@ namespace EntSys
             voList = new List<VagueObject>();   
         }
 
+        /// <summary>
+        /// Returns List to be used, DO NOT USE TO ADD, only use for retrieval purposes, returned actaul list, not a copy, using add directly from list will overwrite safety checks such as uniqueness, massive problem
+        /// </summary>
+        /// <returns></returns>
+        public List<VagueObject> ReturnList()
+        {
+            return voList;
+        }
+
         public void Add(VagueObject vo)
         {
             bool isUnique = true;
@@ -48,7 +57,9 @@ namespace EntSys
 
         public void Add(List<VagueObject> vol)
         {
-            voList.AddRange(vol);
+            foreach (VagueObject vo in vol)
+                Add(vo);           
+
         }
 
         public void Add(VOContainer voc)

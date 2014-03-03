@@ -36,7 +36,9 @@ namespace BodyParts
         ///<summary>Cast as anything Nullable (obj, int, w/e) </summary>
         PassBodyPulse,
         ///<summary>Cast as FeedbackPulse </summary>
-        PassInput
+        PassInput,
+        ///<summary>Cast as Bool </summary>
+        CollectAllParts
 
     }
     public struct FuncPulse
@@ -175,6 +177,9 @@ namespace BodyParts
                     break;
                 case FuncPulseType.PassInput:
                     AE.TriggerEvent(funcPulse.keyState);
+                    break;
+                case FuncPulseType.CollectAllParts:
+                    funcPulse.coliParts.Add(this);
                     break;
                 default:
                     Console.Out.WriteLine("error, unhandled funcPulseType");
