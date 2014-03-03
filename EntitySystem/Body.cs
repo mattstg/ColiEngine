@@ -99,11 +99,17 @@ namespace EntSys
 
             foreach (BodyPart bp in bodyParts)
             {
-                bp.UnlockAllConnections();
-                bp.Update(rt);
+                //bp.UnlockAllConnections();
+                //bp.Update(rt);
+                FuncPulse fp = new FuncPulse();
+                fp.rt = rt;
+                bp.SendFuncPulse(FuncPulseType.Update, fp);
             }
 
         }
+
+        //moved from bm so material can acccess it
+        
 
         public void Draw()
         {

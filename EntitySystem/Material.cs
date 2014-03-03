@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework;
 
 
 namespace EntSys
@@ -34,11 +35,13 @@ namespace EntSys
         float friction;
         float thornDmg = 0;  //0-inf percent dmg back
         float stickyness = 0; //not sure yet
+        public bool MaterialIsTopScope = false;
        // public ColiSys.Hashtable htable;
         //public ActionEvent AE; //public because other objects will call Grounds event since ground does not update
         //I imagine a ground factory object that creates types of ground
         public Material(float hp, float bounceForceMultLB, float bounceForceMultUB, float bounceThreshold, float absorb, float thornDmg, float stickyness, MaterialResistances matRez, ColiSys.Hashtable htable, float friction, MaterialTypes type, bool isTopScope, DNA dna, Structs.S_XY loc)
         {
+            
             this.hp = hp; this.bounceForceMultLB = bounceForceMultLB; this.bounceForceMultUB = bounceForceMultUB; this.bounceThreshold = bounceThreshold;
             this.absorb = absorb; this.thornDmg = thornDmg; this.stickyness = stickyness; //armor struct
             this.matRez = matRez; SetEntShape(htable); this.friction = friction; this.matType = type;
@@ -46,8 +49,12 @@ namespace EntSys
             rawOffSet.X = offset.x;
             rawOffSet.Y = offset.y;
 
-            if(isTopScope) //if this is the highest scope, it creates the action event, otherise it gets created elsewhere
-                 AE = new ActionEvent(new VagueObject(this));
+            MaterialIsTopScope = isTopScope;
+            if (isTopScope) //if this is the highest scope, it creates the action event, otherise it gets created elsewhere
+            {
+                specType = objSpecificType.Material;
+                AE = new ActionEvent(new VagueObject(this));
+            }
             base.ForceCnstr(dna);
         }
 
@@ -64,9 +71,18 @@ namespace EntSys
         }
         public Material() { }
         public Material(DNA dna) { _ForceCnstr(dna); }//AE = new ActionEvent(new VagueObject(this)); }
-       
-            
-        public float GetBounceForce(float tforce,  ColiSys.Node coliBox)
+
+
+        public float GetBounceForce(float tforce, ColiSys.Node colibox, Vector2 dir )
+        {
+            if (MaterialIsTopScope)
+                return GetBounceForceWithSubtract(tforce, colibox,dir);
+            else
+                return GetBounceForceWithoutSubtract(tforce, colibox,dir);
+
+        }
+
+        public float GetBounceForceWithSubtract(float tforce, ColiSys.Node coliBox, Vector2 dir)
         {
             coliBox = nami.StretchSquareTableByXY(coliBox, new Structs.S_XY(-1, 1));   
             float fMult = 1;
@@ -99,6 +115,27 @@ namespace EntSys
 
             }
 
+        }
+
+
+        public float GetBounceForceWithoutSubtract(float tforce, ColiSys.Node coliBox, Vector2 dir)
+        {
+            float fMult = 1;
+            float force = Math.Abs(tforce);
+            int mag = (int)(Math.Abs(tforce) / tforce);
+
+            if (force < hp)
+            {           //doesnt break it but bounces    
+                fMult = (bounceForceMultUB - bounceForceMultLB) * (force / hp - bounceThreshold) + bounceForceMultLB;
+                this.ApplyForce(Enums.Force.ForceTypes.Coli, mag * (force + force * fMult) * dir);
+                return -1 * mag * (force + force * fMult);
+            }
+            else
+            {
+                this.ApplyForce(Enums.Force.ForceTypes.Coli, mag * (force + force * fMult) * dir);
+                return -1 * mag * force + -1 * mag; //not enough force to trigger break or bounce, return his force as ground Normal balancing out
+            }
+            
         }
     }
 }

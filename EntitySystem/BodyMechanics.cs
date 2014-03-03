@@ -31,13 +31,7 @@ namespace EntSys
 
         }
 
-        public void ApplyForce(Enums.Force.ForceTypes forceType,Vector2 mag)
-        {
-            //force type can be reacted differently depending on body stats or(both) states
-            curForce += mag;
-          
-
-        }
+        
 
         protected void ForceCnstr(DNA dna)
         {
@@ -233,7 +227,11 @@ namespace EntSys
                                     {
                                         case objSpecificType.Bm:
                                             break;
+                                        case objSpecificType.BodyPart:
+                                            AE.TriggerEvent(this, connecter.getObj<Material>());
+                                            break;
                                         case objSpecificType.Body:
+                                            AE.TriggerEvent(this, connecter.getObj<Material>());
                                             break;
                                         case objSpecificType.Ent:
                                             break;
@@ -244,6 +242,7 @@ namespace EntSys
                                             AE.TriggerEvent(this, connecter.getObj<Material>());
                                             break;
                                         case objSpecificType.Human:
+                                            AE.TriggerEvent(this, connecter.getObj<Material>());
                                             break;
                                         case objSpecificType.Sprite:
                                             break;
@@ -264,19 +263,19 @@ namespace EntSys
                                         {
                                             case objSpecificType.Bm:
                                                 break;
-                                            case objSpecificType.Body:
-                                                break;
+                                            
                                             case objSpecificType.Ent:
                                                 break;
                                             case objSpecificType.Exp:
                                                 bp.AE.TriggerEvent(bp, connecter.getObj<Explosion>());
                                                 break;
-                                            case objSpecificType.Material:                                                
+                                            case objSpecificType.Body:
+                                            case objSpecificType.BodyPart:
+                                            case objSpecificType.Material:
+                                            case objSpecificType.Human:
                                                 bp.AE.TriggerEvent(bp, connecter.getObj<Material>());
                                                 break;
-                                            case objSpecificType.Human:
-                                                //Collision with another human occured
-                                                break;
+                                            
                                             case objSpecificType.Sprite:
                                                 break;
                                             default:

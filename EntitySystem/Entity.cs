@@ -29,6 +29,7 @@ namespace EntSys
         public ColiSys.Node trueEntShapeOffset { get { return nami.MoveTableByOffset(trueEntShape, offset); } }
         public ColiSys.Node coliBox { get { return nami.MoveTableByOffset(nami.ComplexNodeToSquareNode(trueEntShape), offset); } }
         public bool destroy;
+        public objSpecificType specType; //place in ever concerete classes stand alone constructor
 
 
         protected S_XY size{
@@ -67,6 +68,14 @@ namespace EntSys
         public void SetEntShape(ColiSys.Hashtable tempTrueEntShape)
         {            
             EntHashtable = tempTrueEntShape;
+        }
+
+        public void ApplyForce(Enums.Force.ForceTypes forceType, Vector2 mag)
+        {
+            //force type can be reacted differently depending on body stats or(both) states
+            curForce += mag;
+
+
         }
 
         protected bool ifBodyEmpty()

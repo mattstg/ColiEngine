@@ -98,6 +98,9 @@ namespace EntSys
                     S_XY tOff = new S_XY(50, 50);
                     offset = tOff;
                     rawOffSet = new Vector2(tOff.x, tOff.y);
+                    BodyPart wing = new BodyPart(this, null); //default creation, only used temp, add BpC later
+                    bodyParts.Add(wing);
+                    RegisterNewParts = true;
                     break;
 
                 case 2:
@@ -110,11 +113,9 @@ namespace EntSys
 
 
             }
-
+            specType = objSpecificType.Human;
             _DebugSetKeyMap(defaultPack);
-            BodyPart wing = new BodyPart(this, null); //default creation, only used temp, add BpC later
-            bodyParts.Add(wing);
-            RegisterNewParts = true;
+            
 
         }
         

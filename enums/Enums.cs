@@ -7,7 +7,7 @@ namespace Enums
 {
     namespace Force
     {
-        public enum ForceTypes { Internal, NaturalLaw, Dirt }
+        public enum ForceTypes { Coli, Internal, NaturalLaw, Dirt }
 
 
 

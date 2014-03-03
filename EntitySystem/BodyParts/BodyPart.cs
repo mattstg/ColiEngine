@@ -38,7 +38,9 @@ namespace BodyParts
         ///<summary>Cast as FeedbackPulse </summary>
         PassInput,
         ///<summary>Cast as Bool </summary>
-        CollectAllParts
+        CollectAllParts,
+        ///<summary>Cast as dont care </summary>
+        Update
 
     }
     public struct FuncPulse
@@ -67,7 +69,7 @@ namespace BodyParts
         }
     }
 
-    public class BodyPart : Sprite
+    public class BodyPart : Body
     {
         
         List<BodyPartConnection> connecters;
@@ -87,6 +89,7 @@ namespace BodyParts
                 AE.RegAbilityPack(i);
             connecters = new List<BodyPartConnection>();
             base.ForceCnstr(null);
+            specType = objSpecificType.BodyPart;
 
         }
 
@@ -112,6 +115,7 @@ namespace BodyParts
             offset.x -= 5;
             rawOffSet.X = offset.x;
             rawOffSet.Y = offset.y;
+            specType = objSpecificType.BodyPart;
 
             
         }
@@ -139,10 +143,8 @@ namespace BodyParts
         protected void Update(float rt)
         {
             //This should upgrade physical things on body part
-            foreach (BodyPartConnection bpc in connecters)
-                bpc.Update(this, rt);
-
-
+            Master.ApplyForce(Enums.Force.ForceTypes.Coli,curForce); //any forces applied to bodypart should be moved up to master
+            curForce = new Vector2(0,0);
 
         }
         //TakeDamage(float, DamageType, dir)
@@ -174,6 +176,9 @@ namespace BodyParts
                     break;
                 case FuncPulseType.PassBodyPulse:
                     DecodePulse(funcPulse.pulse);
+                    break;
+                case FuncPulseType.Update:
+                    Update(funcPulse.rt);
                     break;
                 case FuncPulseType.PassInput:
                     AE.TriggerEvent(funcPulse.keyState);

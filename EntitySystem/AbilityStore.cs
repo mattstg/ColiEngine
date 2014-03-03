@@ -42,7 +42,6 @@ namespace EntSys
                     //in specificType, bodyPart == 7, so automatically 7 will be loaded for bodyparts, 10 is assigned to a specific part,l ike a wing
                 case 4: //Human
                    // BmGActions.Add(BmGCreateExp);  create debug exp when hit Material
-                    BodyMechVsMaterial.Add(callG);
                     BodyMechVsMaterial.Add(BodyHitsGround);
                     BodyMechVsExp.Add(BmColiExp);
                     KeyActions.Add(HumanKeyMove);
@@ -51,7 +50,6 @@ namespace EntSys
                     
                 case 5: //Exp
                     ExpVsMaterial.Add(ExpGAlterPath);
-                    ExpVsMaterial.Add(callG);
                     BodyMechVsExp.Add(ExpColiBm);
                     return;
                 
@@ -115,13 +113,16 @@ namespace EntSys
         private AERetType BodyHitsGround(VagueObject callingObj, BodyMechanics Bm, Material Material)
         {
             Vector2 dir = Statics.Converter.getMag(Bm.EI.momentum);
+            Vector2 tempDir = dir;
             
             //we now have direction/magnitude vector for movement
             //cases, direct collision, movement not covered by coli
             if (Bm.EI.coliHV[0])
             {
+                tempDir.X = dir.X;
+                tempDir.Y = 0;
                 //bounce in x direction & break Material
-                Bm.ApplyForce(Enums.Force.ForceTypes.Dirt, new Vector2(Material.GetBounceForce(Bm.EI.momentum.X, nami.MoveTableByOffset(callingObj.coliBox,new S_XY((int)dir.X,0))), 0));
+                Bm.ApplyForce(Enums.Force.ForceTypes.Coli, new Vector2(Material.GetBounceForce(Bm.EI.momentum.X, nami.MoveTableByOffset(callingObj.coliBox,new S_XY((int)dir.X,0)),tempDir), 0));
                 
                 
                 //collision happened directly
@@ -136,11 +137,13 @@ namespace EntSys
 
             if (Bm.EI.coliHV[1])
             {
+                tempDir.X = 0;
+                tempDir.Y = dir.Y;
                 //bounce in x direction & break Material
                 //ColiSys.Node node = callingObj.coliBox;
                // ColiSys.Node node = nami.MoveTableByOffset(callingObj.coliBox, new S_XY(0, (int)dir.Y));
                // Bm.ApplyForce(Enums.Force.ForceTypes.Dirt, new Vector2(0, Material.GetBounceForce(Bm.momentum.Y, node)));
-                Bm.ApplyForce(Enums.Force.ForceTypes.Dirt, new Vector2(0, Material.GetBounceForce(Bm.EI.momentum.Y, nami.MoveTableByOffset(callingObj.coliBox, new S_XY(0, (int)dir.Y)))));
+                Bm.ApplyForce(Enums.Force.ForceTypes.Dirt, new Vector2(0, Material.GetBounceForce(Bm.EI.momentum.Y, nami.MoveTableByOffset(callingObj.coliBox, new S_XY(0, (int)dir.Y)),tempDir)));
                 //some reason, one of the pointers gets lost in the resulting Nami. transform when called inside the func, but not otherwise^
 
 
@@ -160,14 +163,16 @@ namespace EntSys
         private AERetType BodypartHitsGround(VagueObject callingObj, BodyPart bp, Material Material)
         {
             Vector2 dir = Statics.Converter.getMag(bp.EI.momentum);
-            
+            Vector2 tempDir = dir;
 
             //we now have direction/magnitude vector for movement
             //cases, direct collision, movement not covered by coli
             if (bp.EI.coliHV[0])
             {
+                tempDir.X = dir.X;
+                tempDir.Y = 0;
                 //bounce in x direction & break Material
-                bp.Master.ApplyForce(Enums.Force.ForceTypes.Dirt, new Vector2(Material.GetBounceForce(bp.EI.momentum.X, nami.MoveTableByOffset(callingObj.coliBox, new S_XY((int)dir.X, 0))), 0));
+                bp.Master.ApplyForce(Enums.Force.ForceTypes.Coli, new Vector2(Material.GetBounceForce(bp.EI.momentum.X, nami.MoveTableByOffset(callingObj.coliBox, new S_XY((int)dir.X, 0)),tempDir), 0));
 
 
                 //collision happened directly
@@ -182,11 +187,13 @@ namespace EntSys
 
             if (bp.EI.coliHV[1])
             {
+                tempDir.X = 0;
+                tempDir.Y = dir.Y;
                 //bounce in x direction & break Material
                 //ColiSys.Node node = callingObj.coliBox;
                 // ColiSys.Node node = nami.MoveTableByOffset(callingObj.coliBox, new S_XY(0, (int)dir.Y));
                 // Bm.ApplyForce(Enums.Force.ForceTypes.Dirt, new Vector2(0, Material.GetBounceForce(Bm.momentum.Y, node)));
-                bp.Master.ApplyForce(Enums.Force.ForceTypes.Dirt, new Vector2(0, Material.GetBounceForce(bp.EI.momentum.Y, nami.MoveTableByOffset(callingObj.coliBox, new S_XY(0, (int)dir.Y)))));
+                bp.Master.ApplyForce(Enums.Force.ForceTypes.Dirt, new Vector2(0, Material.GetBounceForce(bp.EI.momentum.Y, nami.MoveTableByOffset(callingObj.coliBox, new S_XY(0, (int)dir.Y)),tempDir)));
                 //some reason, one of the pointers gets lost in the resulting Nami. transform when called inside the func, but not otherwise^
 
 
