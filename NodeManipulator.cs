@@ -996,19 +996,26 @@ namespace ColiSys
             {
                 Node itx = a;
                 Node ity;
+                toRet += "X"; 
+                toRet += "\r\n";
 
                 while (itx != null)
                 {
                     toRet += itx.Ret(Bounds.l) + "-" + itx.Ret(Bounds.u);
+                    toRet += "\r\n";
+                    toRet += "Y";
+                    toRet += "\r\n";
+                    
                     ity = itx.Dwn();
                     while (ity != null)
                     {
-                        toRet += "|";
-                        toRet += ity.Ret(Bounds.l) + "-" + ity.Ret(Bounds.u) + ",";
+                        toRet += ity.Ret(Bounds.l) + "-" + ity.Ret(Bounds.u);
+                        toRet += "\r\n";
                         ity = ity.Adj();
                     }
                     itx = itx.Adj();
-                    toRet += "\n\r";
+                    toRet += "X";
+                    toRet += "\r\n";
                 }
 
             }

@@ -81,10 +81,10 @@ namespace BodyParts
             Hashtable b3 = new Hashtable(nami.CreateNodesFromBox(new S_Box(0,31,15,15)));
             b3.LoadTexture(tc.dirt,Color.Blue);
             toRet.Add(new Button(b3, _clickEvent, 2));
-
+            /*
             Hashtable b4 = new Hashtable(nami.CreateNodesFromBox(new S_Box(0, 46, 15, 15)));
             b4.LoadTexture(tc.dirt, Color.Black);
-            toRet.Add(new Button(b4, _clickEvent, 3));
+            toRet.Add(new Button(b4, _clickEvent, 3));*/
 
 
             return toRet;
@@ -162,10 +162,13 @@ namespace BodyParts
 
         private void _ClickButton(MouseState mouse)
         {
-            Node t = _CreateNodeFromClick(mouse);
-            if (t != null)            
-                foreach (Button but in buttons)                
-                    but.Click(mouse);
+            if (bpStep != BpStep.addAbilities && bpStep != BpStep.finalize)
+            {
+                Node t = _CreateNodeFromClick(mouse);
+                if (t != null)
+                    foreach (Button but in buttons)
+                        but.Click(mouse);
+            }
             
         }
 

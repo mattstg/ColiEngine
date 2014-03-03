@@ -40,7 +40,7 @@ namespace ColiSys
         public Game1()
             : base()
         {
-            gameState = GameState.mainGame;
+            gameState = GameState.BodyDesigner;
             Shape shapo;
             graphics = new GraphicsDeviceManager(this);
             graphics.PreferredBackBufferHeight = 720;
