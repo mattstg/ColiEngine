@@ -94,7 +94,7 @@ namespace EntSys
             {
                 case 1:
                     LoadTexture(tc.dirt,Color.Blue);            
-                    SetEntShape(new ColiSys.Hashtable(sgen.GenShape(ColiSys.Shape.Human,new S_XY(5,15))));           
+                    SetEntShape(new ColiSys.Hashtable(sgen.GenShape(ColiSys.Shape.Human,new S_XY(50,50))));           
                     S_XY tOff = new S_XY(50, 50);
                     offset = tOff;
                     rawOffSet = new Vector2(tOff.x, tOff.y);
@@ -105,10 +105,13 @@ namespace EntSys
 
                 case 2:
                     LoadTexture(tc.dirt,Color.Red);            
-                    SetEntShape(new ColiSys.Hashtable(sgen.GenShape(ColiSys.Shape.Human,new S_XY(5,15))));           
+                    SetEntShape(new ColiSys.Hashtable(sgen.GenShape(ColiSys.Shape.Human,new S_XY(50,50))));           
                     S_XY ttOff = new S_XY(250, 50);
                     offset = ttOff;
                     rawOffSet = new Vector2(ttOff.x, ttOff.y);
+                    BodyPart wing2 = new BodyPart(this, null); //default creation, only used temp, add BpC later
+                    bodyParts.Add(wing2);
+                    RegisterNewParts = true;
                     break;
 
 

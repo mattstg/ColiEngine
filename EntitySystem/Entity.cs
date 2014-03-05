@@ -30,7 +30,7 @@ namespace EntSys
         public ColiSys.Node coliBox { get { return nami.MoveTableByOffset(nami.ComplexNodeToSquareNode(trueEntShape), offset); } }
         public bool destroy;
         public objSpecificType specType; //place in ever concerete classes stand alone constructor
-
+        public BodyMechanics Master; //another body can be a master
 
         protected S_XY size{
             get

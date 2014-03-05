@@ -22,7 +22,7 @@ namespace ColiSys
     {
         public enum GameState { mainGame, BodyDesigner, BpStore }
         public static GameState gameState;
-        GraphicsDeviceManager graphics;
+        public static GraphicsDeviceManager graphics;
         TestContent tc;  
         DebugCheatCodes cheats;
         public static SpriteBatch spriteBatch;
@@ -43,16 +43,20 @@ namespace ColiSys
             gameState = GameState.mainGame;
             Shape shapo;
             graphics = new GraphicsDeviceManager(this);
-            graphics.PreferredBackBufferHeight = 720;
+            graphics.PreferredBackBufferHeight = 1080;
+            graphics.PreferredBackBufferWidth = 1920;
+            Consts.TopScope.WORLD_SIZE_X = graphics.PreferredBackBufferWidth;
+            Consts.TopScope.WORLD_SIZE_Y = graphics.PreferredBackBufferHeight;
 
-            graphics.PreferredBackBufferWidth = 1280;
+            graphics.IsFullScreen = true;
             Content.RootDirectory = "ColiEngine/Content";
 
 
             Consts.TopScope.GRAPHICS_BUFFER_HEIGHT = graphics.PreferredBackBufferHeight;
             Consts.TopScope.GRAPHICS_BUFFER_WIDTH = graphics.PreferredBackBufferWidth;
-            Consts.TopScope.GAME_SCALE = new S_XY(Consts.TopScope.GRAPHICS_BUFFER_WIDTH / Consts.TopScope.WORLD_SIZE_X,Consts.TopScope.GRAPHICS_BUFFER_HEIGHT / Consts.TopScope.WORLD_SIZE_Y);
-            
+            Consts.TopScope.GAME_SCALE = new S_XY(graphics.PreferredBackBufferWidth / Consts.TopScope.WORLD_SIZE_X, graphics.PreferredBackBufferHeight / Consts.TopScope.WORLD_SIZE_Y);
+
+            //Consts.TopScope.GAME_SCALE = new S_XY(1, 1);
         }
         /// <summary>
         /// Allows the game to perform any initialization it needs to OverlapType.Before starting to run.
