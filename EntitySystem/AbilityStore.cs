@@ -107,8 +107,13 @@ namespace EntSys
             return new AERetType();
         }
 
-        private AERetType BodyHitsGround(VagueObject callingObj, BodyMechanics Bm, Material Material)
+        private AERetType BodyHitsGround(VagueObject callingObj, BodyMechanics Bm, Material material)
         {
+            AERetType toRet = new AERetType();
+            toRet.alreadyCollidedWith = false;
+
+
+
             Vector2 dir = Statics.Converter.getMag(Bm.EI.momentum);
             Vector2 tempDir = dir;
             
@@ -119,7 +124,7 @@ namespace EntSys
                 tempDir.X = dir.X;
                 tempDir.Y = 0;
                 //bounce in x direction & break Material
-                Bm.ApplyForce(Enums.Force.ForceTypes.Coli, new Vector2(Material.GetBounceForce(Bm.EI.momentum.X, nami.MoveTableByOffset(callingObj.coliBox,new S_XY((int)dir.X,0)),tempDir), 0));
+                Bm.ApplyForce(Enums.Force.ForceTypes.Coli, new Vector2(material.GetBounceForce(Bm.EI.momentum.X, nami.MoveTableByOffset(callingObj.coliBox,new S_XY((int)dir.X,0)),tempDir), 0));
                 //collision happened directly
             }
             else if(!Bm.EI.coliHV[0] && dir.X != 0) //indirect coli, apply friction
@@ -136,7 +141,7 @@ namespace EntSys
                 //ColiSys.Node node = callingObj.coliBox;
                // ColiSys.Node node = nami.MoveTableByOffset(callingObj.coliBox, new S_XY(0, (int)dir.Y));
                // Bm.ApplyForce(Enums.Force.ForceTypes.Dirt, new Vector2(0, Material.GetBounceForce(Bm.momentum.Y, node)));
-                Bm.ApplyForce(Enums.Force.ForceTypes.Dirt, new Vector2(0, Material.GetBounceForce(Bm.EI.momentum.Y, nami.MoveTableByOffset(callingObj.coliBox, new S_XY(0, (int)dir.Y)),tempDir)));
+                Bm.ApplyForce(Enums.Force.ForceTypes.Dirt, new Vector2(0, material.GetBounceForce(Bm.EI.momentum.Y, nami.MoveTableByOffset(callingObj.coliBox, new S_XY(0, (int)dir.Y)),tempDir)));
                 //some reason, one of the pointers gets lost in the resulting Nami. transform when called inside the func, but not otherwise^
 
 
@@ -150,11 +155,25 @@ namespace EntSys
             }
 
 
-            return new AERetType();
+            return toRet;
         }
 
-        private AERetType BodypartHitsGround(VagueObject callingObj, BodyPart bp, Material Material)
+        private AERetType BodypartHitsGround(VagueObject callingObj, BodyPart bp, Material material)
         {
+            AERetType toRet = new AERetType();
+
+            /*if (!material.MaterialIsTopScope)
+                if (material.hasCollidedWithMe.Contains((Material)bp))
+                {
+                    //Console.Out.Write("already collided with this turn");
+                    toRet.alreadyCollidedWith = true;
+                    return toRet;
+                }
+                else
+                    material.hasCollidedWithMe.Add(callingObj.getObj<Material>());*/
+
+
+            toRet.alreadyCollidedWith = false;
             Vector2 dir = Statics.Converter.getMag(bp.EI.momentum);
             Vector2 tempDir = dir;
 
@@ -166,7 +185,7 @@ namespace EntSys
                 tempDir.Y = 0;
                 //bounce in x direction & break Material
                 
-                bp.Master.ApplyForce(Enums.Force.ForceTypes.Coli, new Vector2(Material.GetBounceForce(bp.EI.momentum.X, nami.MoveTableByOffset(callingObj.coliBox, new S_XY((int)dir.X, 0)),tempDir), 0));
+                bp.Master.ApplyForce(Enums.Force.ForceTypes.Coli, new Vector2(material.GetBounceForce(bp.EI.momentum.X, nami.MoveTableByOffset(callingObj.coliBox, new S_XY((int)dir.X, 0)),tempDir), 0));
                 
                 //collision happened directly
             }
@@ -186,7 +205,7 @@ namespace EntSys
                 //ColiSys.Node node = callingObj.coliBox;
                 // ColiSys.Node node = nami.MoveTableByOffset(callingObj.coliBox, new S_XY(0, (int)dir.Y));
                 // Bm.ApplyForce(Enums.Force.ForceTypes.Dirt, new Vector2(0, Material.GetBounceForce(Bm.momentum.Y, node)));
-                bp.Master.ApplyForce(Enums.Force.ForceTypes.Dirt, new Vector2(0, Material.GetBounceForce(bp.EI.momentum.Y, nami.MoveTableByOffset(callingObj.coliBox, new S_XY(0, (int)dir.Y)),tempDir)));
+                bp.Master.ApplyForce(Enums.Force.ForceTypes.Dirt, new Vector2(0, material.GetBounceForce(bp.EI.momentum.Y, nami.MoveTableByOffset(callingObj.coliBox, new S_XY(0, (int)dir.Y)),tempDir)));
                 //some reason, one of the pointers gets lost in the resulting Nami. transform when called inside the func, but not otherwise^
 
 
@@ -199,7 +218,7 @@ namespace EntSys
 
             }
 
-            return new AERetType();
+            return toRet;
         }
 
         private AERetType ExpGAlterPath(VagueObject callingObj, Explosion exp, Material Material)
@@ -278,8 +297,6 @@ namespace EntSys
              //Apply Forces or check if breaks
              return new AERetType();
          }
-
-
 
         private AERetType HumanWingsInput(VagueObject callingObj, KeyboardState ks)
         {

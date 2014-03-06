@@ -51,19 +51,21 @@ namespace EntSys
 
         
 
-        public bool TriggerEvent(BodyMechanics bod,Material Material)
+        public AERetType TriggerEvent(BodyMechanics bod,Material Material)
         {
+            AERetType toRet = new AERetType();
             //cycle through events
             foreach (Func<VagueObject, BodyMechanics, Material, AERetType> func in BmMatActions)
             {
-                func(master,bod, Material);
+                toRet += func(master,bod, Material);
             }
-            return true;
+            return toRet;
         }
 
         public bool TriggerEvent(BodyPart bod, Material Material)
         {
             //cycle through events
+            
             foreach (Func<VagueObject, BodyPart, Material, AERetType> func in BodypartMaterialActions)
             {
                 func(master, bod, Material);
