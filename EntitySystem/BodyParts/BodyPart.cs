@@ -40,9 +40,7 @@ namespace BodyParts
         ///<summary>Cast as Bool </summary>
         CollectAllParts,
         ///<summary>Cast as dont care </summary>
-        Update,
-        ///<summary>Dont even remember why i say it needs a cast anymore </summary>
-        ResetCVM
+        Update
 
     }
     public struct FuncPulse
@@ -110,15 +108,13 @@ namespace BodyParts
             AE = new ActionEvent(new VagueObject(this));
             AE.RegAbilityPack(10);
             connecters = new List<BodyPartConnection>();
-           
+            base.ForceCnstr(dna);
             Master = master;
             offset = master.offsetCopy;
             offset.x -= 15;
             rawOffSet.X = offset.x;
             rawOffSet.Y = offset.y;
             specType = objSpecificType.BodyPart;
-
-            base.ForceCnstr(dna);
 
             
         }
@@ -190,9 +186,6 @@ namespace BodyParts
                 case FuncPulseType.CollectAllParts:
                     funcPulse.coliParts.Add(this);
                     break;
-                case FuncPulseType.ResetCVM:
-                    ResetCVM();
-                    break;
                 default:
                     Console.Out.WriteLine("error, unhandled funcPulseType");
                     break;
@@ -206,13 +199,8 @@ namespace BodyParts
 
 
 
-        /// <summary>
-        /// Resets the CollidedWithMe list, called when its masters turn to do ColiAndMove
-        /// </summary>
-        private void ResetCVM()
-        {
-            hasCollidedWithMe = new List<Material>();
-        }
+
+
 
 
         

@@ -36,7 +36,6 @@ namespace EntSys
         float thornDmg = 0;  //0-inf percent dmg back
         float stickyness = 0; //not sure yet
         public bool MaterialIsTopScope = false;
-        public List<Material> hasCollidedWithMe;
        // public ColiSys.Hashtable htable;
         //public ActionEvent AE; //public because other objects will call Grounds event since ground does not update
         //I imagine a ground factory object that creates types of ground
@@ -49,7 +48,7 @@ namespace EntSys
             offset = new Structs.S_XY(loc);
             rawOffSet.X = offset.x;
             rawOffSet.Y = offset.y;
-            hasCollidedWithMe = new List<Material>();
+
             MaterialIsTopScope = isTopScope;
             if (isTopScope) //if this is the highest scope, it creates the action event, otherise it gets created elsewhere
             {
@@ -59,9 +58,8 @@ namespace EntSys
             base.ForceCnstr(dna);
         }
 
-        protected void ForceCnstr(DNA dna)
+        private void _ForceCnstr(DNA dna)
         {
-            hasCollidedWithMe = new List<Material>();
             base.ForceCnstr(dna);
         }
 
@@ -72,7 +70,7 @@ namespace EntSys
 
         }
         public Material() { }
-        public Material(DNA dna) { ForceCnstr(dna); }//AE = new ActionEvent(new VagueObject(this)); }
+        public Material(DNA dna) { _ForceCnstr(dna); }//AE = new ActionEvent(new VagueObject(this)); }
 
 
         public float GetBounceForce(float tforce, ColiSys.Node colibox, Vector2 dirOfCollider )
@@ -122,7 +120,6 @@ namespace EntSys
 
         public float GetBounceForceWithoutSubtract(float tforce, ColiSys.Node coliBox, Vector2 dir)
         {
-            //upon coli, need to keep track
             float fMult = 1;
             float force = Math.Abs(tforce);
             int mag = (int)(Math.Abs(tforce) / tforce);

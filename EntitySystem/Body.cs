@@ -108,19 +108,6 @@ namespace EntSys
 
         }
 
-        protected void ResetAllBodyPartCWM()
-        {
-            foreach (BodyPart bp in bodyParts)
-            {
-                //bp.UnlockAllConnections();
-                //bp.Update(rt);
-                FuncPulse fp = new FuncPulse();
-                
-                bp.SendFuncPulse(FuncPulseType.ResetCVM, fp);
-            }
-
-        }
-
         //moved from bm so material can acccess it
         
 
