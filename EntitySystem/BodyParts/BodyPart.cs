@@ -143,7 +143,8 @@ namespace BodyParts
         protected void Update(float rt)
         {
             //This should upgrade physical things on body part
-            Master.ApplyForce(Enums.Force.ForceTypes.Coli,curForce); //any forces applied to bodypart should be moved up to master
+            Master.ApplyForce(Enums.Force.ForceTypes.Coli, curForce);
+            Master.ApplyForceToVelo(); //any forces applied to bodypart should be moved up to master
             curForce = new Vector2(0,0);
 
         }

@@ -975,8 +975,6 @@ namespace ColiSys
             Node y = new Node(box.loc.y, box.loc.y + box.size.y - 1, null, null);
             Node x = new Node(box.loc.x, box.loc.x + box.size.x - 1, null, y);
             return x;
-
-
         }
 
 

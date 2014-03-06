@@ -101,8 +101,6 @@ namespace ColiSys
                     foreach (VagueObject bp in bodyPartList.ReturnList())
                         if (vo.getObj<EntSys.Entity>() != (EntSys.Entity)(bp.getObj<BodyPart>().Master)) //if the current object does not equal to the toAdd bodyParts master
                            vo.getObj<EntSys.Entity>().AddCollidables(bp);
-                        else
-                            Console.WriteLine("Blocked!");
     }
  
 
