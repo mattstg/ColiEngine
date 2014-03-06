@@ -114,7 +114,7 @@ namespace ColiSys
 
         private Node _MakeHuman(S_XY size)
         {
-            Node toRet = _MakeSquare(new S_XY(10,10));
+            Node toRet = _MakeSquare(size);
            // Node EndNode = null;
 
             

@@ -73,16 +73,16 @@ namespace EntSys
         public Material(DNA dna) { _ForceCnstr(dna); }//AE = new ActionEvent(new VagueObject(this)); }
 
 
-        public float GetBounceForce(float tforce, ColiSys.Node colibox, Vector2 dir )
+        public float GetBounceForce(float tforce, ColiSys.Node colibox, Vector2 dirOfCollider )
         {
             if (MaterialIsTopScope)
-               return GetBounceForceWithSubtract(tforce, colibox,dir);
+                return GetBounceForceWithSubtract(tforce, colibox, dirOfCollider);
             else
-               return GetBounceForceWithoutSubtract(tforce, colibox,dir);
+                return GetBounceForceWithoutSubtract(tforce, colibox, dirOfCollider);
 
         }
 
-        public float GetBounceForceWithSubtract(float tforce, ColiSys.Node coliBox, Vector2 dir)
+        public float GetBounceForceWithSubtract(float tforce, ColiSys.Node coliBox, Vector2 dirOfCollider)
         {
             coliBox = nami.StretchSquareTableByXY(coliBox, new Structs.S_XY(-1, 1));   
             float fMult = 1;
@@ -124,21 +124,22 @@ namespace EntSys
             float force = Math.Abs(tforce);
             int mag = (int)(Math.Abs(tforce) / tforce);
 
-            //The subtraction of the coliding forces give the difference of force, divided then by mass, give thing
-            //obj collide with - object collided(since must be faster in chase scenario) divided amongst mass
-            /* FIX THIS PLEASE
+          
             float momDif = 0;
+            Vector2 thisObjVelo = momentum;
+            if (specType == objSpecificType.BodyPart)
+                thisObjVelo = Master.momentum;
 
             if (dir.X == 0)
-                momDif = tforce - this.momentum.Y;
+                momDif = tforce - thisObjVelo.Y;
             else
-                momDif = tforce - this.momentum.X;
+                momDif = tforce - thisObjVelo.X;
 
             momDif /= 2;
-            this.ApplyForce(Enums.Force.ForceTypes.Coli, momDif * dir * -1);
+            this.ApplyForce(Enums.Force.ForceTypes.Coli, new Vector2(4000, 0));
             return momDif * -1;
-            */
-
+            
+             /*
             if (force < hp)
             {           //doesnt break it but bounces    
                 fMult = (bounceForceMultUB - bounceForceMultLB) * (force / hp - bounceThreshold) + bounceForceMultLB;
@@ -151,7 +152,7 @@ namespace EntSys
                 float t = mag * (force + force * fMult);
                 this.ApplyForce(Enums.Force.ForceTypes.Coli, -1 * mag * (force + force * fMult) * dir);
                 return -1 * mag * force + -1 * mag; //not enough force to trigger break or bounce, return his force as ground Normal balancing out
-            }
+            }*/
             
         }
     }

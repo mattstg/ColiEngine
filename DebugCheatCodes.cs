@@ -61,10 +61,16 @@ namespace ColiSys
 
         private void _InputKeyboard(KeyboardState keys)
         {
-            if (keys.IsKeyDown(Keys.I))
+            if (keys.IsKeyDown(Keys.F))
             {
-                
+                Game1.graphics.IsFullScreen = !Game1.graphics.IsFullScreen;
+             //   Game1.graphics.PreferredBackBufferHeight = 540;
+              //  Game1.graphics.PreferredBackBufferWidth = 1046;
+               // Consts.TopScope.WORLD_SIZE_X = Game1.graphics.PreferredBackBufferWidth;
+                //Consts.TopScope.WORLD_SIZE_Y = Game1.graphics.PreferredBackBufferHeight;
+               // Consts.TopScope.GAME_SCALE = new Structs.S_XY(Game1.graphics.PreferredBackBufferWidth / Consts.TopScope.WORLD_SIZE_X, Game1.graphics.PreferredBackBufferHeight / Consts.TopScope.WORLD_SIZE_Y);
 
+                Game1.graphics.ApplyChanges();
             }
         }
 

@@ -52,10 +52,7 @@ namespace ColiSys
             }
             thisMotion = (DM > nDM) ? MainMotion.Diago : MainMotion.notDiag;
 
-            if(Math.Abs(x) >= 19){
-                Console.Out.WriteLine("Hello World!");
-            };
-
+            
             switch (thisMotion)
             {
                 case MainMotion.Diago:
@@ -260,7 +257,6 @@ namespace ColiSys
         {
             
             return new S_Box(lastLoc); //returns the last location of the phantom (E)
-            Console.Out.WriteLine("Hello World!");
             
         }
 

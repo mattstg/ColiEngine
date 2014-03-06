@@ -73,7 +73,6 @@ namespace BodyParts
     {
         
         List<BodyPartConnection> connecters;
-        public BodyMechanics Master;
         ColiSys.TestContent tc;
         public BpConstructor bpDNA;
 
@@ -112,7 +111,7 @@ namespace BodyParts
             base.ForceCnstr(dna);
             Master = master;
             offset = master.offsetCopy;
-            offset.x -= 5;
+            offset.x -= 15;
             rawOffSet.X = offset.x;
             rawOffSet.Y = offset.y;
             specType = objSpecificType.BodyPart;
@@ -123,10 +122,10 @@ namespace BodyParts
         public ColiSys.Hashtable DefaultShapeGen()
         {
 
-            ColiSys.Node nodey2 = new ColiSys.Node(3, 4);
-            ColiSys.Node nodey1 = new ColiSys.Node(0, 1, nodey2, null);
-            ColiSys.Node nodex2 = new ColiSys.Node(12, 19, null, nodey1);
-            ColiSys.Node nodex1 = new ColiSys.Node(0, 7, nodex2, nodey1);
+            ColiSys.Node nodey2 = new ColiSys.Node(10, 16);
+            ColiSys.Node nodey1 = new ColiSys.Node(0, 5, nodey2, null);
+            ColiSys.Node nodex2 = new ColiSys.Node(65, 80, null, nodey1);
+            ColiSys.Node nodex1 = new ColiSys.Node(0, 15, nodex2, nodey1);
 
 
             LoadTexture(tc.dirt, Microsoft.Xna.Framework.Color.GhostWhite);
