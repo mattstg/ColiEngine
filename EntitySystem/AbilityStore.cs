@@ -165,7 +165,6 @@ namespace EntSys
                 tempDir.X = dir.X;
                 tempDir.Y = 0;
                 //bounce in x direction & break Material
-                
                 bp.Master.ApplyForce(Enums.Force.ForceTypes.Coli, new Vector2(Material.GetBounceForce(bp.EI.momentum.X, nami.MoveTableByOffset(callingObj.coliBox, new S_XY((int)dir.X, 0)),tempDir), 0));
                 
                 //collision happened directly

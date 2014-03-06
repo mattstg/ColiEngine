@@ -11,16 +11,13 @@ namespace EntSys
 {
     class MaterialFactory
     {
-        ShapeGenerator sgen;
-        TestContent tc;
-        NodeManipulator nami;
+        ColiSys.ShapeGenerator sgen;
+        ColiSys.TestContent tc;
 
         private static MaterialFactory instance;
         private MaterialFactory() {
-            sgen = ShapeGenerator.Instance;
-            tc = TestContent.Instance;
-            nami = NodeManipulator.Instance;
-
+            sgen = ColiSys.ShapeGenerator.Instance;
+            tc = ColiSys.TestContent.Instance;
         }
         public static MaterialFactory Instance
         {
@@ -58,7 +55,7 @@ namespace EntSys
             switch (pattern)
             {
                 case 0: //normal dirt
-                    hp = 600;
+                    hp = 1000;
                     bounceThreshold = .33f; //bounce within -100%
                     bounceForceMultLB = .2f;
                     bounceForceMultUB = 1f;
@@ -68,14 +65,13 @@ namespace EntSys
                     armor.steel = 1;
                     matType  = MaterialTypes.dirt;
                     friction = .5f;
-                    loc = new S_XY(0, 0);
+                    loc = new S_XY(0, Consts.TopScope.WORLD_SIZE_Y / 2);
                     thornDmg = 0;  //0-inf percent dmg back
                     stickyness = 0; //not sure yet
                     //addInfo = new AdditionalInfo();
 
 
                     htable = new ColiSys.Hashtable(sgen.GenShape(ColiSys.Shape.Square, new Structs.S_XY(Consts.TopScope.WORLD_SIZE_X, Consts.TopScope.WORLD_SIZE_Y / 2), addInfo));
-                    htable.ResetMainNode(nami.MoveTableByOffset(htable.RetMainNode(), new S_XY(0, Consts.TopScope.WORLD_SIZE_Y / 2)));
                    // htable.LoadTexture(tc.dirt, Color.White);
                     tr = new Material(hp, bounceForceMultLB, bounceForceMultUB, bounceThreshold, absorb, thornDmg, stickyness, armor, htable, friction,matType,true,null,loc);
                     tr.LoadTexture(tc.dirt, Color.White);

@@ -155,7 +155,7 @@ namespace ColiSys
                 */
                 Hashtable ht = new Hashtable(theGround.trueEntShapeOffset);
                 ht.HashSubtractor(toAdd);
-                theGround.SetEntShape(ht);
+                theGround.SetEntShape(new Hashtable(nami.MoveTableByOffset(ht.RetMainNode(),theGround.offsetCopy*-1)));
                 toAdd.EmptyTable();               
                 
                /* Console.Out.WriteLine("////////////////////////// vvv Result vvv//////////////////////////");
@@ -173,7 +173,7 @@ namespace ColiSys
                 */
                 Hashtable ht = new Hashtable(theGround.trueEntShapeOffset);
                 ht.HashAdder(toAdd);
-                theGround.SetEntShape(ht);
+                theGround.SetEntShape(new Hashtable(nami.MoveTableByOffset(ht.RetMainNode(), theGround.offsetCopy * -1)));
                 toAdd.EmptyTable();   
                 /*
                 Console.Out.WriteLine("////////////////////////// vvv Result vvv//////////////////////////");
