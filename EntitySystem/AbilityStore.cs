@@ -63,11 +63,14 @@ namespace EntSys
                     return;
 
                 case 10: //Wings!
-                    KeyActions.Add(HumanWingsInput);                    
+                    KeyActions.Add(HumanWingsInput);
+                    
                     return;
+
 
                 default:
                     break;
+
 
             }
 
@@ -120,10 +123,14 @@ namespace EntSys
                 tempDir.Y = 0;
                 //bounce in x direction & break Material
                 Bm.ApplyForce(Enums.Force.ForceTypes.Coli, new Vector2(Material.GetBounceForce(Bm.EI.momentum.X, nami.MoveTableByOffset(callingObj.coliBox,new S_XY((int)dir.X,0)),tempDir), 0));
+                
+                
                 //collision happened directly
             }
             else if(!Bm.EI.coliHV[0] && dir.X != 0) //indirect coli, apply friction
             {
+                
+
 
             }
 
@@ -166,7 +173,8 @@ namespace EntSys
                 tempDir.Y = 0;
                 //bounce in x direction & break Material
                 bp.Master.ApplyForce(Enums.Force.ForceTypes.Coli, new Vector2(Material.GetBounceForce(bp.EI.momentum.X, nami.MoveTableByOffset(callingObj.coliBox, new S_XY((int)dir.X, 0)),tempDir), 0));
-                
+
+
                 //collision happened directly
             }
             else if (!bp.EI.coliHV[0] && dir.X != 0) //indirect coli, apply friction

@@ -78,17 +78,6 @@ namespace EntSys
 
         }
 
-        public Vector2 ApplyForceToVelo()
-        {
-            //eventaully connect with weight and such
-            //F=MA UP IN HERE
-            Vector2 toRet = curForce / mass;
-            velo += toRet;
-            curForce.X = 0; curForce.Y = 0; //all force used into velo
-            return toRet;
-
-        }
-
         protected bool ifBodyEmpty()
         {
             return (EntHashtable == null);

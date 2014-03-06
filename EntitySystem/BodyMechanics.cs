@@ -50,7 +50,7 @@ namespace EntSys
            // _ApplyForceToVelo();
            // _MoveAndCheckVelo(rt);
 
-            ApplyForceToVelo();
+            _ApplyForceToVelo();
             ColiAndMoveFunc(rt);
             //things that mod velo
                   
@@ -73,7 +73,16 @@ namespace EntSys
            // }
         }*/
 
-        
+        private Vector2 _ApplyForceToVelo()
+        {
+            //eventaully connect with weight and such
+            //F=MA UP IN HERE
+            Vector2 toRet = curForce / mass;
+            velo += toRet;
+            curForce.X = 0; curForce.Y = 0; //all force used into velo
+            return toRet;
+
+        }
 
         private void _MoveUpdate()
         {
@@ -295,7 +304,7 @@ namespace EntSys
                         rawOffSet.X = offset.x;
                         rawOffSet.Y = offset.y;
 
-                        ApplyForceToVelo();
+                        _ApplyForceToVelo();
                         veloThisCycle.x = (int)((trem / 1000) * velo.X);
                         veloThisCycle.y = (int)((trem / 1000) * velo.Y);
                         dMot = new ColiSys.DiagMotion(veloThisCycle.x, veloThisCycle.y, this.coliBox);
