@@ -165,12 +165,24 @@ namespace Structs
 
 namespace EntSys
 {
-    struct AERetType { };
+    public struct AERetType
+    {
+        public bool alreadyCollidedWith;
+
+
+        public static AERetType operator +(AERetType v1, AERetType v2)
+        {
+            AERetType tr = new AERetType();
+            tr.alreadyCollidedWith = (v1.alreadyCollidedWith || v2.alreadyCollidedWith);
+            return tr;
+        }
+
+    };
     struct DamageType
     {
-        float piercing;
-        float blunt;
-        float groundShrapnel;
+        public float piercing;
+        public float blunt;
+        public float groundShrapnel;
 
 
     }

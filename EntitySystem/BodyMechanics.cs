@@ -11,9 +11,10 @@ namespace EntSys
 {
     public class BodyMechanics : Body
     {
-        
+        bool firstUpdate = true;
         Global.Bus bus = Global.Bus.Instance;
         private PhysSys.Physics phys = PhysSys.Physics.Instance;
+        public float timeRemainingForCM;
         //private ColiSys.NodeManipulator nami = ColiSys.NodeManipulator.Instance;
 
         public BodyMechanics() { }
@@ -38,9 +39,11 @@ namespace EntSys
             base.ForceCnstr(dna);
             _DNADecoder(dna);
         }
+                
 
         public void Update(float rt)
         {
+            
             //things that apply force
            // _UpdatePerSec(rt);
            // _ApplyForceToVelo();
@@ -51,7 +54,7 @@ namespace EntSys
            // _MoveAndCheckVelo(rt);
 
             ApplyForceToVelo();
-            ColiAndMoveFunc(rt);
+            timeRemainingForCM = ColiAndMoveFunc(rt);
             //things that mod velo
                   
             //_MoveUpdate();
@@ -175,8 +178,11 @@ namespace EntSys
         }
         
 
-        public void ColiAndMoveFunc(float rt)
+        public float ColiAndMoveFunc(float rt)
         {
+            // now that im moving, unlock myself
+            hasCollidedWithMe = new List<Material>(); //resets the list of things collided with me
+            ResetAllBodyPartCWM(); //rests all body CVM ^^
             int expectedNumOfCycles;
             Vector2 tRawOffset = rawOffSet + velo * (rt / 1000);
             //Vector2 tRawOffset = rawOffSet + new Vector2(3,1);
@@ -207,6 +213,16 @@ namespace EntSys
                             {
                                 //COLI HAS OCCURED// Since bodyparts and Ent were handled seperatly unfortunatly, do
                                 //two sets of calculations
+                                //check if the collision is against a unique object, not the same one again, else bm locks else its stuck
+                                if (!connecter.getObj<Material>().MaterialIsTopScope) //if its not just plain material
+                                    if (connecter.getObj<Material>().hasCollidedWithMe.Contains((Material)this))
+                                    {
+                                        Console.Out.Write("already collided with this obj this turn");
+                                        return trem;
+                                    }
+                                    else
+                                        connecter.getObj<Material>().hasCollidedWithMe.Add((Material)this);
+
                                 EI.PointsOfContact = collidedParts.Count;
                                 if (thisCollided)
                                 {
@@ -335,7 +351,7 @@ namespace EntSys
 
 
 
-
+            return 0;
         }
 
 
