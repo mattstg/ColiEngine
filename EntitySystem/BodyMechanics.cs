@@ -205,10 +205,23 @@ namespace EntSys
                     if(checkHere != null)
                         while (Collidables.GetNext(ref connecter))
                         { //checking against each Collidable in bodyMechs list
-                            bool thisCollided = connecter.Coli(checkHere);
+                            ///Check if they exists inside of eachother without movement, this is a huge issue if true
+                            
                             List<BodyPart> collidedParts = new List<BodyPart>();
+                            List<BodyPart> TESTcollidedParts = new List<BodyPart>();
+
                             foreach ( BodyPart bp in bodyParts)
-                                bp.CheckColi(checkHere.loc - offset,connecter,collidedParts);
+                                bp.CheckColi(new S_XY(0,0),connecter,TESTcollidedParts);
+
+                            if (connecter.Coli(coliBox) || TESTcollidedParts.Count > 0)
+                                Console.Out.Write("parts overlap before movement");
+
+                            S_XY moveDir = _diffToColiSpot(checkHere);
+
+
+                            bool thisCollided = connecter.Coli(checkHere);
+                            foreach ( BodyPart bp in bodyParts)
+                                bp.CheckColi(moveDir,connecter,collidedParts);
                             if(thisCollided || collidedParts.Count != 0)
                             {
                                 //COLI HAS OCCURED// Since bodyparts and Ent were handled seperatly unfortunatly, do

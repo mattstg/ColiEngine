@@ -139,7 +139,7 @@ namespace EntSys
                 momDif = tforce - thisObjVelo.X;
 
             momDif /= 2;
-            this.ApplyForce(Enums.Force.ForceTypes.Coli, new Vector2(4000, 0));
+            this.ApplyForce(Enums.Force.ForceTypes.Coli, Math.Abs(momDif) * dir);
             return momDif * -1;
             
              /*
