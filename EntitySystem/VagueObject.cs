@@ -134,14 +134,18 @@ namespace EntSys
 
 
         }
-        public void Update(float rt)
+
+       
+
+        public float Update(float rt)
         {
+            float toRet = 0;
+
             switch (specificType)
             {
                 case objSpecificType.Bm:
                     BodyMechanics bm = (BodyMechanics)obj;
-                    bm.Update(rt);
-                    
+                    bm.Update(rt);                    
                     break;
                 case objSpecificType.Body:
                     Body b = (Body)obj;
@@ -167,11 +171,9 @@ namespace EntSys
                     //kinds like ground and such dont get updated
                     break;
 
-
-
             }
-            
 
+            return toRet;
 
         }
         public bool Destroy()

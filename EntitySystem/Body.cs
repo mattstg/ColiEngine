@@ -69,7 +69,7 @@ namespace EntSys
 
         public void Update(float rt)
         {
-            _UpdateBodyParts(rt);
+            UpdateBodyParts(rt);
             base.Update(rt);
         }
 
@@ -94,7 +94,7 @@ namespace EntSys
 
         }
 
-        private void _UpdateBodyParts(float rt)
+        protected void UpdateBodyParts(float rt)
         {
 
             foreach (BodyPart bp in bodyParts)

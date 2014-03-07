@@ -14,7 +14,7 @@ namespace EntSys
         bool firstUpdate = true;
         Global.Bus bus = Global.Bus.Instance;
         private PhysSys.Physics phys = PhysSys.Physics.Instance;
-        public float timeRemainingForCM;
+        public float timeRemainingForCM = 0;
         //private ColiSys.NodeManipulator nami = ColiSys.NodeManipulator.Instance;
 
         public BodyMechanics() { }
@@ -41,13 +41,13 @@ namespace EntSys
         }
                 
 
-        public void Update(float rt)
-        {
-            
+        public float Update(float rt)
+        {            
             //things that apply force
            // _UpdatePerSec(rt);
            // _ApplyForceToVelo();
-            phys.applyNaturalLaws(this, mass, rt);
+            if (timeRemainingForCM == 0) //first update
+                phys.applyNaturalLaws(this, mass, rt);
 
            // _CheckAllColi();
            // _ApplyForceToVelo();
@@ -56,13 +56,38 @@ namespace EntSys
             ApplyForceToVelo();
             timeRemainingForCM = ColiAndMoveFunc(rt);
             //things that mod velo
-                  
+            if (timeRemainingForCM > 0)
+                ColiSys.GRAPHICTestWorld.Update2List.Add(this);
+            
             //_MoveUpdate();
             PlaceInBounds();
             //do all calcs with force
             curForce = new Vector2(0,0); //reset 0,0
             
             base.Update(rt);
+            return timeRemainingForCM;
+
+        }
+
+        /// <summary>
+        /// Update function called to resolve BMs that were blocked last call
+        /// </summary>
+        /// <returns></returns>
+        public float Update2()
+        {           
+
+            ApplyForceToVelo();
+            timeRemainingForCM = ColiAndMoveFunc(timeRemainingForCM);
+            
+            PlaceInBounds();
+            curForce = new Vector2(0, 0); //reset 0,0
+
+            UpdateBodyParts(0); //update body parts so they call apply force, but give it 0 time
+           // if (timeRemainingForCM > 0)
+             //   ColiSys.GRAPHICTestWorld.Update2List.Add(this); inf loop if crashing against a timed out block
+
+            return timeRemainingForCM;
+
         }
 
        /* private void _UpdatePerSec(float rt)
@@ -88,9 +113,6 @@ namespace EntSys
             //nami check
         }
 
-        
-       
-
         private float _RetHighest(Vector2 a)
         {
             if (Math.Abs(a.X) > Math.Abs(a.Y))
@@ -98,6 +120,7 @@ namespace EntSys
             else 
                 return a.Y;
         }
+
         private int _RetHighest(S_XY a)
         {
             if (Math.Abs(a.x) > Math.Abs(a.y))

@@ -177,17 +177,6 @@ namespace EntSys
         public void Update(float rt)
         {
 
-
-
-
-
-
-
-            //should be done last, less you dec before ur ready
-            if (timerOncePerSec.ready)
-                timerOncePerSec.Dec(true);
-            else
-                timerOncePerSec.Tick(rt);
         }
         /*
         protected void setColiBox()

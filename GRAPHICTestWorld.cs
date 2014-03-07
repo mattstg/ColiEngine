@@ -24,12 +24,14 @@ namespace ColiSys
         Hashtable toAdd;
         NodeManipulator nami = NodeManipulator.Instance;
         MaterialFactory forge = MaterialFactory.Instance;
+        public static List<BodyMechanics> Update2List; //BodyMechanics access during update, add themselves if update was not completed
         float inputTimer;
         const float inputRefreshTimer = 50;
         ShapeGenerator shapeGen;
 
         public GRAPHICTestWorld()
         {
+            Update2List = new List<BodyMechanics>();
             shapeGen = ShapeGenerator.Instance;
             humanList = new List<HumanPlayer>();
             bodyPartList = new VOContainer(this);
@@ -205,8 +207,38 @@ namespace ColiSys
             inputTimer = 0;
         _UnloadBus();
         CheckForNewBodyParts();
+        //Spliting into 3 checks and allowing for a backup check creates extra fine reactions
         foreach (VagueObject vo in masterList)
-            vo.Update(rt);
+            vo.Update(rt/3);
+        foreach (BodyMechanics bm in Update2List)
+            bm.Update2();
+        foreach (VagueObject vo in masterList)
+            vo.Update(rt/3);
+        foreach (BodyMechanics bm in Update2List)
+            bm.Update2();
+        foreach (VagueObject vo in masterList)
+            vo.Update(rt/3);
+        foreach (BodyMechanics bm in Update2List)
+            bm.Update2();
+
+       /* int safetyNet = 500;
+       // while (Update2List.Count > 0)
+       // {
+          //  safetyNet--;
+            for(int i = Update2List.Count - 1; i >= 0; i--)
+            {
+                BodyMechanics tempBM = Update2List[i];
+                Update2List.RemoveAt(i); //pop
+                tempBM.Update2();
+            }
+            //call update2 on each
+            if (safetyNet <= 0)
+            {
+                Console.Out.WriteLine("safety net for Update2 activated");
+                Update2List.Clear();
+            }
+        }*/
+
         //Unload explosions and turn them back into them
 
 

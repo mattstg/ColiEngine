@@ -23,6 +23,7 @@ namespace EntSys
         List<VagueObject> voList;
         Object ntAllowed;
         int it;
+        public int Count { get { return voList.Count; } }
 
         //literally type "this", its for checking unique objects
         public VOContainer(object typeThis)
@@ -91,6 +92,8 @@ namespace EntSys
                 it = voList.Count - 1;
 
         }
+
+        
 
         public bool GetNext(ref VagueObject o)
         {
