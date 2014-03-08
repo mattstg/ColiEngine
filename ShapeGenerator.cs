@@ -142,7 +142,7 @@ namespace ColiSys
 
             return toRet.RetMainNode();
         }
-        
+        /*
         private Node _MakeCircle(S_XY size)
         {
             Node toRet = new Node(1, 1, null, null);
@@ -150,7 +150,7 @@ namespace ColiSys
 
             return toRet;
         }
-        
+        */
         private Node _MakeSquare(S_XY size)
         {
 
