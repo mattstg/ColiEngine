@@ -500,6 +500,7 @@ namespace ColiSys
         {
             HashAdder(a.RetMainNode());
         }
+
         public void HashAdder(Node A)
         {
             //given another hashTable head A, add to current hashtable

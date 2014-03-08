@@ -126,12 +126,31 @@ namespace ColiSys
         //Need to complete 
         private Node _MakeCircle(S_XY size)
         {
+            Hashtable toRet = new Hashtable();
+            int diam = size.x;
+            int rad = diam / 2;
+            for(int x = 1; x <= diam; x++){
+                if (x < rad)
+                {
+                    toRet.HashAdder(new Node(x - 1, x, new Node(rad - (int)(Math.Sqrt(((rad) * (rad) - (rad-x)*(rad-x) * (0.5)))), rad + (int)(-Math.Sqrt((rad - x) * (rad - x - (x * x) * (0.5))))), null));
+                }
+                else
+                {
+                    toRet.HashAdder(new Node(x - 1, x, new Node((int)(Math.Sqrt(((rad) * (rad) - (x-rad) * (x-rad) * (0.5)))), rad + (int)(-Math.Sqrt((x-rad) * (x-rad) - (x * x) * (0.5)))), null));
+                }
+            }
+
+            return toRet.RetMainNode();
+        }
+        
+        private Node _MakeCircle(S_XY size)
+        {
             Node toRet = new Node(1, 1, null, null);
 
 
             return toRet;
         }
-
+        
         private Node _MakeSquare(S_XY size)
         {
 
