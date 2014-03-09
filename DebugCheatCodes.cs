@@ -64,14 +64,25 @@ namespace ColiSys
             if (keys.IsKeyDown(Keys.F))
             {
                 Game1.graphics.IsFullScreen = !Game1.graphics.IsFullScreen;
+                Game1.graphics.ApplyChanges();
+            }
+
+
+
+            if(keys.IsKeyDown(Keys.O))
+                if (Consts.TopScope.BRUSH_SIZE <= Consts.TopScope.BRUSH_MAX_SIZE)
+                    Consts.TopScope.BRUSH_SIZE++;
+            if(keys.IsKeyDown(Keys.P))
+                if (Consts.TopScope.BRUSH_SIZE > Consts.TopScope.BRUSH_MIN_SIZE)
+                    Consts.TopScope.BRUSH_SIZE--;
              //   Game1.graphics.PreferredBackBufferHeight = 540;
               //  Game1.graphics.PreferredBackBufferWidth = 1046;
                // Consts.TopScope.WORLD_SIZE_X = Game1.graphics.PreferredBackBufferWidth;
                 //Consts.TopScope.WORLD_SIZE_Y = Game1.graphics.PreferredBackBufferHeight;
                // Consts.TopScope.GAME_SCALE = new Structs.S_XY(Game1.graphics.PreferredBackBufferWidth / Consts.TopScope.WORLD_SIZE_X, Game1.graphics.PreferredBackBufferHeight / Consts.TopScope.WORLD_SIZE_Y);
 
-                Game1.graphics.ApplyChanges();
-            }
+               
+            
         }
 
         

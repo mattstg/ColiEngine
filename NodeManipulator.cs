@@ -317,8 +317,305 @@ namespace ColiSys
 
         }
 
+        public Hashtable Scale(Hashtable a, float factor)
+        {
+            //make loops and shit
+            return new Hashtable(Scale(a.RetMainNode(), factor));
 
 
+        }
+
+        public Node Scale(Node a, float factor)
+        { 
+            Node toRet = a.CopySelf(copyTypes.copyBoth);
+
+
+            if (factor <= 0 || factor == 1)
+                return toRet;
+            if (factor > 1)
+                return _Grow(toRet, factor);
+
+            //make loops and shit, call _shrink or _grow loop times
+            if (factor < 1)
+                for (float i = .5f; i >= factor; i /= 2)
+                {
+                    toRet = _Shrink(toRet, 2);
+                }
+
+            
+            return toRet;
+
+        }
+
+        private Node _Shrink(Node a, float factor)
+        {
+                      
+
+            int blockFound = 0;
+            Hashtable ht = new Hashtable();
+
+            ///if 2 exsists, using found x, check if two adj ys exist, if yes, create block  (x%2,y%2)  
+            ///if only one or non, cycle down next x,
+            Node itx;
+            Node ity;
+
+            itx = a.CopySelf(copyTypes.copyBoth);
+            Node lastX = itx;
+            Node toRet = itx;
+
+            for (; itx != null; itx = itx.Adj())
+            {
+                if (itx.lb != itx.ub)
+                {
+                    Node preX = null;
+                    Node postX = null;
+                    if (itx.lb % 2 == 1) //if lb odd, extra extension in front
+                    {
+                        preX = new Node((int)(itx.lb/2),(int)(itx.lb/2));
+                        preX.Dwn(_ShrinkYNodes(itx));
+                        ht.HashAdder(preX);
+
+
+                    }
+                    if (itx.ub % 2 == 0) //even ub means extra extension at end
+                    {
+                        postX = new Node((int)(itx.ub / 2), (int)(itx.ub / 2));
+                        postX.Dwn(_ShrinkYNodes(itx));
+                        ht.HashAdder(postX);
+
+
+                    }
+
+                    itx.Set((itx.lb % 2) * 1 + (int)(itx.lb / 2), (int)(itx.ub / 2) - (1 - itx.ub % 2));
+                    for (Node y = itx.Dwn(); y != null; y = y.Adj())
+                    {
+                        y.Set((int)(y.lb / 2), (int)(y.ub / 2));
+
+                    }
+                    Node toAdd = new Node(itx);
+                    toAdd.Dwn(itx.Dwn());
+                    ht.HashAdder(toAdd);
+
+                    //Now add the post and pres
+                    if (postX != null)
+                    {
+                        postX.Adj(itx.Adj());
+                        itx.Adj(postX);
+                        itx = postX;
+                    }
+
+                    if (preX != null)
+                    {//gotta add the x before, bit more annoying
+                        if (toRet == lastX) //still at first node, add in front
+                        {
+                            toRet = preX;
+                            preX.Adj(itx);
+
+                        }
+                        else
+                        {
+                            preX.Adj(itx);
+                            lastX.Adj(preX);
+
+                        }
+
+
+
+                    }
+
+
+
+                }
+                else
+                {
+                    itx.Set((int)(itx.lb / 2), (int)(itx.lb / 2));
+                    itx.Dwn(_ShrinkYNodes(itx));
+
+                    Node toAdd = new Node(itx);
+                    toAdd.Dwn(itx.Dwn());
+                    ht.HashAdder(toAdd);
+
+                }
+
+                lastX = itx;
+                
+
+
+            }
+            Node tr = ht.RetMainNode();
+            tr = CleanNode(tr);
+            ht.ResetMainNode(tr);
+            return ht.RetMainNode();
+
+
+
+            //////////
+
+            /*
+            for (; itx != null; itx = itx.Adj())
+            {                
+                    if (itx.lb % 2 == 0 && itx.ub % 2 == 1) //even n odd
+                    { 
+                        //perfect case, even number of cases
+                        itx.Set((int)(itx.lb/2), (int)(itx.ub/2));
+                        itx.Dwn(_ShrinkYNodes(itx));
+
+
+
+
+                    }
+                    else if (itx.lb % 2 == 0 && itx.ub % 2 == 0) //both even
+                    {
+                        itx.Set((int)(itx.lb / 2), (int)((itx.ub-1) / 2)); //all xs up till last one are proper
+                        Node x = new Node(itx.ub, itx.ub,itx.Adj(),_ShrinkYNodes(itx));
+                        itx.Adj(x); //shrinks only if two in row
+                        //shrink all the ys in itx now
+                       
+                        for (Node y = itx.Dwn(); y != null; y = y.Adj())
+                        {
+                            y.Set((int)(y.lb / 2), (int)(y.ub / 2));
+
+                        }
+                        //extra at end
+                    } else if (itx.lb % 2 == 1 && itx.ub % 2 == 1)// both odd
+                    {
+                        //Extra at Start
+                        itx.Set((int)(itx.lb / 2), (int)((itx.lb - 1) / 2)); //all xs up till last one are proper
+                        Node x = new Node((int)(itx.ub / 2), (int)((itx.ub) / 2), itx.Adj(), _ShrinkYNodes(itx));
+                        itx.Adj(x); //shrinks only if two in row
+                        //shrink all the ys in itx now
+
+                        for (Node y = itx.Dwn(); y != null; y = y.Adj())
+                        {
+                            y.Set((int)(y.lb / 2), (int)(y.ub / 2));
+
+                        }
+                    }
+                    else if (itx.lb % 2 == 1 && itx.ub % 2 == 0)// odd n even
+                    {
+
+                    }
+                    else
+                    {
+                        Console.Out.WriteLine("WEIRD ER(1): Unknown combination of even n odds");
+                    }
+                        //for each y case one
+                
+            }
+            return toRet;*/
+
+
+        }
+
+        /// <summary>
+        /// creates and returns the head y of a list of shrunken ys by the 4 factor, shrinks only if two in row, use for single x lb==ub
+        /// </summary>
+        /// <param name="x"></param>
+        /// <returns></returns>
+        private Node _ShrinkYNodes(Node x)
+        {
+            Node headY = null;
+            Node lastYAdded = null;
+            bool first = true;
+            //!(!a/\b)
+            //(aV!b)
+            
+                for (Node ity = x.Dwn(); ity != null; ity = ity.Adj())
+                {
+                    if (ity.lb != ity.ub && ( ity.ub - ity.lb != 1 || ity.lb%2 != 1 || ity.ub%2 != 0)) //to exclude case edd & even
+                    {
+                        Node y = new Node((int)(ity.lb / 2) + 1 * (ity.lb % 2), (int)(ity.ub / 2) - 1 * (1 - (ity.ub % 2)));
+                       
+                        
+                            if (!first)
+                                lastYAdded.Adj(y);
+                            else
+                            {
+                                first = false;
+                                headY = y;
+                            }
+
+
+                            lastYAdded = y;
+                        
+                    }
+                }
+
+                return headY;
+            
+
+
+
+
+            /*
+            if (x.lb == x.ub)
+            {
+                for(Node ity = x.Dwn(); ity != null; ity = ity.Adj())
+                if (x.lb % 2 == 0 && x.ub % 2 == 1) //even n odd
+                {
+                    //perfect case, even number of cases
+                    Node y = new Node((int)(x.lb/2), (int)(x.ub/2));
+
+                    if (!xScope)                    
+                        lastYAdded.Adj(y);
+                     else                    
+                        newXNode.Dwn(y);
+                        
+                    
+                    lastYAdded = y;
+
+                }
+                else if (x.lb % 2 == 0 && x.ub % 2 == 0) //both even
+                {
+                    Node y = new Node((int)(x.lb / 2), (int)((x.ub-1) / 2));
+
+                    if (!xScope)
+                        lastYAdded.Adj(y);
+                    else
+                        newXNode.Dwn(y);
+
+
+                    lastYAdded = y;
+                    //extra at end
+                }
+                else if (x.lb % 2 == 1 && x.ub % 2 == 1)// both odd
+                {
+                    Node y = new Node((int)(x.lb / 2), (int)((x.ub - 1) / 2));
+
+                    if (!xScope)
+                        lastYAdded.Adj(y);
+                    else
+                        newXNode.Dwn(y);
+
+
+                    lastYAdded = y;
+                    //extra at start
+                }
+                else if (x.lb % 2 == 1 && x.ub % 2 == 0)// odd n even
+                {//extra both ends
+                    //Node Y Added!
+                }
+                else
+                {
+                    Console.Out.WriteLine("WEIRD ER(1): Unknown combination of even n odds");
+                }
+            }
+            else
+            {
+                Console.Out.WriteLine("Shrink2NodeY geting called for a.lb n a.ub diff bigger than 1!!");
+            }
+
+             */
+
+        }
+
+        private Node _Grow(Node a, float factor)
+        {
+            Node toRet;
+
+
+            return a.CopySelf(copyTypes.copyBoth) ;
+        }
 
         public bool DoesNodeExistFullyInOtherNode(Node mainNode, Node subNode)
         {

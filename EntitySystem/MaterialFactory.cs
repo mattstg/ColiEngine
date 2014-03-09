@@ -78,7 +78,7 @@ namespace EntSys
                     htable.ResetMainNode(nami.MoveTableByOffset(htable.RetMainNode(), new S_XY(0, Consts.TopScope.WORLD_SIZE_Y / 2)));
                    // htable.LoadTexture(tc.dirt, Color.White);
                     tr = new Material(hp, bounceForceMultLB, bounceForceMultUB, bounceThreshold, absorb, thornDmg, stickyness, armor, htable, friction,matType,true,null,loc);
-                    tr.LoadTexture(tc.dirt, Color.White);
+                    tr.LoadTexture(tc.sqr, Color.Brown);
                     break;
 
                 case 1: //Indestructible wall

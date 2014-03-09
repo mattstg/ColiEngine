@@ -17,6 +17,8 @@ namespace ColiSys
         //Our Nodes Variables
         int u; //upper bound
         int l; //lower bound
+        public int lb { get { return l; } }
+        public int ub { get { return u; } }
         public bool visited; //used for connection checking
         // yNode and xNode are the nodes which are "pointed to", or more appropriately birthed or stemming from this Node.
         Node dwnNode = null; //the adjacent node connection (if there is any)

@@ -20,6 +20,7 @@ namespace EntSys
         ColiSys.NodeManipulator nami = ColiSys.NodeManipulator.Instance;
         Global.Timers UniResponseT = null;
         public keyMap keymap;
+        bool inputShutDown = false;
            
 
 
@@ -69,12 +70,15 @@ namespace EntSys
 
         public void Input()
         {
-            KeyboardState ks = Keyboard.GetState();
-            if(Keyboard.GetState().GetPressedKeys().Length > 0)
-                 AE.TriggerEvent(ks);
+            if (!inputShutDown)
+            {
+                KeyboardState ks = Keyboard.GetState();
+                if (Keyboard.GetState().GetPressedKeys().Length > 0)
+                    AE.TriggerEvent(ks);
 
-            foreach (BodyPart bp in bodyParts)
-                bp.Input(ks);
+                foreach (BodyPart bp in bodyParts)
+                    bp.Input(ks);
+            }
 
             
         }
@@ -113,6 +117,14 @@ namespace EntSys
                     bodyParts.Add(wing2);
                     RegisterNewParts = true;
                     break;
+                case 0:
+                    LoadTexture(tc.dirt, Color.Teal);
+                    SetEntShape(new ColiSys.Hashtable(sgen.GenShape(ColiSys.Shape.Human, new S_XY(25, 25))));
+                    S_XY tttOff = new S_XY(Consts.TopScope.WORLD_SIZE_X / 2, Consts.TopScope.WORLD_SIZE_Y / 2);
+                    offset = tttOff;
+                    rawOffSet = new Vector2(tttOff.x, tttOff.y);
+                    inputShutDown = true;
+                    break;
 
 
             }
@@ -149,6 +161,9 @@ namespace EntSys
                     keymap.right = Keys.D;
                     keymap.down = Keys.S;
                     keymap.up = Keys.Q;
+                    break;
+
+                default:
                     break;
 
             }

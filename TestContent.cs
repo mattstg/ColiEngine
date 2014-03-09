@@ -11,8 +11,12 @@ namespace ColiSys
     class TestContent
     {
         public ContentManager Content;
-
-        public Texture2D dirt;
+        public SpriteFont font_small;
+        public Texture2D dirt; 
+        /// <summary>
+        /// Basic White Sqaure, cast to any color you want
+        /// </summary>
+        public Texture2D sqr; 
         
         //singleton set//////////////////////////
         private static TestContent instance;
@@ -40,6 +44,8 @@ namespace ColiSys
 
 
             dirt = Content.Load<Texture2D>("dirt");
+            font_small = Content.Load<SpriteFont>("font800");
+            sqr = Content.Load<Texture2D>("BasicBox");
 
 
         }

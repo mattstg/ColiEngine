@@ -20,10 +20,11 @@ namespace ColiSys
     /// </summary>
     public class Game1 : Game
     {
-        public enum GameState { mainGame, BodyDesigner, BpStore }
+        public enum GameState { mainGame, BodyDesigner, BpStore, CharDesigner }
         public static GameState gameState;
         public static GraphicsDeviceManager graphics;
-        TestContent tc;  
+        TestContent tc;
+        CharDesign.CharacterDesigner charDesigner;
         DebugCheatCodes cheats;
         public static SpriteBatch spriteBatch;
         GRAPHICTestWorld world;
@@ -34,20 +35,19 @@ namespace ColiSys
         Global.Bus bus = Global.Bus.Instance;
         NodeManipulator nami;
         BodyPartSaveLoader bpSaveLoader;
-
+        
 
 
         public Game1()
             : base()
         {
-            gameState = GameState.mainGame;
+            gameState = GameState.BodyDesigner;
             Shape shapo;
             graphics = new GraphicsDeviceManager(this);
             graphics.PreferredBackBufferHeight = 1080;
             graphics.PreferredBackBufferWidth = 1920;
             Consts.TopScope.WORLD_SIZE_X = graphics.PreferredBackBufferWidth;
             Consts.TopScope.WORLD_SIZE_Y = graphics.PreferredBackBufferHeight;
-
             graphics.IsFullScreen = true;
             Content.RootDirectory = "ColiEngine/Content";
 
@@ -66,6 +66,7 @@ namespace ColiSys
         /// </summary>
         protected override void Initialize()
         {
+            spriteBatch = new SpriteBatch(GraphicsDevice);
             tc = TestContent.Instance;
             tc.LoadContent(Content);
 
@@ -75,9 +76,11 @@ namespace ColiSys
             
             nami = NodeManipulator.Instance;
             shapeGen = ShapeGenerator.Instance;
+
+            charDesigner = CharDesign.CharacterDesigner.Instance;
             
             //loading content
-            spriteBatch = new SpriteBatch(GraphicsDevice);
+            
             
             
             bpDesigner = new BodyPartDesigner();
@@ -157,6 +160,10 @@ namespace ColiSys
                     //human.Update(rt);
                     world.Update(rt);
                     break;
+                case GameState.CharDesigner:
+                    charDesigner.Update(rt);
+
+                    break;
 
 
             }
@@ -181,6 +188,10 @@ namespace ColiSys
                     cheats.Input();
                     //human.Input();
                     break;
+                case GameState.CharDesigner:
+                    charDesigner.Input();
+                    break;
+
 
 
             }
@@ -204,6 +215,9 @@ namespace ColiSys
                 case GameState.mainGame:
                      world.Draw(spriteBatch);
                      //human.Draw();
+                    break;
+                case GameState.CharDesigner:
+                    charDesigner.Draw();
                     break;
 
 

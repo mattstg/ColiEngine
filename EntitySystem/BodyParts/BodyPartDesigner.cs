@@ -361,6 +361,7 @@ namespace BodyParts
                 case 2:
                     Game1.gameState = Game1.GameState.mainGame;
                     break;
+                
 
 
 
@@ -392,6 +393,18 @@ namespace BodyParts
             sa.Draw();
             sb.Draw();
             tempDrawTable.Draw();
+            if (BpHt.RetMainNode() != null)
+            {
+                Hashtable scale2 = nami.Scale(BpHt, .5f);
+                scale2.ResetMainNode(nami.MoveTableByOffset(scale2.RetMainNode(), new S_XY(50, 50)));
+                Hashtable scale4 = nami.Scale(BpHt, .25f);
+                scale4.ResetMainNode(nami.MoveTableByOffset(scale4.RetMainNode(), new S_XY(150, 150)));
+                scale2.LoadTexture(tc.sqr, Color.Green);
+                scale4.LoadTexture(tc.sqr, Color.Gold);
+                scale2.Draw();
+                scale4.Draw();
+            }
+
 
             foreach (Button button in buttons)
                 button.ht.Draw();
