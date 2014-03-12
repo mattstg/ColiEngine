@@ -27,7 +27,14 @@ namespace ColiSys
 
         public void SetCur(Node newCur)
         {
-            cur = newCur; next = cur.Adj(); prev = null;
+            if (newCur != null)
+            {
+                cur = newCur; next = cur.Adj(); prev = null;
+            }
+            else
+            {
+                cur = next = prev = null;
+            }
         }
 
 

@@ -6,8 +6,10 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using ColiSys;
 using Structs;
+using EntSys;
 
-namespace EntSys
+
+namespace FactSys
 {
     class MaterialFactory
     {

@@ -40,7 +40,7 @@ namespace EntSys
             {
                     //case numbers equal to SpecificType default value for default loads, ex
                     //in specificType, bodyPart == 7, so automatically 7 will be loaded for bodyparts, 10 is assigned to a specific part,l ike a wing
-                case 4: //Human
+                case 5: //Human
                    // BmGActions.Add(BmGCreateExp);  create debug exp when hit Material
                     BodyMechVsMaterial.Add(BodyHitsGround);
                     BodyMechVsExp.Add(BmColiExp);
@@ -48,12 +48,12 @@ namespace EntSys
                    // BmGActions.Add(BodyHitsGround);
                     return;
                     
-                case 5: //Exp
+                case 6: //Exp
                     ExpVsMaterial.Add(ExpGAlterPath);
                     BodyMechVsExp.Add(ExpColiBm);
                     return;
                 
-                case 6: //Material
+                case 2: //Material
                     ExpVsMaterial.Add(GcoliExp);
                     BodyMechVsMaterial.Add(GcoliBm);
                     return;

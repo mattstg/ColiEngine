@@ -326,7 +326,10 @@ namespace ColiSys
         }
 
         public Node Scale(Node a, float factor)
-        { 
+        {
+            if (a == null)
+                return null;
+
             Node toRet = a.CopySelf(copyTypes.copyBoth);
 
 
@@ -373,7 +376,8 @@ namespace ColiSys
                     {
                         preX = new Node((int)(itx.lb/2),(int)(itx.lb/2));
                         preX.Dwn(_ShrinkYNodes(itx));
-                        ht.HashAdder(preX);
+                        if(preX.Dwn() != null)
+                            ht.HashAdder(preX);
 
 
                     }
@@ -381,7 +385,8 @@ namespace ColiSys
                     {
                         postX = new Node((int)(itx.ub / 2), (int)(itx.ub / 2));
                         postX.Dwn(_ShrinkYNodes(itx));
-                        ht.HashAdder(postX);
+                        if (postX.Dwn() != null)
+                            ht.HashAdder(postX);
 
 
                     }
@@ -394,7 +399,8 @@ namespace ColiSys
                     }
                     Node toAdd = new Node(itx);
                     toAdd.Dwn(itx.Dwn());
-                    ht.HashAdder(toAdd);
+                    if (toAdd.Dwn() != null)
+                        ht.HashAdder(toAdd);
 
                     //Now add the post and pres
                     if (postX != null)
@@ -433,7 +439,8 @@ namespace ColiSys
 
                     Node toAdd = new Node(itx);
                     toAdd.Dwn(itx.Dwn());
-                    ht.HashAdder(toAdd);
+                    if(toAdd.Dwn() != null)
+                      ht.HashAdder(toAdd);
 
                 }
 
@@ -894,25 +901,33 @@ namespace ColiSys
 
         private Node _DeleteAllEmptyX(Node a)
         {
-            Node headNode = a;
-            Node tx = null;
+            if (a != null)
+            {
+                Node headNode = a;
+                Node tx = null;
 
-            while (headNode.Dwn() == null || headNode.Dwn().Ret(Bounds.l) == -1)
-                headNode = headNode.Adj();
+                if (headNode == null)
+                    Console.Out.WriteLine("What the fuck?");
+
+                while (headNode.Dwn() == null || headNode.Dwn().Ret(Bounds.l) == -1)
+                    headNode = headNode.Adj();
 
 
-            tx = headNode;
+                tx = headNode;
 
-            if (tx != null)
-                while (tx.Adj() != null)
-                {
-                    if (tx.Adj().Dwn() == null || tx.Adj().Dwn().Ret(Bounds.l) == -1)
-                        tx.Adj(tx.Adj().Adj());
-                    else
-                        tx = tx.Adj();
-                }
+                if (tx != null)
+                    while (tx.Adj() != null)
+                    {
+                        if (tx.Adj().Dwn() == null || tx.Adj().Dwn().Ret(Bounds.l) == -1)
+                            tx.Adj(tx.Adj().Adj());
+                        else
+                            tx = tx.Adj();
+                    }
 
-            return headNode;
+                return headNode;
+            }
+            else
+                return null;
 
         }
 
@@ -1053,7 +1068,8 @@ namespace ColiSys
 
         public Node ComplexNodeToSquareNode(Node O)
         {
-
+            if (O == null)
+                return null;
             ColiSys.Node x = O;
             ColiSys.Node y = x.Dwn();
             S_XY yRange = new S_XY(int.MaxValue, 0);
@@ -1397,22 +1413,26 @@ namespace ColiSys
 
         public Node MoveTableByOffset(Node a, S_XY offset)
         {
-
-            Node toRet = a.CopySelf(copyTypes.copyBoth);
-            Node itx = toRet;
-            Node ity;
-            while(itx != null)
+            if (a != null)
             {
-                itx.Mod(new S_XY(offset.x,offset.x));
-                ity = itx.Dwn();
-                while (ity != null)
+                Node toRet = a.CopySelf(copyTypes.copyBoth);
+                Node itx = toRet;
+                Node ity;
+                while (itx != null)
                 {
-                    ity.Mod(new S_XY(offset.y,offset.y));
-                    ity = ity.Adj();
+                    itx.Mod(new S_XY(offset.x, offset.x));
+                    ity = itx.Dwn();
+                    while (ity != null)
+                    {
+                        ity.Mod(new S_XY(offset.y, offset.y));
+                        ity = ity.Adj();
+                    }
+                    itx = itx.Adj();
                 }
-                itx = itx.Adj();
+                return toRet;
             }
-            return toRet;
+            else
+                return null;
         }
 
         //I feel function could be so unsafe for any complex non square shape, only use for sqaure

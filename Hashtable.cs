@@ -21,7 +21,8 @@ namespace ColiSys
 
         public Hashtable(Node hashTreeHead)
         {
-            mainNode = hashTreeHead.CopySelf(copyTypes.copyBoth);
+            if(hashTreeHead != null)
+               mainNode = hashTreeHead.CopySelf(copyTypes.copyBoth);
             spriteTable = new SpriteHTable();
         }
 
@@ -65,7 +66,8 @@ namespace ColiSys
         public void ResetMainNode(Node n)
         {
             EmptyTable();
-            mainNode = n.CopySelf(copyTypes.copyBoth);
+            if(n != null)
+                mainNode = n.CopySelf(copyTypes.copyBoth);
         }
 
 
@@ -160,6 +162,19 @@ namespace ColiSys
 
 
             return Coli(nodeX); //given the nodeX trees
+        }
+
+        public S_XY GetSize()
+        {
+            Node t = nami.ComplexNodeToSquareNode(mainNode);
+            if (t == null)
+                return new S_XY();
+            if (t.Dwn() == null)
+                return new S_XY(); //very odd, node not cleaned properly
+
+
+            S_XY toRet = new S_XY(t.ub - t.lb + 1, t.Dwn().ub - t.Dwn().lb + 1);
+            return toRet;
         }
 
         public OverlapType[] ColiType(S_Box box)

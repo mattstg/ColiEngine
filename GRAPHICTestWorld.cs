@@ -10,6 +10,7 @@ using Structs;
 using EntSys;
 using Enums.Node;
 using BodyParts;
+using FactSys;
 //Next version of graphic world needs to take into account zooming in and out and the not drawing of things outside
 namespace ColiSys
 {
@@ -20,10 +21,10 @@ namespace ColiSys
         Material theGround;
         List<VagueObject> masterList;
         VOContainer bodyPartList;
+        MaterialFactory forge;
         List<HumanPlayer> humanList;
         Hashtable toAdd;
         NodeManipulator nami = NodeManipulator.Instance;
-        MaterialFactory forge = MaterialFactory.Instance;
         public static List<BodyMechanics> Update2List; //BodyMechanics access during update, add themselves if update was not completed
         float inputTimer;
         const float inputRefreshTimer = 50;
@@ -32,6 +33,7 @@ namespace ColiSys
         public GRAPHICTestWorld()
         {
             Update2List = new List<BodyMechanics>();
+            forge = MaterialFactory.Instance;
             shapeGen = ShapeGenerator.Instance;
             humanList = new List<HumanPlayer>();
             bodyPartList = new VOContainer(this);
@@ -106,7 +108,7 @@ namespace ColiSys
     }
  
 
-    public void Draw(SpriteBatch sb)
+    public void Draw()
     {
 
         foreach (VagueObject vo in masterList)
@@ -118,7 +120,7 @@ namespace ColiSys
 
     }
 
-    public void Input()
+    public void Input(KeyboardState keys, MouseState mouse)
     {
         if (inputTimer <= 0)
         {
@@ -126,8 +128,6 @@ namespace ColiSys
                 h.Input();
 
 
-            MouseState mouse = Mouse.GetState();
-            KeyboardState keys = Keyboard.GetState();
             if (mouse.LeftButton == ButtonState.Pressed)
             {
                 int m = (mouse.X / Consts.TopScope.GAME_SCALE.x)-Consts.TopScope.BRUSH_SIZE;

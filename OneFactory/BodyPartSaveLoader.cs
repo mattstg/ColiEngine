@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using BodyParts;
 
-namespace BodyParts
+
+
+namespace FactSys
 {
     public class BodyPartSaveLoader
     {
@@ -15,7 +18,6 @@ namespace BodyParts
         private BodyPartSaveLoader()
         {
             bodyIDs = LoadAllIDs();
-            LoadFileIntoBodyPart(2);
         
         }
         public static BodyPartSaveLoader Instance
@@ -67,8 +69,12 @@ namespace BodyParts
 
         }
 
+        public List<int> RetrieveAllIDs()
+        {
+            return new List<int>(bodyIDs);
+        }
 
-        public BodyPart LoadFileIntoBodyPart(int fileID)
+        public BpConstructor LoadFileIntoBpc(int fileID)
         {
             if (Directory.Exists(Environment.CurrentDirectory + "/SavedBodyParts"))
             {
@@ -124,8 +130,7 @@ namespace BodyParts
                    bpC.regPacks = regPack;
                    bpC.shape = ht;
                    bpC.sutureSpots = sutureSpots;
-                   BodyPart toRet = new BodyPart(bpC);
-                   return toRet;
+                   return bpC;
 
 
                     
@@ -141,7 +146,7 @@ namespace BodyParts
 
             }
 
-            return null;
+            return new BpConstructor();
         }
 
 

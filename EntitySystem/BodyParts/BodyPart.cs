@@ -12,6 +12,14 @@ using Structs;
 
 namespace BodyParts
 {
+    public struct BpConstructor
+    {
+        public ColiSys.Hashtable shape;
+        public List<ColiSys.Hashtable> sutureSpots;
+        public List<int> regPacks;
+
+    }
+
     public struct BodyPulse
     {
         long energy;
@@ -77,7 +85,8 @@ namespace BodyParts
         List<BodyPartConnection> connecters;
         ColiSys.TestContent tc;
         public BpConstructor bpDNA;
-
+        S_XY OffsetDifToMaster;
+       
 
         //given a bodypart to clone from
         public BodyPart(BpConstructor bpC)
@@ -89,6 +98,7 @@ namespace BodyParts
             foreach (int i in bpC.regPacks)            
                 AE.RegAbilityPack(i);
             connecters = new List<BodyPartConnection>();
+            OffsetDifToMaster = new S_XY();
             base.ForceCnstr(null);
             specType = objSpecificType.BodyPart;
 
@@ -97,6 +107,16 @@ namespace BodyParts
         public void SetMaster(BodyMechanics master)
         {
             Master = master;
+            offset = master.offsetCopy;
+            offset.x -= 15;  ///should not be just 15, needs to specificy suture point
+            rawOffSet.X = offset.x;
+            rawOffSet.Y = offset.y;
+
+            ///DITTO AS ABOVE
+            OffsetDifToMaster.y = 0;
+            OffsetDifToMaster.x = -15;
+           
+
         }
 
 
@@ -110,12 +130,8 @@ namespace BodyParts
             AE = new ActionEvent(new VagueObject(this));
             AE.RegAbilityPack(10);
             connecters = new List<BodyPartConnection>();
-           
-            Master = master;
-            offset = master.offsetCopy;
-            offset.x -= 15;
-            rawOffSet.X = offset.x;
-            rawOffSet.Y = offset.y;
+            OffsetDifToMaster = new S_XY();
+            SetMaster(master);
             specType = objSpecificType.BodyPart;
 
             base.ForceCnstr(dna);
@@ -139,7 +155,8 @@ namespace BodyParts
 
         public void ForceCnstr(DNA dna)
         {
-           
+
+            OffsetDifToMaster = new S_XY();
             connecters = new List<BodyPartConnection>();
             base.ForceCnstr(dna);
         }
@@ -216,13 +233,34 @@ namespace BodyParts
 
 
         
-
+       
         
 
-        public void SutureBodyPart()
+        public void SutureBodyPart(BodyPart otherPart)
         {
-           // BodyPartConnection bp = new BodyPartConnection();
-           // bp.SealConnection(
+           BodyPartConnection bp = new BodyPartConnection(this,otherPart);
+           otherPart.AddBPConnecter(bp);
+            //
+           otherPart.offset -= new S_XY(10, 10);
+           otherPart.OffsetDifToMaster -= new S_XY(10, 10);     
+            //
+           connecters.Add(bp);
+
+          
+
+        }
+
+        public void AddBPConnecter(BodyPartConnection BPConnection)
+        {
+            connecters.Add(BPConnection);
+
+
+        }
+
+        public void GrowBodyPart(BpConstructor BPc)
+        {
+
+
 
         }
 

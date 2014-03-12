@@ -103,7 +103,25 @@ namespace EntSys
                     offset = tOff;
                     rawOffSet = new Vector2(tOff.x, tOff.y);
                     BodyPart wing = new BodyPart(this, null); //default creation, only used temp, add BpC later
+                   // BodyPart wing2 = new BodyPart(this, null);
+                    BodyPart arm1 = new BodyPart(this, null);
+                   // BodyPart arm2 = new BodyPart(this, null);
+                   // BodyPart leg1 = new BodyPart(this, null);
+                    // leg2 = new BodyPart(this, null);
+
+                  //  BodyPart feet1 = new BodyPart(this, null);
+                  //  BodyPart feet2 = new BodyPart(this, null);
+
+                    BodyPart claws1 = new BodyPart(this, null);
+                   // BodyPart claws2 = new BodyPart(this, null);
+
+                    arm1.AddBodyPart(claws1);
+
+
+                   
+
                     bodyParts.Add(wing);
+                    bodyParts.Add(arm1);
                     RegisterNewParts = true;
                     break;
 

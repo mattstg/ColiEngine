@@ -2,22 +2,24 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using FactSys;
 namespace BodyParts
 {
-    class BodyPartStore
+    public struct bodyItem
     {
-        struct bodyItem
-        {
-            public int id;
-            public BpConstructor bp;
+        public int id;
+        public BpConstructor bp;
 
-            public bodyItem(int id, BpConstructor bp)
-            {
-                this.id = id;
-                this.bp = bp;
-            }
+        public bodyItem(int id, BpConstructor bp)
+        {
+            this.id = id;
+            this.bp = bp;
         }
+    }
+
+    public class BodyPartStore
+    {
+        
         ColiSys.NodeManipulator nami = ColiSys.NodeManipulator.Instance;
         List<bodyItem> bodyList;
         BodyPartSaveLoader bpSaveLoader;
@@ -27,6 +29,7 @@ namespace BodyParts
         {
             bodyList = new List<bodyItem>();
             bpSaveLoader = BodyPartSaveLoader.Instance;
+            LoadAllPartsFromFilesIntoStore();
         
         }
         public static BodyPartStore Instance
@@ -41,7 +44,20 @@ namespace BodyParts
             }
         }
 
+        public void LoadAllPartsFromFilesIntoStore()
+        {
+            List<int> allIDsFromFile = bpSaveLoader.RetrieveAllIDs();
 
+            foreach (int id in allIDsFromFile)
+            {
+                bodyItem bi = new bodyItem(id, bpSaveLoader.LoadFileIntoBpc(id));
+                bodyList.Add(bi);
+            }
+
+
+
+
+        }
 
         /// <summary>
         /// Store a bodypart in the store, returns false if ID is not unique, part does not get stored
@@ -82,7 +98,14 @@ namespace BodyParts
 
         }
 
-
+        /// <summary>
+        /// Due to lazyness, returns actauly BpC list, careful with it
+        /// </summary>
+        /// <returns></returns>
+        public List<bodyItem> ReturnBpcList()
+        {
+            return bodyList;
+        }
 
 
 

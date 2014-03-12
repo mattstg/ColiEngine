@@ -6,18 +6,19 @@ using Microsoft.Xna.Framework.Input;
 
 namespace BodyParts
 {
-    class BodyPartConnection
+    public class BodyPartConnection
     {
         BodyPart p1;
         BodyPart p2;
         private bool Lock = false;
         int str; //Strength of connection
+        
 
 
-
-        public BodyPartConnection()
+        public BodyPartConnection(BodyPart part1, BodyPart part2)
         {
-            
+            p1 = part1;
+            p2 = part2;
 
 
 

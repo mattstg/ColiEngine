@@ -12,7 +12,7 @@ using EntStructEnum;
 using Structs;
 using EntSys;
 #endregion
-
+using FactSys;
 namespace ColiSys
 {
     /// <summary>
@@ -20,28 +20,26 @@ namespace ColiSys
     /// </summary>
     public class Game1 : Game
     {
-        public enum GameState { mainGame, BodyDesigner, BpStore, CharDesigner }
+        public enum GameState { MainGame, Factory }
         public static GameState gameState;
         public static GraphicsDeviceManager graphics;
+        OneFactory Factory;
         TestContent tc;
-        CharDesign.CharacterDesigner charDesigner;
         DebugCheatCodes cheats;
         public static SpriteBatch spriteBatch;
         GRAPHICTestWorld world;
         DNABuilder dnaBuilder;
         //HumanPlayer human;
-        BodyPartDesigner bpDesigner;
         ShapeGenerator shapeGen;
         Global.Bus bus = Global.Bus.Instance;
         NodeManipulator nami;
-        BodyPartSaveLoader bpSaveLoader;
         
 
 
         public Game1()
             : base()
         {
-            gameState = GameState.BodyDesigner;
+            gameState = GameState.MainGame;
             Shape shapo;
             graphics = new GraphicsDeviceManager(this);
             graphics.PreferredBackBufferHeight = 1080;
@@ -66,24 +64,20 @@ namespace ColiSys
         /// </summary>
         protected override void Initialize()
         {
+            Factory = OneFactory.Instance;
+
             spriteBatch = new SpriteBatch(GraphicsDevice);
             tc = TestContent.Instance;
             tc.LoadContent(Content);
 
 
             cheats = DebugCheatCodes.Instance;
-            bpSaveLoader = BodyPartSaveLoader.Instance;
             
             nami = NodeManipulator.Instance;
             shapeGen = ShapeGenerator.Instance;
-
-            charDesigner = CharDesign.CharacterDesigner.Instance;
             
             //loading content
             
-            
-            
-            bpDesigner = new BodyPartDesigner();
             world = new GRAPHICTestWorld();
             /////////////
 
@@ -153,47 +147,35 @@ namespace ColiSys
 
             switch (gameState)
             {
-                case GameState.BodyDesigner:
-                    bpDesigner.Update(rt);
+                case GameState.Factory:
+                    Factory.Update(rt);
                     break;
-                case GameState.mainGame:
+                case GameState.MainGame:
                     //human.Update(rt);
                     world.Update(rt);
                     break;
-                case GameState.CharDesigner:
-                    charDesigner.Update(rt);
-
-                    break;
-
-
             }
-
-
-
-            
-                       
+    
             base.Update(gameTime);
            
         }
 
         protected void Input(float rt)
         {
+            KeyboardState keys = Keyboard.GetState();
+            MouseState mouses = Mouse.GetState();
+
             switch (gameState)
             {
-                case GameState.BodyDesigner:
+                case GameState.Factory:
+                    Factory.Input(keys, mouses);
                     cheats.Input();
                     break;
-                case GameState.mainGame:
-                    world.Input();
+                case GameState.MainGame:
+                    world.Input(keys,mouses);
                     cheats.Input();
                     //human.Input();
                     break;
-                case GameState.CharDesigner:
-                    charDesigner.Input();
-                    break;
-
-
-
             }
             
         }
@@ -204,22 +186,18 @@ namespace ColiSys
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.DarkSlateBlue);
             spriteBatch.Begin();
 
             switch (gameState)
             {
-                case GameState.BodyDesigner:
-                    bpDesigner.Draw();
+                case GameState.Factory:
+                    Factory.Draw();
                     break;
-                case GameState.mainGame:
-                     world.Draw(spriteBatch);
+                case GameState.MainGame:
+                     world.Draw();
                      //human.Draw();
                     break;
-                case GameState.CharDesigner:
-                    charDesigner.Draw();
-                    break;
-
 
             }
             spriteBatch.End();
