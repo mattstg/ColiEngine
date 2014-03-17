@@ -8,6 +8,19 @@ using BodyParts;
 
 namespace EntSys
 {
+
+    public struct AEWrapper
+    {
+        public bool isPassive;
+        public bool isTriggerable;
+        public int triggerId;
+        public int AEWCreationCost;
+        public int energyStored;
+        public int energyStoredMax;
+        public Func<int, Body, Vector2, AERetType> Ability;
+    }
+
+
     /*
 
      current order: BodyMech, Explosion, Material

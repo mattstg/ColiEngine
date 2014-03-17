@@ -50,10 +50,14 @@ namespace BodyParts
         ///<summary>Cast as dont care </summary>
         Update,
         ///<summary>Dont even remember why i say it needs a cast anymore </summary>
-        ResetCVM
+        ResetCVM,
+        /// <summary>nomnomnomn calls draw for all parts </summary>
+        Draw,
+        /// <summary> ask to fill a given list-AEW- type by id  </summary>
+        FillAEWListById
 
     }
-    public struct FuncPulse
+    public struct FuncPulse //this could have totally been a generic class probably
     {
         public FuncPulseType funcCalling;
         public S_XY byOffest;
@@ -62,6 +66,8 @@ namespace BodyParts
         public KeyboardState keyState;
         public BodyPulse pulse;
         public float rt;
+        public List<AEWrapper> AEWList;
+        public int Int;
 
 
     }
@@ -83,24 +89,23 @@ namespace BodyParts
     {
         
         List<BodyPartConnection> connecters;
-        ColiSys.TestContent tc;
+        ColiSys.TestContent tc = ColiSys.TestContent.Instance;
         public BpConstructor bpDNA;
         S_XY OffsetDifToMaster;
+        List<AEWrapper> AbilityList;
+        
        
 
         //given a bodypart to clone from
         public BodyPart(BpConstructor bpC)
         {
-            bpDNA = bpC;
-            tc = ColiSys.TestContent.Instance;
-            SetEntShape(bpC.shape);
-            AE = new ActionEvent(new VagueObject(this));
+            ForceCnstr(null);
+            bpDNA = bpC;            
+            SetEntShape(bpC.shape);            
             foreach (int i in bpC.regPacks)            
                 AE.RegAbilityPack(i);
-            connecters = new List<BodyPartConnection>();
-            OffsetDifToMaster = new S_XY();
-            base.ForceCnstr(null);
-            specType = objSpecificType.BodyPart;
+            
+            
 
         }
 
@@ -125,17 +130,11 @@ namespace BodyParts
         // default made without bodyPartDesigner, makes wings
         public BodyPart(BodyMechanics master, EntSys.DNA dna)
         {
-            tc = ColiSys.TestContent.Instance;  
+            ForceCnstr(dna);
             SetEntShape(DefaultShapeGen());           
-            AE = new ActionEvent(new VagueObject(this));
-            AE.RegAbilityPack(10);
-            connecters = new List<BodyPartConnection>();
-            OffsetDifToMaster = new S_XY();
+            AE.RegAbilityPack(10);           
             SetMaster(master);
-            specType = objSpecificType.BodyPart;
-
-            base.ForceCnstr(dna);
-
+            
             
         }
 
@@ -153,9 +152,23 @@ namespace BodyParts
             return new ColiSys.Hashtable(nodex1);
         }
 
+        private void DebugLoad()
+        {
+            AEWrapper t = new AEWrapper();
+            t.triggerId = 5;
+            t.energyStored = 100;
+            AbilityList.Add(t);
+
+        }
+
         public void ForceCnstr(DNA dna)
         {
-
+            AbilityList = new List<AEWrapper>();
+            specType = objSpecificType.BodyPart;
+            OffsetDifToMaster = new S_XY();
+            connecters = new List<BodyPartConnection>();
+            AE = new ActionEvent(new VagueObject(this));
+            DebugLoad();
             OffsetDifToMaster = new S_XY();
             connecters = new List<BodyPartConnection>();
             base.ForceCnstr(dna);
@@ -210,6 +223,12 @@ namespace BodyParts
                 case FuncPulseType.ResetCVM:
                     ResetCVM();
                     break;
+                case FuncPulseType.Draw:
+                    Draw();
+                    break;
+                case FuncPulseType.FillAEWListById:
+                    FillAEWListByID(funcPulse.Int,funcPulse.AEWList);
+                    break;
                 default:
                     Console.Out.WriteLine("error, unhandled funcPulseType");
                     break;
@@ -221,6 +240,13 @@ namespace BodyParts
             return toRet;
         }
 
+
+        private void FillAEWListByID(int id, List<AEWrapper> toAddTo)
+        {
+            foreach (AEWrapper ab in AbilityList)            
+                if (id == ab.triggerId && !toAddTo.Contains(ab))                
+                    toAddTo.Add(ab);  
+        }
 
 
         /// <summary>
@@ -239,10 +265,10 @@ namespace BodyParts
         public void SutureBodyPart(BodyPart otherPart)
         {
            BodyPartConnection bp = new BodyPartConnection(this,otherPart);
-           otherPart.AddBPConnecter(bp);
+           //otherPart.AddBPConnecter(bp);
             //
-           otherPart.offset -= new S_XY(10, 10);
-           otherPart.OffsetDifToMaster -= new S_XY(10, 10);     
+           otherPart.offset -= new S_XY(20, 10);
+           otherPart.OffsetDifToMaster -= new S_XY(20, 10);     
             //
            connecters.Add(bp);
 

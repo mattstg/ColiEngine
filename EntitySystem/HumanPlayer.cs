@@ -30,7 +30,6 @@ namespace EntSys
             //set the instructor to be prepped as if being fed a string of values
             //some things only affected by full ints, so passing doubles can make a good scope/buffer level
             ForceCnstr(dna);
-            
         }
 
         private void _DNADecoder(DNA dna)
@@ -48,7 +47,6 @@ namespace EntSys
         protected void ForceCnstr(DNA dna)
         {
             AE = new ActionEvent(new VagueObject(this));
-
             
             base.ForceCnstr(dna);
             acceptedSColi = new List<objSpecificType>();
@@ -64,7 +62,7 @@ namespace EntSys
 
            
             _DNADecoder(dna);
-
+            base.ForceCnstr(null);
             
         }
 
@@ -102,7 +100,7 @@ namespace EntSys
                     S_XY tOff = new S_XY(250, 50);
                     offset = tOff;
                     rawOffSet = new Vector2(tOff.x, tOff.y);
-                    BodyPart wing = new BodyPart(this, null); //default creation, only used temp, add BpC later
+                    //BodyPart wing = new BodyPart(this, null); //default creation, only used temp, add BpC later
                    // BodyPart wing2 = new BodyPart(this, null);
                     BodyPart arm1 = new BodyPart(this, null);
                    // BodyPart arm2 = new BodyPart(this, null);
@@ -115,12 +113,12 @@ namespace EntSys
                     BodyPart claws1 = new BodyPart(this, null);
                    // BodyPart claws2 = new BodyPart(this, null);
 
-                    arm1.AddBodyPart(claws1);
+                    arm1.SutureBodyPart(claws1);
 
 
                    
 
-                    bodyParts.Add(wing);
+                   // bodyParts.Add(wing);
                     bodyParts.Add(arm1);
                     RegisterNewParts = true;
                     break;

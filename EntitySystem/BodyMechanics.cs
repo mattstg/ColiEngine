@@ -11,6 +11,7 @@ namespace EntSys
 {
     public class BodyMechanics : Body
     {
+        
         bool firstUpdate = true;
         Global.Bus bus = Global.Bus.Instance;
         private PhysSys.Physics phys = PhysSys.Physics.Instance;
@@ -199,7 +200,17 @@ namespace EntSys
         {
             return _GetDirCol(new Vector2(turnVelo.x, turnVelo.y), ht, colibox);
         }
-        
+
+        public void Draw()
+        {
+            foreach (BodyPart bp in bodyParts)
+            {
+                FuncPulse fp = new FuncPulse();
+                bp.SendFuncPulse(FuncPulseType.Draw, fp);
+                //bp.UnlockAllConnections();
+            }
+            base.Draw();//pass draw down to sprite class
+        }
 
         public float ColiAndMoveFunc(float rt)
         {

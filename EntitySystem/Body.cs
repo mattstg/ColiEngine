@@ -15,12 +15,13 @@ namespace EntSys
     public class Body : Material
     {
         protected Global.Timers UniResponseT = new Global.Timers();//this way until dna
-        protected List<BodyPart> bodyParts;
+        
         //body vars
         protected int moveForce;
         protected int totalMass;
         public bool RegisterNewParts; //New parts have been added and need to be registered with the world
-        
+        protected List<BodyPart> bodyParts; //main branching bodyparts from master
+        protected List<AEWrapper> MasterTransferList;
 
 
         public Body() { }
@@ -60,8 +61,9 @@ namespace EntSys
 
         protected void ForceCnstr(DNA dna)
         {
+            MasterTransferList = new List<AEWrapper>();
+            
             bodyParts = new List<BodyPart>();
-            RegisterNewParts = false;
             base.ForceCnstr(dna);
             _DNADecoder(dna);
             _UpdateBodyPartRelatedInfo();
@@ -90,9 +92,23 @@ namespace EntSys
             }
 
             return toRet;
-
-
         }
+
+        protected void GetTransferList(int id)
+        {
+            foreach (BodyPart bp in bodyParts)
+            {                
+                FuncPulse fp = new FuncPulse();
+                fp.AEWList = MasterTransferList;
+                fp.Int = id;               
+                bp.SendFuncPulse(FuncPulseType.FillAEWListById, fp);
+                int i = 5;
+                //MasterTransferList now contains all the ones by id it needs
+            }
+        }
+
+
+
 
         protected void UpdateBodyParts(float rt)
         {
@@ -124,15 +140,7 @@ namespace EntSys
         //moved from bm so material can acccess it
         
 
-        public void Draw()
-        {
-            foreach (BodyPart bp in bodyParts)
-            {
-                bp.UnlockAllConnections();
-                bp.Draw();
-            }
-            base.Draw();//pass draw down to sprite class
-        }
+        
 
 
         
