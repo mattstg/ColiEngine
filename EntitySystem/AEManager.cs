@@ -8,11 +8,23 @@ namespace EntSys
 {
     class AEManager
     {
-        List<AEPack> initzAbilities;
-        List<AEPack> channeledAbilities;
-        List<AEPack> timerAbilities;
-        List<AEPack> coliAbilities;
+        public List<AEPack> initzAbilities;
+        public List<AEPack> channeledAbilities;
+        public List<AEPack> timerAbilities;
+        public List<AEPack> coliAbilities;
         float efficiency;
+
+
+        public AEManager()
+        {
+            initzAbilities = new List<AEPack>();
+            channeledAbilities = new List<AEPack>();
+            timerAbilities = new List<AEPack>();
+            coliAbilities = new List<AEPack>();
+            efficiency = 1f;
+
+
+        }
 
 
 
@@ -94,6 +106,17 @@ namespace EntSys
         public Func<Body, Vector2, AEPack, AERetType> Ability;
 
 
+        public AEPack(AEPackType type, int[] triggerID, Global.Timers timer, long estore, long emax, Body thisBody, Func<Body, Vector2, AEPack, AERetType> ab)
+        {
+            this.type = type;
+            this.triggerID = triggerID;
+            this.timer = timer;
+            this.energyStored = estore;
+            this.energyStoreMax = emax;
+            Summoner = thisBody;
+            Ability = ab;
+
+        }
         
         /// <summary>
         /// Default test cnstr, never use legitly
