@@ -9,7 +9,7 @@ using BodyParts;
 namespace EntSys
 {
 
-    public struct AEWrapper
+   /* public struct AEWrapper
     {
         public bool isPassive;
         public bool isTriggerable;
@@ -18,7 +18,7 @@ namespace EntSys
         public int energyStored;
         public int energyStoredMax;
         public Func<int, Body, Vector2, AERetType> Ability;
-    }
+    }*/
 
 
     /*
