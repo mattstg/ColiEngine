@@ -77,7 +77,7 @@ namespace ColiSys
         {
             if (vo.type == objType.Body)
             {
-                Body b = vo.getObj<Body>();
+                MasterBody b = vo.getObj<MasterBody>();
                 if (b.RegisterNewParts)
                 {
                     //Moot

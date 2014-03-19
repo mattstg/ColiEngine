@@ -19,9 +19,9 @@ namespace EntSys
         //body vars
         protected int moveForce;
         protected int totalMass;
-        public bool RegisterNewParts; //New parts have been added and need to be registered with the world
-        protected List<BodyPart> bodyParts; //main branching bodyparts from master
-        protected List<AEManager> MasterTransferList;
+        ///public bool RegisterNewParts; //New parts have been added and need to be registered with the world
+        //protected List<BodyPart> bodyParts; //main branching bodyparts from master
+        //protected List<AEManager> MasterTransferList;
 
 
         public Body() { }
@@ -40,144 +40,24 @@ namespace EntSys
             
         }
 
-        public void AddBodyPart(BodyPart bpToAdd)
-        {
-            
-            bodyParts.Add(bpToAdd);
-            RegisterNewParts = true;
-            //not sure how to go about this yet since dont have sutures, but in the
-            //mean time, get the total mass
-            _UpdateBodyPartRelatedInfo();
-        }
-
-        public void _UpdateBodyPartRelatedInfo()
-        {
-            totalMass = this.mass;
-            foreach (BodyPart bp in bodyParts)
-            {
-                FuncPulse fp = new FuncPulse();
-
-                FeedbackPulse result = bp.SendFuncPulse(FuncPulseType.getTotalMass, fp);
-                totalMass += result.TotalWeight;
-                //bp.UnlockAllConnections();
-                //totalMass += bp.getTotalMass();
-            }
-            //totalMass = this.mass;
-            this.CombinedMass = totalMass;
-            EI.totalMass = totalMass;
-        }
+        
 
         protected void ForceCnstr(DNA dna)
         {
-            MasterTransferList = new List<AEManager>();
+           // MasterTransferList = new List<AEManager>();
             
-            bodyParts = new List<BodyPart>();
+            //bodyParts = new List<BodyPart>();
             base.ForceCnstr(dna);
             _DNADecoder(dna);
-            _UpdateBodyPartRelatedInfo();
+           // _UpdateBodyPartRelatedInfo();
         }
 
         public void Update(float rt)
         {
-            UpdateBodyParts(rt);
+            
             base.Update(rt);
         }
-
-        public List<VagueObject> GetAllParts()
-        {
-            List<VagueObject> toRet = new List<VagueObject>();
-            FuncPulse fp = new FuncPulse();
-            fp.coliParts = new List<BodyPart>();
-            foreach (BodyPart b in bodyParts)
-                b.SendFuncPulse(FuncPulseType.CollectAllParts, fp);
-
-            
-            //the return coliParts can be used as a list of all parts
-            foreach (BodyPart b in fp.coliParts)
-            {
-                VagueObject vo = new VagueObject(b);
-                toRet.Add(vo);
-            }
-
-            return toRet;
-        }
-
-        protected void GetAbilityManagerListsWithIDs(int id)
-        {
-            foreach (BodyPart bp in bodyParts)
-            {                
-                FuncPulse fp = new FuncPulse();
-                fp.AbilityManagerList = MasterTransferList;
-                fp.Int = id;               
-                bp.SendFuncPulse(FuncPulseType.PingForAbilityIDs, fp);
-                int i = 5;
-                MasterTransferList = fp.AbilityManagerList;
-                //MasterTransferList now contains all the ones by id it needs
-            }
-        }
-
-
-
-
-        protected void UpdateBodyParts(float rt)
-        {
-
-            foreach (BodyPart bp in bodyParts)
-            {
-                //bp.UnlockAllConnections();
-                //bp.Update(rt);
-                FuncPulse fp = new FuncPulse();
-                fp.rt = rt;
-                bp.SendFuncPulse(FuncPulseType.Update, fp);
-            }
-
-        }
-
-        protected void ResetAllBodyPartCWM()
-        {
-            foreach (BodyPart bp in bodyParts)
-            {
-                //bp.UnlockAllConnections();
-                //bp.Update(rt);
-                FuncPulse fp = new FuncPulse();
-                
-                bp.SendFuncPulse(FuncPulseType.ResetCVM, fp);
-            }
-
-        }
-
-        //moved from bm so material can acccess it
-        
-
-        
-
-
-        
-
-
-        public List<BodyPart> GetAllCollidingParts(S_XY moveBy,VagueObject checkAgainst)
-        {
-            
-            List<BodyPart> allColiParts = new List<BodyPart>();
-            foreach (BodyPart bp in bodyParts)
-            {
-                bp.UnlockAllConnections(); //VERY IMPORTANT, else you wont get proper data
-                bp.CheckColi(moveBy, checkAgainst, allColiParts);
-            }
-            return allColiParts;
-        }
-
-        public void MoveAllBy(S_XY modOffset)
-        {
-            offset += modOffset;
-            foreach (BodyPart bp in bodyParts)
-            {
-                FuncPulse fp = new FuncPulse();
-                fp.byOffset = modOffset;
-                bp.SendFuncPulse(FuncPulseType.MovePartsBy, fp);
-              // bp.MovePartBy(modOffset); 
-            }
-        }
+       
 
     }
 }

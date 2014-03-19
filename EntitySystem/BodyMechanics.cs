@@ -9,7 +9,7 @@ using BodyParts;
 
 namespace EntSys
 {
-    public class BodyMechanics : Body
+    public class BodyMechanics : MasterBody
     {
         public Vector2 aimer;
         bool firstUpdate = true;
@@ -72,7 +72,8 @@ namespace EntSys
         }
 
         /// <summary>
-        /// Update function called to resolve BMs that were blocked last call
+        /// Update function called to resolve BMs that were blocked last call, Function now
+        /// broken because updateBodyParts(0) was removed due to inaccesible
         /// </summary>
         /// <returns></returns>
         public float Update2()
@@ -202,16 +203,7 @@ namespace EntSys
             return _GetDirCol(new Vector2(turnVelo.x, turnVelo.y), ht, colibox);
         }
 
-        public void Draw()
-        {
-            foreach (BodyPart bp in bodyParts)
-            {
-                FuncPulse fp = new FuncPulse();
-                bp.SendFuncPulse(FuncPulseType.Draw, fp);
-                //bp.UnlockAllConnections();
-            }
-            base.Draw();//pass draw down to sprite class
-        }
+        
 
         public float ColiAndMoveFunc(float rt)
         {
@@ -245,7 +237,7 @@ namespace EntSys
                             List<BodyPart> collidedParts = new List<BodyPart>();
                             List<BodyPart> TESTcollidedParts = new List<BodyPart>();
 
-                            foreach (BodyPart bp in bodyParts)
+                            foreach (BodyPart bp in bodyPartList)
                             {
                                 FuncPulse fp = new FuncPulse();
                                 fp.coliObj = connecter;
@@ -263,7 +255,7 @@ namespace EntSys
 
 
                             bool thisCollided = connecter.Coli(checkHere);
-                            foreach ( BodyPart bp in bodyParts)
+                            foreach ( BodyPart bp in bodyPartList)
                             {
                                 FuncPulse fp = new FuncPulse();
                                 fp.coliObj = connecter;

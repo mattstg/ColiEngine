@@ -21,6 +21,8 @@ namespace EntSys
         Global.Timers UniResponseT = null;
         public keyMap keymap;
         bool inputShutDown = false;
+        Dictionary<int, List<int>> TriggerKeyMap;
+        
            
 
 
@@ -47,7 +49,7 @@ namespace EntSys
         protected void ForceCnstr(DNA dna)
         {
             AE = new ActionEvent(new VagueObject(this));
-            
+            TriggerKeyMap = new Dictionary<int, List<int>>();
             base.ForceCnstr(dna);
             acceptedSColi = new List<objSpecificType>();
             acceptedColi = new List<objType>();
@@ -68,13 +70,30 @@ namespace EntSys
 
         public void Input()
         {
+            Vector2 aimer = new Vector2(0,0);
             if (!inputShutDown)
             {
+                //Input(new List<int>() { 5, 6, 0, 1 }, new Vector2(0, 0));
+
                 KeyboardState ks = Keyboard.GetState();
+                Keys[] keysPressed = ks.GetPressedKeys();
+                List<int> triggersToPass = new List<int>();
+
+                foreach (Keys k in keysPressed)
+                {
+                    if (TriggerKeyMap.ContainsKey((int)k))
+                        foreach (int i in TriggerKeyMap[(int)k])
+                            if (!triggersToPass.Contains(i))
+                                triggersToPass.Add(i);
+                }
+
+                Input(triggersToPass, aimer);
+
+
                 if (Keyboard.GetState().GetPressedKeys().Length > 0)
                     AE.TriggerEvent(ks);
 
-                foreach (BodyPart bp in bodyParts)
+                foreach (BodyPart bp in bodyPartList)
                     bp.Input(ks);
             }
 
@@ -119,7 +138,7 @@ namespace EntSys
                    
 
                    // bodyParts.Add(wing);
-                    bodyParts.Add(arm1);
+                    bodyPartList.Add(arm1);
                     RegisterNewParts = true;
                     break;
 
@@ -130,7 +149,7 @@ namespace EntSys
                     offset = ttOff;
                     rawOffSet = new Vector2(ttOff.x, ttOff.y);
                     BodyPart wing2 = new BodyPart(this, null); //default creation, only used temp, add BpC later
-                    bodyParts.Add(wing2);
+                    bodyPartList.Add(wing2);
                     RegisterNewParts = true;
                     break;
                 case 0:
@@ -168,8 +187,11 @@ namespace EntSys
                     keymap.right = Keys.Right;
                     keymap.down = Keys.Down;
                     keymap.up = Keys.Up;
+                    List<int> someTriggers = new List<int>(){0,1,2};                    
+                    TriggerKeyMap.Add((int)Keys.P, someTriggers);
+                    TriggerKeyMap.Add((int)Keys.O, someTriggers);
                     break;
-
+                    
                 case 2:
                     keymap = new keyMap();
                     keymap.jump = Keys.W;

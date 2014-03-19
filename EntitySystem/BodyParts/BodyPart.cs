@@ -50,11 +50,11 @@ namespace BodyParts
         CollectAllParts,
         ///<summary>Cast as dont care </summary>
         Update,
-        ///<summary>Dont even remember why i say it needs a cast anymore </summary>
+        ///<summary>Resets all the CollidedWithMe lists, no fp needed </summary>
         ResetCVM,
         /// <summary>nomnomnomn calls draw for all parts </summary>
         Draw,
-        /// <summary> ask to fill a given list-AEW- type by id  </summary>
+        /// <summary> ask to fill a given list-AEW- type by id, Fill fp with Eff=new,AbilityManagerList=new, Int=ID  </summary>
         PingForAbilityIDs
 
     }
