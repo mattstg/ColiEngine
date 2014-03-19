@@ -138,6 +138,7 @@ namespace EntSys
 
         public void Update(float rt)
         {
+            ChannelAbilities(rt);
             UpdateBodyParts(rt);
 
 
@@ -221,6 +222,35 @@ namespace EntSys
             foreach(int i in keysToRemove)
                 MasterChannelList.Remove(i); //careful may cause errors
     
+
+
+        }
+
+        protected void ChannelAbilities(float rt)
+        {
+            if (MasterChannelList == null || MasterChannelList.Count == 0)
+                return;
+
+            int totalChannelRate = 10;
+            int totalEnergy = 100;
+            int chnlRate;
+
+            chnlRate = (int)((totalChannelRate * rt) / MasterChannelList.Count);
+
+            List<AEManager> toChnl = new List<AEManager>();
+            foreach (List<AEManager> aeL in MasterChannelList.Values)
+               foreach (AEManager ae in aeL)
+                    if (!toChnl.Contains(ae))
+                        toChnl.Add(ae);
+                    else
+                        Console.Out.WriteLine("Testing123, should nt happen but could? (multiple triggers-1 ability)");
+
+            chnlRate = totalChannelRate / toChnl.Count;
+            //WARNING MORE ABILITIES THAN CHANNEL RAtE WILL MEAN NO TRANSFER AT ALL
+            //WARNING MULTIPLE TRIGGERS TO ONE SPELL WILL...WELL EXTRA CHANNEL IT? same total tho... 
+            foreach (AEManager ae in toChnl)
+                foreach (int i in MasterChannelList.Keys)
+                    ae.ChannelAbility(i, chnlRate);
 
 
         }

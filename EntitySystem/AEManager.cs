@@ -81,13 +81,14 @@ namespace EntSys
             if (count != 0)
             {
                 foreach (AEPack aep in channeledAbilities)
-                    energyLeftOver += aep.Channel(energyTransfered / count);
+                    if(aep.triggerID[0] == triggerID)
+                        energyLeftOver += aep.Channel(energyTransfered / count);
 
                 return energyLeftOver;
 
             }
             
-            Console.Out.WriteLine("WEIRD ERROR CHNL");
+            //Console.Out.WriteLine("WEIRD ERROR CHNL");
             return 0;
         }
 
@@ -172,6 +173,8 @@ namespace EntSys
         {
             timer.Dec(true);
             _testFunc(Summoner, aimer, this);
+            if (energyStored == energyStoreMax)
+                Console.Out.WriteLine("Released fully charged ability!");
 
         }
 
@@ -179,14 +182,17 @@ namespace EntSys
 
         public long Channel(long EnergyTransfered)
         {
+
             energyStored += EnergyTransfered;
             if (energyStoreMax < energyStored)
             {
                 long toRet = energyStored - energyStoreMax;
                 energyStored = energyStoreMax;
+                Console.Out.WriteLine("FULLY CHARGED!");
                 return toRet;
 
             }
+            Console.Out.WriteLine("CHARGING " + energyStored + " / " + energyStoreMax);
             return 0;
         }
 
