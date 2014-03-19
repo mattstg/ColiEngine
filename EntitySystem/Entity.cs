@@ -31,6 +31,7 @@ namespace EntSys
         public bool destroy;
         public objSpecificType specType; //place in ever concerete classes stand alone constructor
         public BodyMechanics Master; //another body can be a master
+        public int CombinedMass;
 
         protected S_XY size{
             get
@@ -51,7 +52,7 @@ namespace EntSys
         protected VOContainer Collidables;
         public List<objType> acceptedColi; //type of coli to load into collidables
         public List<objSpecificType> acceptedSColi; //specific type
-        public Vector2 momentum { get { return velo * mass; } }
+        public Vector2 momentum { get { return velo * CombinedMass; } }
 
         //This boundary trick no longer works, was worth a shot tho
         protected S_XY offset = new S_XY();// { set { _offset.x = (_offset.x < 0) ? 0 : value.x; _offset.y = (_offset.y < 0) ? 0 : value.y; } get { return new S_XY((int)_offset.x,(int)_offset.y); } }
@@ -91,7 +92,7 @@ namespace EntSys
         {
             //eventaully connect with weight and such
             //F=MA UP IN HERE
-            Vector2 toRet = curForce / mass;
+            Vector2 toRet = curForce / CombinedMass;
             velo += toRet;
             curForce.X = 0; curForce.Y = 0; //all force used into velo
             return toRet;
@@ -127,8 +128,8 @@ namespace EntSys
         private void _DNADecoder(DNA dna)
         {
             //Need DNA copier
-            
-            
+
+            CombinedMass = 10;
             mass = 10;
         }
 

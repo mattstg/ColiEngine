@@ -106,7 +106,7 @@ namespace BodyParts
                 Lock = false;
             }
         }
-
+        /*
         public int getTotalMass(BodyPart typeThis)
         {
             if (!Lock)
@@ -118,7 +118,7 @@ namespace BodyParts
                 Lock = true;
             }
             return 0;
-        }
+        }*/
 
         public FeedbackPulse SendPulse(BodyPart typeThis, FuncPulseType funcPulseType, FuncPulse funcPulse)
         {

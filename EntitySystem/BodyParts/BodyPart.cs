@@ -344,7 +344,8 @@ namespace BodyParts
            otherPart.rawOffSet.X = otherPart.offset.x;
            otherPart.rawOffSet.Y = otherPart.offset.y;
             //
-           connecters.Add(bp);          
+           connecters.Add(bp);
+           Master._UpdateBodyPartRelatedInfo();
 
         }
 
@@ -371,6 +372,7 @@ namespace BodyParts
 
         }
 
+       /*
         public int getTotalMass()
         {
             int toRet = this.mass;
@@ -378,7 +380,7 @@ namespace BodyParts
                 toRet += bpc.getTotalMass(this);
             return toRet;
 
-        }
+        }*/
 
         public void Input(KeyboardState ks)
         {

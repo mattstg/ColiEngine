@@ -50,7 +50,7 @@ namespace EntSys
             _UpdateBodyPartRelatedInfo();
         }
 
-        private void _UpdateBodyPartRelatedInfo()
+        public void _UpdateBodyPartRelatedInfo()
         {
             totalMass = this.mass;
             foreach (BodyPart bp in bodyParts)
@@ -60,9 +60,10 @@ namespace EntSys
                 FeedbackPulse result = bp.SendFuncPulse(FuncPulseType.getTotalMass, fp);
                 totalMass += result.TotalWeight;
                 //bp.UnlockAllConnections();
-                totalMass += bp.getTotalMass();
+                //totalMass += bp.getTotalMass();
             }
-            totalMass = this.mass;
+            //totalMass = this.mass;
+            this.CombinedMass = totalMass;
             EI.totalMass = totalMass;
         }
 

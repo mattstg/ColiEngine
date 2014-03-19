@@ -49,7 +49,7 @@ namespace EntSys
            // _UpdatePerSec(rt);
            // _ApplyForceToVelo();
             if (timeRemainingForCM == 0) //first update
-                phys.applyNaturalLaws(this, mass, rt);
+                phys.applyNaturalLaws(this, CombinedMass, rt);
 
            // _CheckAllColi();
            // _ApplyForceToVelo();

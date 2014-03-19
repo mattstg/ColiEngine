@@ -306,7 +306,7 @@ namespace EntSys
             BodyMechanics bm = bp.Master;    
             
             if (ks.IsKeyDown(Keys.Up))
-                    bm.ApplyForce(Enums.Force.ForceTypes.Internal,new Vector2(0,-60));
+                    bm.ApplyForce(Enums.Force.ForceTypes.Internal,new Vector2(0,-150));
 
                 return new AERetType(); 
         }
