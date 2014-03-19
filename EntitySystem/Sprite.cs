@@ -86,5 +86,13 @@ namespace EntSys
 
         }
 
+        public void Draw(ColiSys.Hashtable graphicSkin)
+        {
+            graphicSkin.Draw();
+
+        }
+
+
+
     }
 }

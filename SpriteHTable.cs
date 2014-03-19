@@ -17,6 +17,11 @@ namespace ColiSys
         public SpriteHTable()
         { }
 
+        public SpriteHTable(SpriteHTable copy)
+        {
+            t = copy.t;
+        }
+
 
         public void LoadTexture(Texture2D tt)
         {

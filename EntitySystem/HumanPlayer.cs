@@ -157,7 +157,7 @@ namespace EntSys
 
         }
 
-        private void _DebugSetKeyMap(int playerNum)
+        public void _DebugSetKeyMap(int playerNum)
         {
             switch (playerNum)
             {

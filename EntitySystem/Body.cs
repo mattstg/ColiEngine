@@ -21,7 +21,7 @@ namespace EntSys
         protected int totalMass;
         public bool RegisterNewParts; //New parts have been added and need to be registered with the world
         protected List<BodyPart> bodyParts; //main branching bodyparts from master
-        protected List<AEWrapper> MasterTransferList;
+        protected List<AEManager> MasterTransferList;
 
 
         public Body() { }
@@ -43,6 +43,8 @@ namespace EntSys
         public void AddBodyPart(BodyPart bpToAdd)
         {
             
+            bodyParts.Add(bpToAdd);
+            RegisterNewParts = true;
             //not sure how to go about this yet since dont have sutures, but in the
             //mean time, get the total mass
             _UpdateBodyPartRelatedInfo();
@@ -53,15 +55,20 @@ namespace EntSys
             totalMass = this.mass;
             foreach (BodyPart bp in bodyParts)
             {
-                bp.UnlockAllConnections();
+                FuncPulse fp = new FuncPulse();
+
+                FeedbackPulse result = bp.SendFuncPulse(FuncPulseType.getTotalMass, fp);
+                totalMass += result.TotalWeight;
+                //bp.UnlockAllConnections();
                 totalMass += bp.getTotalMass();
             }
+            totalMass = this.mass;
             EI.totalMass = totalMass;
         }
 
         protected void ForceCnstr(DNA dna)
         {
-            MasterTransferList = new List<AEWrapper>();
+            MasterTransferList = new List<AEManager>();
             
             bodyParts = new List<BodyPart>();
             base.ForceCnstr(dna);
@@ -94,15 +101,16 @@ namespace EntSys
             return toRet;
         }
 
-        protected void GetTransferList(int id)
+        protected void GetAbilityManagerListsWithIDs(int id)
         {
             foreach (BodyPart bp in bodyParts)
             {                
                 FuncPulse fp = new FuncPulse();
-                fp.AEWList = MasterTransferList;
+                fp.AbilityManagerList = MasterTransferList;
                 fp.Int = id;               
-                bp.SendFuncPulse(FuncPulseType.FillAEWListById, fp);
+                bp.SendFuncPulse(FuncPulseType.PingForAbilityIDs, fp);
                 int i = 5;
+                MasterTransferList = fp.AbilityManagerList;
                 //MasterTransferList now contains all the ones by id it needs
             }
         }
@@ -163,7 +171,10 @@ namespace EntSys
             offset += modOffset;
             foreach (BodyPart bp in bodyParts)
             {
-                bp.MovePartBy(modOffset); 
+                FuncPulse fp = new FuncPulse();
+                fp.byOffset = modOffset;
+                bp.SendFuncPulse(FuncPulseType.MovePartsBy, fp);
+              // bp.MovePartBy(modOffset); 
             }
         }
 

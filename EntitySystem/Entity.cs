@@ -78,6 +78,15 @@ namespace EntSys
 
         }
 
+
+        public void ForceNewOffset(Vector2 newOffset)
+        {
+            offset.x = (int)(newOffset.X);
+            offset.y = (int)(newOffset.Y);
+            rawOffSet = newOffset;
+
+        }
+
         public Vector2 ApplyForceToVelo()
         {
             //eventaully connect with weight and such

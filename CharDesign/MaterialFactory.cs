@@ -61,7 +61,7 @@ namespace FactSys
             {
                 case 0: //normal dirt
                     hp = 600;
-                    bounceThreshold = .33f; //bounce within -100%
+                    bounceThreshold = .60f; //bounce within -100%
                     bounceForceMultLB = .2f;
                     bounceForceMultUB = 1f;
                     absorb = 1; //times it own health worth of force repelling        \

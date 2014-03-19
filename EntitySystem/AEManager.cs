@@ -6,13 +6,14 @@ using Microsoft.Xna.Framework;
 
 namespace EntSys
 {
-    class AEManager
+    public class AEManager
     {
         public List<AEPack> initzAbilities;
         public List<AEPack> channeledAbilities;
         public List<AEPack> timerAbilities;
         public List<AEPack> coliAbilities;
         float efficiency;
+        Body master;
 
 
         public AEManager()
@@ -35,18 +36,34 @@ namespace EntSys
                     aep.ActivateAbility(aimer);
         }
 
-        public AEManager Ping(int triggerID,float efficiency)
+        public bool Ping(int triggerID)
         {
             
             foreach (AEPack aep in timerAbilities)
-                if(aep.triggerID[0] == triggerID)
-                {
-                    this.efficiency = efficiency;
-                    return this;
-                }
+                if(aep.triggerID[0] == triggerID)                
+                    return true;
+                
 
-            return null;
+            return false;
 
+        }
+
+        public void LinkBody(Body summonerMaster)
+        {
+            master = summonerMaster;
+            foreach(AEPack ae in initzAbilities)
+                ae.LinkBody(summonerMaster);
+            foreach(AEPack ae in channeledAbilities)
+                ae.LinkBody(summonerMaster);
+            foreach(AEPack ae in timerAbilities)
+                ae.LinkBody(summonerMaster);
+            foreach(AEPack ae in coliAbilities)
+                ae.LinkBody(summonerMaster);
+        }
+
+        public void SetEffRating(float eff)
+        {
+            this.efficiency = eff;
         }
 
         public long ChannelAbility(int triggerID, long energyTransfered)
@@ -92,7 +109,7 @@ namespace EntSys
 
 
 
-    class AEPack
+    public class AEPack
     {
         AEPackType type;
         public int[] triggerID;
@@ -106,16 +123,21 @@ namespace EntSys
         public Func<Body, Vector2, AEPack, AERetType> Ability;
 
 
-        public AEPack(AEPackType type, int[] triggerID, Global.Timers timer, long estore, long emax, Body thisBody, Func<Body, Vector2, AEPack, AERetType> ab)
+        public AEPack(AEPackType type, int[] triggerID, Global.Timers timer, long estore, long emax, Func<Body, Vector2, AEPack, AERetType> ab)
         {
             this.type = type;
             this.triggerID = triggerID;
             this.timer = timer;
             this.energyStored = estore;
             this.energyStoreMax = emax;
-            Summoner = thisBody;
+            
             Ability = ab;
 
+        }
+
+        public void LinkBody(Body summonerMaster)
+        {
+            Summoner = summonerMaster;
         }
         
         /// <summary>

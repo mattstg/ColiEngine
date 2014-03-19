@@ -29,6 +29,7 @@ namespace ColiSys
         float inputTimer;
         const float inputRefreshTimer = 50;
         ShapeGenerator shapeGen;
+        HumanFactory humanFact = HumanFactory.Instance;
 
         public GRAPHICTestWorld()
         {
@@ -41,10 +42,9 @@ namespace ColiSys
             theGround = forge.CreateMaterial(0); //Reason created seperatly is for the mouse adding to specificlly this hash table
             masterList.Add(new VagueObject(theGround));
             masterList.Add(new VagueObject(forge.CreateMaterial(1)));
-            HumanPlayer h1 = new HumanPlayer(null);
-            HumanPlayer h2 = new HumanPlayer(null);
-            h1.DebugLoadHuman(1);
-            h2.DebugLoadHuman(2);
+            HumanPlayer h1 = humanFact.CreateHuman(0);
+            HumanPlayer h2 = humanFact.CreateHuman(1);
+
             masterList.Add(new VagueObject(h1));
             masterList.Add(new VagueObject(h2));
             LinkColiLists(h1);

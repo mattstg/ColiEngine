@@ -14,6 +14,7 @@ namespace BodyParts
 {
     public struct BpConstructor
     {
+        public S_XY offsetToMaster;
         public ColiSys.Hashtable shape;
         public List<ColiSys.Hashtable> sutureSpots;
         public List<int> regPacks;
@@ -35,11 +36,11 @@ namespace BodyParts
     }
     public enum FuncPulseType
     {
-       ///<summary>Cast Function as INT </summary>
+       ///<summary>Returns a FeedBack pulse instead of using fp for now, old function </summary>
         getTotalMass,
-        ///<summary>Cast as anything Nullable (obj, int, w/e) </summary>
+        ///<summary>Move all parts by offset, Fill "byOffset" in fp </summary>
        MovePartsBy,
-        ///<summary>Cast as Bool </summary>
+        ///<summary>Check all bp if a colision exists in direction, requires fp: "byOffset,coliObj,coliParts" where coliparts is the list to fill</summary>
         CheckColiInDir,
         ///<summary>Cast as anything Nullable (obj, int, w/e) </summary>
         PassBodyPulse,
@@ -54,20 +55,21 @@ namespace BodyParts
         /// <summary>nomnomnomn calls draw for all parts </summary>
         Draw,
         /// <summary> ask to fill a given list-AEW- type by id  </summary>
-        FillAEWListById
+        PingForAbilityIDs
 
     }
     public struct FuncPulse //this could have totally been a generic class probably
     {
         public FuncPulseType funcCalling;
-        public S_XY byOffest;
+        public S_XY byOffset;
         public VagueObject coliObj;
         public List<BodyPart> coliParts;
         public KeyboardState keyState;
         public BodyPulse pulse;
         public float rt;
-        public List<AEWrapper> AEWList;
+        public List<AEManager> AbilityManagerList;
         public int Int;
+        public List<float> Eff;
 
 
     }
@@ -92,7 +94,8 @@ namespace BodyParts
         ColiSys.TestContent tc = ColiSys.TestContent.Instance;
         public BpConstructor bpDNA;
         S_XY OffsetDifToMaster;
-        List<AEWrapper> AbilityList;
+        AEManager AbilityManager;
+        ColiSys.Hashtable graphicSkin;
         
        
 
@@ -104,23 +107,26 @@ namespace BodyParts
             SetEntShape(bpC.shape);            
             foreach (int i in bpC.regPacks)            
                 AE.RegAbilityPack(i);
-            
-            
+            OffsetDifToMaster = bpC.offsetToMaster;
+
+            LoadTexture(_LoadDefaultSkin());
 
         }
 
-        public void SetMaster(BodyMechanics master)
+
+
+        /// <summary>
+        /// This is called directly when bodypart is attached to master, not when bodypart is
+        /// attached to more parts
+        /// </summary>
+        /// <param name="master"></param>
+        public void SetMasterFromMaster(BodyMechanics master)
         {
             Master = master;
             offset = master.offsetCopy;
-            offset.x -= 15;  ///should not be just 15, needs to specificy suture point
+            offset += OffsetDifToMaster;
             rawOffSet.X = offset.x;
-            rawOffSet.Y = offset.y;
-
-            ///DITTO AS ABOVE
-            OffsetDifToMaster.y = 0;
-            OffsetDifToMaster.x = -15;
-           
+            rawOffSet.Y = offset.y;          
 
         }
 
@@ -133,9 +139,18 @@ namespace BodyParts
             ForceCnstr(dna);
             SetEntShape(DefaultShapeGen());           
             AE.RegAbilityPack(10);           
-            SetMaster(master);
+            SetMasterFromMaster(master);
             
             
+        }
+
+        private ColiSys.Hashtable _LoadDefaultSkin()
+        {
+
+            ColiSys.Hashtable TgraphicSkin = new ColiSys.Hashtable(trueEntShape);
+            TgraphicSkin.LoadTexture(tc.sqr, Color.Black);
+            return TgraphicSkin;
+
         }
 
         public ColiSys.Hashtable DefaultShapeGen()
@@ -152,18 +167,28 @@ namespace BodyParts
             return new ColiSys.Hashtable(nodex1);
         }
 
+        public void LoadTexture(ColiSys.Hashtable graphicSkin)
+        {
+            this.graphicSkin = graphicSkin;
+        }
+
+        private void Draw()
+        {
+            ColiSys.Hashtable toDraw = new ColiSys.Hashtable(graphicSkin);
+            toDraw.MoveTableByOffset(offset);
+            toDraw.LoadTexture(tc.sqr, Color.Black);
+            base.Draw(toDraw);
+            //graphicSkin.MoveTableByOffset(offset);
+            //base.Draw(graphicSkin);
+        }
+
         private void DebugLoad()
         {
-            AEWrapper t = new AEWrapper();
-            t.triggerId = 5;
-            t.energyStored = 100;
-            AbilityList.Add(t);
 
         }
 
         public void ForceCnstr(DNA dna)
         {
-            AbilityList = new List<AEWrapper>();
             specType = objSpecificType.BodyPart;
             OffsetDifToMaster = new S_XY();
             connecters = new List<BodyPartConnection>();
@@ -179,6 +204,7 @@ namespace BodyParts
             Master.ApplyForce(Enums.Force.ForceTypes.Coli, curForce);
             Master.ApplyForceToVelo(); //any forces applied to bodypart should be moved up to master
             curForce = new Vector2(0,0);
+            AbilityManager.Update(rt, Master.aimer);
 
         }
         //TakeDamage(float, DamageType, dir)
@@ -199,14 +225,14 @@ namespace BodyParts
             switch (funcPulseType)
             {
                 case FuncPulseType.CheckColiInDir:
-                    if (funcPulse.coliObj.Coli(nami.MoveTableByOffset(coliBox, funcPulse.byOffest)))
+                    if (funcPulse.coliObj.Coli(nami.MoveTableByOffset(coliBox, funcPulse.byOffset)))
                         funcPulse.coliParts.Add(this);
                     break;
                 case FuncPulseType.getTotalMass:
                     toRet.TotalWeight = mass;
                     break;
                 case FuncPulseType.MovePartsBy:
-                    offset += funcPulse.byOffest;
+                    offset += funcPulse.byOffset;
                     break;
                 case FuncPulseType.PassBodyPulse:
                     DecodePulse(funcPulse.pulse);
@@ -226,8 +252,9 @@ namespace BodyParts
                 case FuncPulseType.Draw:
                     Draw();
                     break;
-                case FuncPulseType.FillAEWListById:
-                    FillAEWListByID(funcPulse.Int,funcPulse.AEWList);
+                case FuncPulseType.PingForAbilityIDs:
+                    AddEfficencyRatingToList(funcPulse.Eff);
+                    _RespondToAbilityManagerPing(funcPulse.Int, funcPulse.AbilityManagerList, funcPulse.Eff);
                     break;
                 default:
                     Console.Out.WriteLine("error, unhandled funcPulseType");
@@ -240,14 +267,58 @@ namespace BodyParts
             return toRet;
         }
 
-
-        private void FillAEWListByID(int id, List<AEWrapper> toAddTo)
+        /// <summary>
+        /// Insert new Ability Manager into bp. Returns old one if one exisits
+        /// </summary>
+        /// <param name="newManager"></param>
+        /// <returns>Returns old AbilityManager or Null</returns>
+        public AEManager InsertAEManager(AEManager newManager)
         {
-            foreach (AEWrapper ab in AbilityList)            
-                if (id == ab.triggerId && !toAddTo.Contains(ab))                
-                    toAddTo.Add(ab);  
+            
+            if (AbilityManager != null)
+            {
+                AEManager toRet = AbilityManager;
+                AbilityManager = newManager;
+                AbilityManager.LinkBody(this);
+                return toRet;
+            }
+            else
+            {
+                AbilityManager = newManager;
+                AbilityManager.LinkBody(this);
+                return null;
+            }
+
+
         }
 
+        private void AddEfficencyRatingToList(List<float> eff)
+        {
+            eff.Add(1);
+
+        }
+
+        public void _RespondToAbilityManagerPing(int id, List<AEManager> abList, List<float> eff)
+        {
+
+            if (this.AbilityManager.Ping(id))
+            {
+                if (!abList.Contains(this.AbilityManager))
+                {
+                    float effRating = 0;
+                    foreach (float f in eff)
+                        effRating += f;
+                    if (eff.Count != 0)
+                        effRating /= eff.Count;
+                    else
+                        effRating = 1; //shouldnt happen if built properly
+
+                    this.AbilityManager.SetEffRating(effRating);
+                    abList.Add(this.AbilityManager);
+                }
+            }
+
+        }
 
         /// <summary>
         /// Resets the CollidedWithMe list, called when its masters turn to do ColiAndMove
@@ -265,14 +336,15 @@ namespace BodyParts
         public void SutureBodyPart(BodyPart otherPart)
         {
            BodyPartConnection bp = new BodyPartConnection(this,otherPart);
+           otherPart.Master = Master;
            //otherPart.AddBPConnecter(bp);
             //
-           otherPart.offset -= new S_XY(20, 10);
-           otherPart.OffsetDifToMaster -= new S_XY(20, 10);     
+           otherPart.offset = this.offset + otherPart.OffsetDifToMaster;
+           otherPart.OffsetDifToMaster = Master.offsetCopy - otherPart.offset;
+           otherPart.rawOffSet.X = otherPart.offset.x;
+           otherPart.rawOffSet.Y = otherPart.offset.y;
             //
-           connecters.Add(bp);
-
-          
+           connecters.Add(bp);          
 
         }
 
@@ -324,13 +396,13 @@ namespace BodyParts
             foreach (BodyPartConnection bpc in connecters)
                 bpc.CheckColi(this, byOffset, coliObj, coliParts);
         }
-
+        /*
         public void MovePartBy(Structs.S_XY moveBy)
         {
             offset += moveBy;
             foreach (BodyPartConnection bpc in connecters)
                 bpc.MovePartBy(this, moveBy);
-        }
+        }*/
 
         public void Recieve(BodyPulse bp)
         {

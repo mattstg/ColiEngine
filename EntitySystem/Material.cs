@@ -92,7 +92,7 @@ namespace EntSys
             int mag = (int)(Math.Abs(tforce) / tforce);
 
             if (force < hp * bounceThreshold)
-                return -1*mag*force + -1*mag; //not enough force to trigger break or bounce, return his force as ground Normal balancing out
+                return -1*mag*force;// + -1*mag; //not enough force to trigger break or bounce, return his force as ground Normal balancing out
             else
             {
                 if (force < hp)

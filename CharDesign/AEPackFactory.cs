@@ -30,7 +30,7 @@ namespace FactSys
         /// <param name="loadoutID"></param>
         /// <param name="requestingBody"></param>
         /// <returns></returns>
-         public AEPack CreateAEPack(int loadoutID, Body requestingBody)
+         public AEPack CreateAEPack(int loadoutID)
          {
              AEPack toRet = new AEPack();
 
@@ -38,13 +38,13 @@ namespace FactSys
              switch (loadoutID)
              {
                  case 0:
-                     toRet = new AEPack(AEPackType.channel, new int[] { 0, 0 }, new Global.Timers(5000), 0, 500, requestingBody, _testFunc);
+                     toRet = new AEPack(AEPackType.channel, new int[] { 0, 0 }, new Global.Timers(5000), 0, 500, _testFunc);
                      break;
                  case 1:
-                     toRet = new AEPack(AEPackType.init, new int[] { 0, 0 }, new Global.Timers(5000), 0, 500, requestingBody, _testFunc);
+                     toRet = new AEPack(AEPackType.init, new int[] { 0, 0 }, new Global.Timers(5000), 0, 500, _testFunc);
                      break;
                  case 2:
-                     toRet = new AEPack(AEPackType.timer, new int[] { 0, 0 }, new Global.Timers(5000), 0, 500, requestingBody, _testFunc);
+                     toRet = new AEPack(AEPackType.timer, new int[] { 0, 0 }, new Global.Timers(5000), 0, 500, _testFunc);
                      break;
                  default:
                      break;

@@ -25,16 +25,19 @@ namespace FactSys
             }
         }
 
-         public AEManager CreateAEManager(int loadOut, Body requestingBody)
+
+         
+
+         public AEManager CreateAEManager(int loadOut)
          {
              AEManager toRet = new AEManager();
 
              switch (loadOut)
              {
                  case 0:
-                     toRet.channeledAbilities.Add(AEPFact.CreateAEPack(0, requestingBody));
-                     toRet.initzAbilities.Add(AEPFact.CreateAEPack(1,requestingBody));
-                     toRet.timerAbilities.Add(AEPFact.CreateAEPack(2,requestingBody));
+                     toRet.channeledAbilities.Add(AEPFact.CreateAEPack(0));
+                     toRet.initzAbilities.Add(AEPFact.CreateAEPack(1));
+                     toRet.timerAbilities.Add(AEPFact.CreateAEPack(2));
                      return toRet;
 
 

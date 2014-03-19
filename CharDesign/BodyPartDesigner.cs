@@ -12,6 +12,7 @@ using Structs;
 using Global;
 using BankSys;
 using BodyParts;
+using FactSys;
 
 
 namespace FactSys
@@ -23,6 +24,7 @@ namespace FactSys
 
     class BodyPartDesigner
     {
+        AEManagerFactory AEMangFact = AEManagerFactory.Instance;
         Bank bank;
         List<Button> buttons;
         BodyPartStore bpStore;
@@ -141,7 +143,7 @@ namespace FactSys
                         _AddSutures(mouse, keys);
                         break;
                     case BpStep.addAbilities:
-                        _AddAbilities(keys);
+                        _AddColiAbilities(keys);
                         break;
                     case BpStep.finalize:
                         _Finalize();
@@ -313,7 +315,7 @@ namespace FactSys
 
         }
 
-        private void _AddAbilities(KeyboardState keys)
+        private void _AddColiAbilities(KeyboardState keys)
         {
             bool quit = false;
             while(!quit)
@@ -331,7 +333,11 @@ namespace FactSys
 
         }
 
+        private void _AddAEManager(int id)
+        {
 
+
+        }
 
 
         private void _Finalize()

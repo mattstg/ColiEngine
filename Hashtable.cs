@@ -34,8 +34,8 @@ namespace ColiSys
 
         public Hashtable(Hashtable ht)
         {
-            mainNode = ht.RetMainNode();
-            spriteTable = new SpriteHTable();            
+            mainNode = ht.RetMainNode();            
+            spriteTable = new SpriteHTable(ht.spriteTable);            
         }
 
         public Node RetMainNode()  //Delete this function later, mainNode should stay in hashtable to avoid security/consistency issues
@@ -747,6 +747,10 @@ namespace ColiSys
 
         }
 
+        public void MoveTableByOffset(S_XY moveBy)
+        {
+            mainNode = nami.MoveTableByOffset(mainNode, moveBy);
+        }
 
 
 

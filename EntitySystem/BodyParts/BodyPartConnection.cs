@@ -36,6 +36,7 @@ namespace BodyParts
             }
         }
 
+        /*
         public void MovePartBy(BodyPart typeThis, Structs.S_XY moveBy)
         {
             if (!Lock)
@@ -47,7 +48,7 @@ namespace BodyParts
                 Lock = true;
             }
 
-        }
+        }*/
 
         public void Input(BodyPart typeThis, KeyboardState ks)
         {

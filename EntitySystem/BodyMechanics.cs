@@ -11,7 +11,7 @@ namespace EntSys
 {
     public class BodyMechanics : Body
     {
-        
+        public Vector2 aimer;
         bool firstUpdate = true;
         Global.Bus bus = Global.Bus.Instance;
         private PhysSys.Physics phys = PhysSys.Physics.Instance;
@@ -37,6 +37,7 @@ namespace EntSys
 
         protected void ForceCnstr(DNA dna)
         {
+            aimer = new Vector2(1, 0);
             base.ForceCnstr(dna);
             _DNADecoder(dna);
         }
@@ -244,8 +245,16 @@ namespace EntSys
                             List<BodyPart> collidedParts = new List<BodyPart>();
                             List<BodyPart> TESTcollidedParts = new List<BodyPart>();
 
-                            foreach ( BodyPart bp in bodyParts)
-                                bp.CheckColi(new S_XY(0,0),connecter,TESTcollidedParts);
+                            foreach (BodyPart bp in bodyParts)
+                            {
+                                FuncPulse fp = new FuncPulse();
+                                fp.coliObj = connecter;
+                                fp.byOffset = new S_XY(0, 0);
+                                fp.coliParts = TESTcollidedParts;
+                                bp.SendFuncPulse(FuncPulseType.CheckColiInDir, fp);
+                                //should fill test collided parts 
+                            }
+                                
 
                             if (connecter.Coli(coliBox) || TESTcollidedParts.Count > 0)
                                 Console.Out.Write("parts overlap before movement");
@@ -255,7 +264,14 @@ namespace EntSys
 
                             bool thisCollided = connecter.Coli(checkHere);
                             foreach ( BodyPart bp in bodyParts)
-                                bp.CheckColi(moveDir,connecter,collidedParts);
+                            {
+                                FuncPulse fp = new FuncPulse();
+                                fp.coliObj = connecter;
+                                fp.byOffset = moveDir;
+                                fp.coliParts = collidedParts;
+                                bp.SendFuncPulse(FuncPulseType.CheckColiInDir, fp);
+                                //should fill test collided parts 
+                            }
                             if(thisCollided || collidedParts.Count != 0)
                             {
                                 //COLI HAS OCCURED// Since bodyparts and Ent were handled seperatly unfortunatly, do
