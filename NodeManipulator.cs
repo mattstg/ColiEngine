@@ -1409,6 +1409,53 @@ namespace ColiSys
         }
         // ////////////////////////////////////////////////////////
 
+        public enum FlipType{horz = 1,vert = 2 ,both = 3}
+        public Node FlipNode(Node toFlip, FlipType fliptype)
+        {
+
+            Node a = toFlip.CopySelf(copyTypes.copyBoth);
+
+            if (fliptype == FlipType.horz)
+            {
+                Hashtable toRet = new Hashtable();
+
+                List<Node> nodeValues = new List<Node>();
+
+                Node it = a;
+
+                while (it != null)
+                {
+                    nodeValues.Add(new Node(it));
+                    it = it.Adj();
+                }
+
+                Node it2 = a;
+                for (int i = nodeValues.Count - 1; i >= 0; i--)
+                {
+                    it2.Set(nodeValues[i]);
+
+                    Node ta = new Node(it2.lb, it2.ub, null, it2.Dwn());
+                    toRet.HashAdder(ta);
+
+                    it2 = it2.Adj();
+                }
+
+
+                return toRet.RetMainNode();
+
+
+
+                
+
+
+            }
+
+            return a;
+            
+
+
+
+        }
         
 
         public Node MoveTableByOffset(Node a, S_XY offset)

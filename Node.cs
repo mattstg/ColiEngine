@@ -260,12 +260,12 @@ namespace ColiSys
             dwnNode = null;
         }
 
-        public void Set(Node adj, Node dwn)
+        public void Set(Node toCopyBounds)
         {
-            //This type of our Alt method requires two nodes to be input, and both x&y Node
-            adjNode = adj;
-            dwnNode = dwn;
+            l = toCopyBounds.l;
+            u = toCopyBounds.ub;
         }
+
 
         public void Set(Node o, ENode c){
 		/* This type of our Alt method alters one of the Nodes, 
