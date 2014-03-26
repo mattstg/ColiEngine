@@ -94,7 +94,8 @@ namespace EntSys
                     AE.TriggerEvent(ks);
 
                 foreach (BodyPart bp in bodyPartList)
-                    bp.Input(ks);
+                    if(bp != null)
+                      bp.Input(ks);
             }
 
             
@@ -132,13 +133,13 @@ namespace EntSys
                     BodyPart claws1 = new BodyPart(this, null);
                    // BodyPart claws2 = new BodyPart(this, null);
 
-                    arm1.SutureBodyPart(claws1);
+                    arm1.SutureBodyPart(claws1,BpDirection.East);
 
 
                    
 
                    // bodyParts.Add(wing);
-                    bodyPartList.Add(arm1);
+                    bodyPartList[(int)BpDirection.North] = arm1;
                     RegisterNewParts = true;
                     break;
 

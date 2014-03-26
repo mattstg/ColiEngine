@@ -11,7 +11,9 @@ namespace FactSys
     {
         AEManagerFactory AEMangFact = AEManagerFactory.Instance;
         ColiSys.ShapeGenerator sgen = ColiSys.ShapeGenerator.Instance;
-        
+        ColiSys.NodeManipulator Nami = ColiSys.NodeManipulator.Instance;
+
+
          private static BodyPartFactory instance;
          private BodyPartFactory() { }
          public static BodyPartFactory Instance
@@ -43,7 +45,13 @@ namespace FactSys
                  case 0:
                      bpc.regPacks.Add(10);//wings!
                      bpc.shape = new ColiSys.Hashtable(sgen.GenShape(ColiSys.Shape.Square,new Structs.S_XY(10,10)));
-                     bpc.offsetToMaster = new Structs.S_XY(-10, 0);
+                    // bpc.offsetToMaster = new Structs.S_XY(-10, 0);
+                     bpc.sutureSpots = new List<ColiSys.Hashtable>(){null,null,null,null};
+                     bpc.sutureSpots[3] = (new ColiSys.Hashtable(Nami.MoveTableByOffset(sgen.GenShape(ColiSys.Shape.Square, new Structs.S_XY(1, 1)),new Structs.S_XY(0,5))));
+                     bpc.sutureSpots[1] = (new ColiSys.Hashtable(Nami.MoveTableByOffset(sgen.GenShape(ColiSys.Shape.Square, new Structs.S_XY(1, 1)), new Structs.S_XY(10, 5))));
+                     
+                     bpc.sutureSpots[0] = (new ColiSys.Hashtable(Nami.MoveTableByOffset(sgen.GenShape(ColiSys.Shape.Square, new Structs.S_XY(1, 1)),new Structs.S_XY(5,0))));
+                     bpc.sutureSpots[2] = (new ColiSys.Hashtable(Nami.MoveTableByOffset(sgen.GenShape(ColiSys.Shape.Square, new Structs.S_XY(1, 1)), new Structs.S_XY(5, 10))));
                      toRet = new BodyPart(bpc);
                      AEManager abMang = AEMangFact.CreateAEManager(0);                     
                      toRet.InsertAEManager(abMang);

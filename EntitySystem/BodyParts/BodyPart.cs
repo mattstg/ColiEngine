@@ -27,7 +27,7 @@ namespace BodyParts
 
     public struct BpConstructor
     {
-        public S_XY offsetToMaster;
+       // public S_XY offsetToMaster;
         public ColiSys.Hashtable shape;
         /// <summary>
         /// List of  4 Hashtables, North=0,East=1,S=South,W=West 
@@ -110,9 +110,10 @@ namespace BodyParts
     {
         
         List<BodyPartConnection> connecters;
+        List<ColiSys.Hashtable> SutureHashtables;
         ColiSys.TestContent tc = ColiSys.TestContent.Instance;
         public BpConstructor bpDNA;
-        S_XY OffsetDifToMaster;
+       // S_XY OffsetDifToMaster;
         AEManager AbilityManager;
         ColiSys.Hashtable graphicSkin;
         
@@ -126,8 +127,8 @@ namespace BodyParts
             SetEntShape(bpC.shape);            
             foreach (int i in bpC.regPacks)            
                 AE.RegAbilityPack(i);
-            OffsetDifToMaster = bpC.offsetToMaster;
-
+           // OffsetDifToMaster = bpC.offsetToMaster;
+            SutureHashtables = bpC.sutureSpots;
             LoadTexture(_LoadDefaultSkin());
 
         }
@@ -141,12 +142,13 @@ namespace BodyParts
         /// <param name="master"></param>
         public void SetMasterFromMaster(BodyMechanics master)
         {
+            
             Master = master;
             offset = master.offsetCopy;
-            offset += OffsetDifToMaster;
+           // offset += OffsetDifToMaster;
             rawOffSet.X = offset.x;
             rawOffSet.Y = offset.y;          
-
+            
         }
 
 
@@ -209,11 +211,11 @@ namespace BodyParts
         public void ForceCnstr(DNA dna)
         {
             specType = objSpecificType.BodyPart;
-            OffsetDifToMaster = new S_XY();
+            //OffsetDifToMaster = new S_XY();
             connecters = new List<BodyPartConnection>(){null,null,null,null};
             AE = new ActionEvent(new VagueObject(this));
             DebugLoad();
-            OffsetDifToMaster = new S_XY();
+           // OffsetDifToMaster = new S_XY();
             base.ForceCnstr(dna);
         }
         protected void Update(float rt)
@@ -354,33 +356,67 @@ namespace BodyParts
 
         public void SutureBodyPart(BodyPart otherPart,BpDirection bpDir)
         {
-           
-           BodyPartConnection bpc = new BodyPartConnection(this,otherPart);
-           otherPart.Master = Master; //First my god
-          
-           otherPart.offset = this.offset + otherPart.OffsetDifToMaster; //Then a place by my side
-           otherPart.OffsetDifToMaster = Master.offsetCopy - otherPart.offset;
-           otherPart.rawOffSet.X = otherPart.offset.x;
-           otherPart.rawOffSet.Y = otherPart.offset.y; 
-           int index = (int)bpDir;
-           connecters[index] = bpc;
-           Master._UpdateBodyPartRelatedInfo();
+            if ((connecters[(int)bpDir] == null && otherPart.connecters[((int)bpDir + 2) % 4] == null) //spots arnt used
+                && (SutureHashtables[(int)bpDir] != null && otherPart.SutureHashtables[((int)bpDir + 2) % 4] != null))
+            { //if connect in dir and connector of new part in opp dir are both valid suture spots
 
+                int yMod = 0;
+                int xMod = 0;
+
+               if((int)bpDir % 2 == 0)
+                   if((int)bpDir == 0)
+                       yMod = -1;
+                   else
+                       yMod = 1;
+               else
+                   if((int)bpDir == 3)
+                       xMod = -1;
+                   else
+                       xMod = 1;
+
+ 
+
+               BodyPartConnection bpc = new BodyPartConnection(this,otherPart);
+               otherPart.Master = Master; 
+
+               S_Box thisConnectorBox = nami.NodetoBox(this.SutureHashtables[(int)bpDir].RetMainNode()); //Then a place by my side               
+               S_Box otherConnectorBox = nami.NodetoBox(otherPart.SutureHashtables[(int)bpDir].RetMainNode());
+               otherPart.offset.x = thisConnectorBox.loc.x + thisConnectorBox.size.x*xMod;
+               otherPart.offset.y = thisConnectorBox.loc.y + thisConnectorBox.size.y * yMod;
+               //otherPart.OffsetDifToMaster = Master.offsetCopy - otherPart.offset;
+               otherPart.rawOffSet.X = otherPart.offset.x;
+               otherPart.rawOffSet.Y = otherPart.offset.y; 
+               int index = (int)bpDir;
+               connecters[index] = bpc;
+               Master._UpdateBodyPartRelatedInfo();
+           } else {
+                //missing specific connectors in each direction, fails
+
+            }
 
             //otherPart.AddBPConnecter(bp); needed if want two way list (in future, needs fixing)
         }
 
-        public void GrowBodyPart(BpConstructor BPc)
+        public void GrowBodyPart(BodyPart BP, BpDirection bpDir)
         {
+            if (connecters[(int)bpDir] != null && BP.connecters[((int)bpDir + 2) % 4] != null)
+            { //if connect in dir and connector of new part in opp dir are both valid suture spots
+
+                if (true) //if enough energy and no coli
+                {
+                    SutureBodyPart(BP, bpDir);
 
 
+                }
+            }
 
         }
 
         private FeedbackPulse _SendPulseToEachBp(FuncPulseType funcPulseType, FuncPulse funcPulse)
         {
             FeedbackPulse fp = new FeedbackPulse();
-            for(int c = 0; c < 4; c++)
+            for (int c = 0; c < 4; c++)
+                if (connecters[c] != null) 
                 try
                 {
 
@@ -390,7 +426,7 @@ namespace BodyParts
                 {
                     Console.Out.WriteLine(e.Message);
                 }
-                    return fp;
+            return fp;
 
         }
 
@@ -433,6 +469,15 @@ namespace BodyParts
         public void Recieve(BodyPulse bp)
         {
             _SplitEvenlyAndSendPulse(bp);
+
+        }
+
+        public void GrowPart(BodyPart bpToGrow)
+        {
+            float growthCost = bpToGrow.bpDNA.SummonCost;
+
+            //Now we have to channel growing it, or have it be a burst cost.
+
 
         }
 

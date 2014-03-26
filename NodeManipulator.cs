@@ -34,6 +34,7 @@ namespace ColiSys
             }
         }
 
+        
         public S_Box NodetoBox(Node tN)
         {
             tN = ComplexNodeToSquareNode(tN);

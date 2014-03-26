@@ -239,12 +239,15 @@ namespace EntSys
 
                             foreach (BodyPart bp in bodyPartList)
                             {
-                                FuncPulse fp = new FuncPulse();
-                                fp.coliObj = connecter;
-                                fp.byOffset = new S_XY(0, 0);
-                                fp.coliParts = TESTcollidedParts;
-                                bp.SendFuncPulse(FuncPulseType.CheckColiInDir, fp);
-                                //should fill test collided parts 
+                                if (bp != null)
+                                {
+                                    FuncPulse fp = new FuncPulse();
+                                    fp.coliObj = connecter;
+                                    fp.byOffset = new S_XY(0, 0);
+                                    fp.coliParts = TESTcollidedParts;
+                                    bp.SendFuncPulse(FuncPulseType.CheckColiInDir, fp);
+                                    //should fill test collided parts 
+                                }
                             }
                                 
 
@@ -257,12 +260,15 @@ namespace EntSys
                             bool thisCollided = connecter.Coli(checkHere);
                             foreach ( BodyPart bp in bodyPartList)
                             {
-                                FuncPulse fp = new FuncPulse();
-                                fp.coliObj = connecter;
-                                fp.byOffset = moveDir;
-                                fp.coliParts = collidedParts;
-                                bp.SendFuncPulse(FuncPulseType.CheckColiInDir, fp);
-                                //should fill test collided parts 
+                                if (bp != null)
+                                {
+                                    FuncPulse fp = new FuncPulse();
+                                    fp.coliObj = connecter;
+                                    fp.byOffset = moveDir;
+                                    fp.coliParts = collidedParts;
+                                    bp.SendFuncPulse(FuncPulseType.CheckColiInDir, fp);
+                                    //should fill test collided parts 
+                                }
                             }
                             if(thisCollided || collidedParts.Count != 0)
                             {
