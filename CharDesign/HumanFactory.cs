@@ -64,9 +64,9 @@ namespace FactSys
             toRet.ForceNewOffset(new Vector2(50,50));
             toRet._DebugSetKeyMap(1);
             toRet.specType = objSpecificType.Human;
-            toRet.AddBodyPart(arm1);
+            toRet.AddBodyPart(arm1,BpDirection.East);
             arm1.SetMasterFromMaster(toRet);
-            arm1.SutureBodyPart(claws1);
+            arm1.SutureBodyPart(claws1, BpDirection.East);
             
             return toRet;
 
@@ -82,9 +82,9 @@ namespace FactSys
             toRet.ForceNewOffset(new Vector2(200, 50));
             toRet._DebugSetKeyMap(2);
             toRet.specType = objSpecificType.Human;
-            toRet.AddBodyPart(arm1);
+            toRet.AddBodyPart(arm1, BpDirection.West);
             arm1.SetMasterFromMaster(toRet);
-            arm1.SutureBodyPart(claws1);
+            arm1.SutureBodyPart(claws1, BpDirection.West);
 
             return toRet;
         }

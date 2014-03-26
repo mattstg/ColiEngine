@@ -16,18 +16,31 @@ namespace EntSys
         /// alerts system new parts were added, does calculations appropriatly
         /// </summary>
         public bool RegisterNewParts;
+        /// <summary>
+        /// List of body parts, total of 4 for each direction (NESW), Possible values are NULL!
+        /// </summary>
         protected List<BodyPart> bodyPartList;
         Dictionary<int, List<AEManager>> MasterChannelList;
         protected List<AEManager> MasterTransferList;
 
 
-        public void AddBodyPart(BodyPart bpToAdd)
+        public void AddBodyPart(BodyPart bpToAdd, BpDirection dir)
         {
             //shouldnt this function be setting master and etc?
-            bodyPartList.Add(bpToAdd);
+            int index = (int)dir;
+            _ReplaceBodyPart(dir);
+            bodyPartList[index] = bpToAdd;
+            
             RegisterNewParts = true;
             _UpdateBodyPartRelatedInfo();
         }
+
+       
+
+       
+
+
+
 
         public MasterBody()
         {
@@ -128,8 +141,9 @@ namespace EntSys
 
         public void ForceCnstr(DNA dna)
         {
+
             RegisterNewParts = false;
-            bodyPartList = new List<BodyPart>();
+            bodyPartList = new List<BodyPart>(){null,null,null,null};
             MasterTransferList = new List<AEManager>();
             MasterChannelList = new Dictionary<int, List<AEManager>>();
             base.ForceCnstr(null);
@@ -267,8 +281,20 @@ namespace EntSys
             base.Draw();//pass draw down to sprite class
         }
 
+        public void _ReplaceBodyPart(BpDirection dir)
+        {
+            //Part internally replaced? maybe bool here
+            //&*&
+            //ReplacementNegatesDestroyEffect
+            _DestoryBodyPart(dir);
+        }
 
-
+        public void _DestoryBodyPart(BpDirection dir)
+        {
+            //&*&
+            //DestroyEffectsNegated
+            //Part goes boom!
+        }
 
 
 

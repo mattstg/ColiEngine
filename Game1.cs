@@ -49,7 +49,7 @@ namespace ColiSys
             graphics.IsFullScreen = true;
             Content.RootDirectory = "ColiEngine/Content";
             BodyPartFactory bpFact = BodyPartFactory.Instance;
-           // TestDriver td = new TestDriver();
+            TestDriver td = new TestDriver();
 
             Consts.TopScope.GRAPHICS_BUFFER_HEIGHT = graphics.PreferredBackBufferHeight;
             Consts.TopScope.GRAPHICS_BUFFER_WIDTH = graphics.PreferredBackBufferWidth;

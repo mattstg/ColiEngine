@@ -12,10 +12,26 @@ using Structs;
 
 namespace BodyParts
 {
+    /// <summary>
+    /// Body part direction, NESW 0,1,2,3
+    /// </summary>
+    public enum BpDirection{
+        North = 0,
+        East = 1,
+        South= 2,
+        West = 3
+
+
+    }
+
+
     public struct BpConstructor
     {
         public S_XY offsetToMaster;
         public ColiSys.Hashtable shape;
+        /// <summary>
+        /// List of  4 Hashtables, North=0,East=1,S=South,W=West 
+        /// </summary>
         public List<ColiSys.Hashtable> sutureSpots;
         public List<int> regPacks;
         public int SummonCost;
@@ -58,6 +74,9 @@ namespace BodyParts
         PingForAbilityIDs
 
     }
+
+    
+
     public struct FuncPulse //this could have totally been a generic class probably
     {
         public FuncPulseType funcCalling;
@@ -191,11 +210,10 @@ namespace BodyParts
         {
             specType = objSpecificType.BodyPart;
             OffsetDifToMaster = new S_XY();
-            connecters = new List<BodyPartConnection>();
+            connecters = new List<BodyPartConnection>(){null,null,null,null};
             AE = new ActionEvent(new VagueObject(this));
             DebugLoad();
             OffsetDifToMaster = new S_XY();
-            connecters = new List<BodyPartConnection>();
             base.ForceCnstr(dna);
         }
         protected void Update(float rt)
@@ -211,8 +229,9 @@ namespace BodyParts
         //
         public void UnlockAllConnections()
         {
-            foreach (BodyPartConnection bpc in connecters)            
-                bpc.Unlock(this);          
+            foreach (BodyPartConnection bpc in connecters) 
+                if(bpc != null)
+                    bpc.Unlock(this);          
 
         }
 
@@ -333,27 +352,22 @@ namespace BodyParts
        
         
 
-        public void SutureBodyPart(BodyPart otherPart)
+        public void SutureBodyPart(BodyPart otherPart,BpDirection bpDir)
         {
-           BodyPartConnection bp = new BodyPartConnection(this,otherPart);
-           otherPart.Master = Master;
-           //otherPart.AddBPConnecter(bp);
-            //
-           otherPart.offset = this.offset + otherPart.OffsetDifToMaster;
+           
+           BodyPartConnection bpc = new BodyPartConnection(this,otherPart);
+           otherPart.Master = Master; //First my god
+          
+           otherPart.offset = this.offset + otherPart.OffsetDifToMaster; //Then a place by my side
            otherPart.OffsetDifToMaster = Master.offsetCopy - otherPart.offset;
            otherPart.rawOffSet.X = otherPart.offset.x;
-           otherPart.rawOffSet.Y = otherPart.offset.y;
-            //
-           connecters.Add(bp);
+           otherPart.rawOffSet.Y = otherPart.offset.y; 
+           int index = (int)bpDir;
+           connecters[index] = bpc;
            Master._UpdateBodyPartRelatedInfo();
 
-        }
 
-        public void AddBPConnecter(BodyPartConnection BPConnection)
-        {
-            connecters.Add(BPConnection);
-
-
+            //otherPart.AddBPConnecter(bp); needed if want two way list (in future, needs fixing)
         }
 
         public void GrowBodyPart(BpConstructor BPc)
@@ -366,9 +380,17 @@ namespace BodyParts
         private FeedbackPulse _SendPulseToEachBp(FuncPulseType funcPulseType, FuncPulse funcPulse)
         {
             FeedbackPulse fp = new FeedbackPulse();
-            foreach (BodyPartConnection bpc in connecters)
-                fp += bpc.SendPulse(this, funcPulseType,funcPulse);
-            return fp;
+            for(int c = 0; c < 4; c++)
+                try
+                {
+
+                    fp += connecters[c].SendPulse(this, funcPulseType, funcPulse);
+                }
+                catch (Exception e)
+                {
+                    Console.Out.WriteLine(e.Message);
+                }
+                    return fp;
 
         }
 
@@ -386,7 +408,8 @@ namespace BodyParts
         {
             AE.TriggerEvent(ks);
             foreach (BodyPartConnection bpc in connecters)
-                bpc.Input(this,ks);
+                if(bpc != null)
+                    bpc.Input(this,ks);
 
         }
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////should be done
@@ -396,7 +419,8 @@ namespace BodyParts
             if (coliObj.Coli(nami.MoveTableByOffset(coliBox, byOffset)))
                 coliParts.Add(this);
             foreach (BodyPartConnection bpc in connecters)
-                bpc.CheckColi(this, byOffset, coliObj, coliParts);
+                if(bpc != null)
+                    bpc.CheckColi(this, byOffset, coliObj, coliParts);
         }
         /*
         public void MovePartBy(Structs.S_XY moveBy)
@@ -408,21 +432,28 @@ namespace BodyParts
 
         public void Recieve(BodyPulse bp)
         {
+            _SplitEvenlyAndSendPulse(bp);
+
+        }
+
+        private void _SplitEvenlyAndSendPulse(BodyPulse bp)
+        {
             bool hasChild = false;
             DecodePulse(bp);
             foreach (BodyPartConnection bpc in connecters)
             {
-                hasChild = true;
-                bpc.Send(this, bp.split(connecters.Count));
+                if (bpc != null)
+                {
+                    hasChild = true;
+                    bpc.Send(this, bp.split(connecters.Count));
+                }
             }
             if (!hasChild)
             {
                 //Need to reverse the pulse? or pulse just ends here... hmm
 
             }
-
         }
-
 
         public void DecodePulse(BodyPulse bp)
         {

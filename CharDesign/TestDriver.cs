@@ -12,12 +12,24 @@ namespace ColiSys
 {
     class TestDriver
     {
+        BodyPartFactory bpFact;
+
+
         public TestDriver()
         {
             //like a program main
-            BodyPartFactory bpFact = BodyPartFactory.Instance;
-            BodyPart bp = bpFact.CreateBodyPart(0);
+            bpFact = BodyPartFactory.Instance;
+
+            if(true) //To active, set to true
+                 MattDriver();
+
+
+            if (false) ; //to deactivate, set to false
+                  MikeDriver();
+
+            
             int i = 5;
+
             
 
 
@@ -25,8 +37,39 @@ namespace ColiSys
 
 
 
+        }
+
+        public void MikeDriver()
+        {
+            /////////
+            //O//O///
+            // _  ///
+            /////////
+         /*   ////
+         /////////
+             /////
+             /////
+          */// ///
+            
+        }
+
+
+        public void MattDriver()
+        {
+            int alphagetti;
+            BodyPart bp = bpFact.CreateBodyPart(0);
+            List<BodyPart> bpTest = new List<BodyPart>();
+            bpTest.Add(bp);
+            bpTest.Add(null);
+            bpTest.Add(bpFact.CreateBodyPart(0));
+            if(bpTest[1] == null)
+                alphagetti = 9;
+
+            int i = 6;
 
         }
+
+
 
 
 

@@ -1451,6 +1451,7 @@ namespace ColiSys
         // ////////////////////////////////////////////////////////
 
         public enum FlipType{horz = 1,vert = 2 ,both = 3}
+        //////Ugh i programmed that messy as hell, but is early w/e
         public Node FlipNode(Node toFlip, FlipType fliptype)
         {
 
@@ -1483,12 +1484,6 @@ namespace ColiSys
 
 
                 return toRet.RetMainNode();
-
-
-
-                
-
-
             }
 
             return a;
