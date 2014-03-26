@@ -59,8 +59,41 @@ namespace FactSys
 
              return null;
          }
+        /*
+        /// <summary>
+        /// Calls a mix hashtable from bodyshape maker and loadout from AEManager and merges them into a new bp
+        /// </summary>
+        /// <param name="hashTableLoadOut"></param>
+        /// <param name="AEManagerLoadout"></param>
+        /// <returns></returns>
+         public BodyPart CreateBodyPart(int hashTableLoadOut, int AEManagerLoadout)
+         {
+             BodyPart toRet;
+             BpConstructor bpc = new BpConstructor();
+             bpc.regPacks = new List<int>();
+             bpc.sutureSpots = new List<ColiSys.Hashtable>();
+
+             switch (loadOut)
+             {
+                 case 0:
+                    // bpc.regPacks.Add(10);//wings!
+                     bpc.shape = new ColiSys.Hashtable(sgen.GenShape(ColiSys.Shape.Square, new Structs.S_XY(30, 12)));
+                     bpc.offsetToMaster = new Structs.S_XY(0, 0);
+                     toRet = new BodyPart(bpc);
+                     AEManager abMang = AEMangFact.CreateAEManager(AEManagerLoadout);
+                     toRet.InsertAEManager(abMang);
+                     return toRet;
 
 
+                 default:
+
+
+                     break;
+
+             }
+
+             return null;
+         }*/
 
 
     }

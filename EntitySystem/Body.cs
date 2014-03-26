@@ -9,7 +9,11 @@ using Microsoft.Xna.Framework;
 
 namespace EntSys
 {
+    struct SutureSpots
+    {
 
+
+    }
 
 
     public class Body : Material

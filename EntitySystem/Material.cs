@@ -10,16 +10,18 @@ namespace EntSys
     public struct MaterialResistances
     {
         //should name other kinds of materials
-        public float dirt;
-        public float steel;
+        public float Dirt;
+        public float Steel;
         public float Indestructable;
+        public float Flesh;
+        public float Etheral;
 
 
     }
     //////Please update vBOTH^ when you update ONE!!
     public enum MaterialTypes
     {
-        dirt,steel,Indestructible
+        Dirt,Steel,Indestructible,Flesh,Etheral
     }
 
     public class Material : Sprite
@@ -29,6 +31,14 @@ namespace EntSys
         float bounceThreshold = .33f; //bounce within -100%
         float bounceForceMultLB = .2f;
         float bounceForceMultUB = 1f;
+        /// <summary>
+        /// weight per unit
+        /// </summary>
+        float atmoicWeight = 1;
+        /// <summary>
+        /// particles per pixel
+        /// </summary>
+        float density = 1;
         float absorb = 1; //times it own health worth of force repelling        \
         MaterialResistances matRez;
         MaterialTypes matType;

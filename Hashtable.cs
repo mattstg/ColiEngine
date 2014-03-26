@@ -52,6 +52,11 @@ namespace ColiSys
             spriteTable.Draw(sb,mainNode,color);
         }
 
+        public float GetVolume()
+        {
+            return nami.GetVolume(mainNode);
+        }
+
         public void LoadTexture(Texture2D texture,Color color)
         {
             this.color = color;

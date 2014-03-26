@@ -66,9 +66,9 @@ namespace FactSys
                     bounceForceMultUB = 1f;
                     absorb = 1; //times it own health worth of force repelling        \
                     armor = new MaterialResistances();
-                    armor.dirt = 1;
-                    armor.steel = 1;
-                    matType  = MaterialTypes.dirt;
+                    armor.Dirt = 1;
+                    armor.Steel = 1;
+                    matType  = MaterialTypes.Dirt;
                     friction = .5f;
                     loc = new S_XY(0, 0);
                     thornDmg = 0;  //0-inf percent dmg back
@@ -90,8 +90,8 @@ namespace FactSys
                     bounceForceMultUB = 1f;
                     absorb = 100; //times it own health worth of force repelling        \
                     armor = new MaterialResistances();
-                    armor.dirt = .001f;
-                    armor.steel = .001f;
+                    armor.Dirt = .001f;
+                    armor.Steel = .001f;
                     matType  = MaterialTypes.Indestructible;
                     friction = .5f;
                     addInfo.width = 5;

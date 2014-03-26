@@ -350,6 +350,47 @@ namespace ColiSys
 
         }
 
+        /// <summary>
+        /// Returns the width of a single node, ub-lb+1
+        /// </summary>
+        /// <returns>float of difference, remember its +1 cause 1-1 is width one still</returns>
+        private float _NodeWidth(Node a)
+        {
+            return a.ub - a.lb + 1;
+        }
+
+        /// <summary>
+        /// returns  the raw volume of a hashtable
+        /// </summary>
+        /// <param name="a"></param>
+        /// <returns></returns>
+        public float GetVolume(Node a)
+        {
+            if (a == null)
+                return 0;
+            Node ity = a.CopySelf(copyTypes.copyBoth);
+            Node itx;
+            float totalVolume = 0;
+
+            while (ity != null)
+            {
+
+                itx = ity.Dwn();
+                while(itx != null)
+                {
+                    totalVolume += (_NodeWidth(ity) * _NodeWidth(itx));
+                    itx = itx.Adj();
+
+                }
+                ity = ity.Adj();
+
+            }
+
+            return totalVolume;
+
+
+        }
+
         private Node _Shrink(Node a, float factor)
         {
                       

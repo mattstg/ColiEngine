@@ -18,7 +18,7 @@ namespace BodyParts
         public ColiSys.Hashtable shape;
         public List<ColiSys.Hashtable> sutureSpots;
         public List<int> regPacks;
-
+        public int SummonCost;
     }
 
     public struct BodyPulse
