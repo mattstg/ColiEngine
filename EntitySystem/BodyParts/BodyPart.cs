@@ -380,12 +380,32 @@ namespace BodyParts
                otherPart.Master = Master; 
 
                S_Box thisConnectorBox = nami.NodetoBox(this.SutureHashtables[(int)bpDir].RetMainNode()); //Then a place by my side               
-               S_Box otherConnectorBox = nami.NodetoBox(otherPart.SutureHashtables[(int)bpDir].RetMainNode());
-               otherPart.offset.x = thisConnectorBox.loc.x + thisConnectorBox.size.x*xMod;
-               otherPart.offset.y = thisConnectorBox.loc.y + thisConnectorBox.size.y * yMod;
-               //otherPart.OffsetDifToMaster = Master.offsetCopy - otherPart.offset;
-               otherPart.rawOffSet.X = otherPart.offset.x;
-               otherPart.rawOffSet.Y = otherPart.offset.y; 
+               S_Box otherConnectorBox = nami.NodetoBox(otherPart.SutureHashtables[((int)bpDir + 2)%4].RetMainNode());
+               S_XY diffOff = new S_XY();
+            
+                
+               switch(bpDir)
+                {
+                    case BpDirection.North:
+                    
+                        
+                        break;
+                    case BpDirection.East:
+                       diffOff = thisConnectorBox.loc + thisConnectorBox.size + 1 - otherConnectorBox.loc; //how much it is moved by
+                        break;
+                    case BpDirection.South:
+                        break;
+                    case BpDirection.West:
+                        diffOff = thisConnectorBox.loc - otherConnectorBox.size - otherConnectorBox.loc; //how much it is moved by
+                        break;
+                }
+
+           // otherPart.offset = this.offset + diffOff ;
+               otherPart.offset = new S_XY(10, 10);
+               otherPart.offset = new S_XY(70, 32);
+              
+               otherPart.rawOffSet.X = otherPart.offset.x; //rel to master
+               otherPart.rawOffSet.Y = otherPart.offset.y;  //rel to master
                int index = (int)bpDir;
                connecters[index] = bpc;
                Master._UpdateBodyPartRelatedInfo();

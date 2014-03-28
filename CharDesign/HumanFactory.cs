@@ -58,7 +58,7 @@ namespace FactSys
         {
             HumanPlayer toRet = new HumanPlayer(null);
             toRet.LoadTexture(tc.dirt, Color.Blue);
-            toRet.SetEntShape(new ColiSys.Hashtable(sgen.GenShape(ColiSys.Shape.Human, new Structs.S_XY(50, 50))));
+            toRet.SetEntShape(new ColiSys.Hashtable(sgen.GenShape(ColiSys.Shape.Human, new Structs.S_XY(20, 20))));
             BodyPart arm1 = bpFact.CreateBodyPart(0);
             BodyPart claws1 = bpFact.CreateBodyPart(0);
             toRet.ForceNewOffset(new Vector2(50,50));

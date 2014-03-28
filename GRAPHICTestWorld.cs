@@ -43,14 +43,14 @@ namespace ColiSys
             masterList.Add(new VagueObject(theGround));
             masterList.Add(new VagueObject(forge.CreateMaterial(1)));
             HumanPlayer h1 = humanFact.CreateHuman(0);
-            HumanPlayer h2 = humanFact.CreateHuman(1);
+            //HumanPlayer h2 = humanFact.CreateHuman(1);
 
             masterList.Add(new VagueObject(h1));
-            masterList.Add(new VagueObject(h2));
+           // masterList.Add(new VagueObject(h2));
             LinkColiLists(h1);
-            LinkColiLists(h2);
+          //  LinkColiLists(h2);
             humanList.Add(h1);
-            humanList.Add(h2);
+           // humanList.Add(h2);
 
             inputTimer = 0;
             boxSize = 50;
