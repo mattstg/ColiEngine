@@ -8,11 +8,14 @@ namespace FactSys
 {
     class AEManagerFactory
     {
-        AEPackFactory AEPFact = AEPackFactory.Instance;
+        AEPackFactory AEPFact;
 
         
          private static AEManagerFactory instance;
-         private AEManagerFactory() { }
+         private AEManagerFactory()
+         {
+            
+         }
          public static AEManagerFactory Instance
         {
             get
@@ -30,6 +33,9 @@ namespace FactSys
 
          public AEManager CreateAEManager(int loadOut)
          {
+             if(AEPFact == null)
+                 AEPFact = AEPackFactory.Instance;
+
              AEManager toRet = new AEManager();
 
              switch (loadOut)
@@ -38,6 +44,13 @@ namespace FactSys
                      toRet.channeledAbilities.Add(AEPFact.CreateAEPack(0));
                      toRet.initzAbilities.Add(AEPFact.CreateAEPack(1));
                      toRet.timerAbilities.Add(AEPFact.CreateAEPack(2));
+                     return toRet;
+
+
+                 case 1:
+                     toRet.channeledAbilities.Add(AEPFact.CreateAEPack(0));
+                     toRet.initzAbilities.Add(AEPFact.CreateAEPack(1));
+                     toRet.timerAbilities.Add(AEPFact.CreateAEPack(3));
                      return toRet;
 
 

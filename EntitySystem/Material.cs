@@ -23,6 +23,25 @@ namespace EntSys
     {
         Dirt,Steel,Indestructible,Flesh,Etheral
     }
+    public struct MatCnstr
+    {
+        public float hp;
+        public float bounceThreshold;
+        public float bounceForceMultLB;
+        public float bounceForceMultUB;
+        public float atmoicWeight;
+        public float density;
+        public float absorb;
+        public MaterialResistances matRez;
+        public MaterialTypes matType;
+        public float friction;
+        public float thornDmg;
+        public float stickyness; 
+        public bool MaterialIsTopScope;
+    }
+
+
+
 
     public class Material : Sprite
     {
@@ -73,13 +92,25 @@ namespace EntSys
         {
             hasCollidedWithMe = new List<Material>();
             base.ForceCnstr(dna);
+            _DecodeDNA(dna);
         }
 
-        private void _DecodeDNA(DNA dna)
+        private void _DecodeDNA(DNA dna)  //NOT CALLED
         {
-
-
-
+            absorb = dna.matC.absorb;
+            atmoicWeight = dna.matC.atmoicWeight;
+            bounceForceMultLB = dna.matC.bounceForceMultLB;
+            bounceForceMultUB = dna.matC.bounceForceMultUB;
+            bounceThreshold = dna.matC.bounceThreshold;
+            density = dna.matC.density;
+            friction = dna.matC.friction;
+            hp = dna.matC.hp;
+            MaterialIsTopScope = dna.matC.MaterialIsTopScope;
+            matRez = dna.matC.matRez;
+            matType = dna.matC.matType;
+            stickyness = dna.matC.stickyness;
+            thornDmg = dna.matC.thornDmg;
+            
         }
         public Material() { }
         public Material(DNA dna) { ForceCnstr(dna); }//AE = new ActionEvent(new VagueObject(this)); }

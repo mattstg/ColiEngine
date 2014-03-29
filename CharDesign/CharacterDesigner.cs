@@ -37,7 +37,7 @@ namespace FactSys
         ColiSys.NodeManipulator nami;
         ColiSys.TestContent tc;
         SpriteBatch sb;
-        HumanPlayer human = new HumanPlayer(null);
+        HumanPlayer human;// = new HumanPlayer(null);
         
 
         

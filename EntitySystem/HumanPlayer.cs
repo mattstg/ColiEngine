@@ -12,6 +12,25 @@ using BodyParts;
 //remove later^^
 namespace EntSys
 {
+    public class HumanCnstr
+    {
+        public int debugKeyLoadout;
+
+
+        public HumanCnstr(int dKeyLoadout)
+        {
+            this.debugKeyLoadout = dKeyLoadout;
+
+
+        }
+
+
+    }
+
+
+
+
+
     public class HumanPlayer : BodyMechanics
     {
         ColiSys.TestContent tc = ColiSys.TestContent.Instance;
@@ -29,6 +48,8 @@ namespace EntSys
         public HumanPlayer() { }
         public HumanPlayer(DNA dna)
         {
+
+            base.ForceCnstr(dna);
             //set the instructor to be prepped as if being fed a string of values
             //some things only affected by full ints, so passing doubles can make a good scope/buffer level
             ForceCnstr(dna);
@@ -58,13 +79,8 @@ namespace EntSys
             acceptedColi.Add(objType.Explosion);
             acceptedColi.Add(objType.Body);
             acceptedSColi.Add(objSpecificType.Human);
-            
-
-            
-
            
             _DNADecoder(dna);
-            base.ForceCnstr(null);
             
         }
 
@@ -93,9 +109,9 @@ namespace EntSys
                 if (Keyboard.GetState().GetPressedKeys().Length > 0)
                     AE.TriggerEvent(ks);
 
-                foreach (BodyPart bp in bodyPartList)
+                /*foreach (BodyPart bp in bodyPartList)
                     if(bp != null)
-                      bp.Input(ks);
+                      bp.Input(ks);*/
             }
 
             
@@ -139,7 +155,7 @@ namespace EntSys
                    
 
                    // bodyParts.Add(wing);
-                    bodyPartList[(int)BpDirection.North] = arm1;
+                    //bodyPartList[(int)BpDirection.North] = arm1;
                     RegisterNewParts = true;
                     break;
 
@@ -150,7 +166,7 @@ namespace EntSys
                     offset = ttOff;
                     rawOffSet = new Vector2(ttOff.x, ttOff.y);
                     BodyPart wing2 = new BodyPart(this, null); //default creation, only used temp, add BpC later
-                    bodyPartList.Add(wing2);
+                    //bodyPartList.Add(wing2);
                     RegisterNewParts = true;
                     break;
                 case 0:

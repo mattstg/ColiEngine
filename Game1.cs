@@ -28,7 +28,7 @@ namespace ColiSys
         DebugCheatCodes cheats;
         public static SpriteBatch spriteBatch;
         GRAPHICTestWorld world;
-        DNABuilder dnaBuilder;
+       // DNABuilder dnaBuilder;
         //HumanPlayer human;
         ShapeGenerator shapeGen;
         Global.Bus bus = Global.Bus.Instance;
@@ -89,7 +89,7 @@ namespace ColiSys
            
             
             //MattDriver d = new MattDriver();
-            dnaBuilder = new DNABuilder();
+            //dnaBuilder = new DNABuilder();
             //human = new HumanPlayer(dnaBuilder.buildEntDNA(new S_XY(300, 360), new S_XY(50, 50)));
            // RockList = new Rock[5];
            // for (int i = 0; i < 5; i++)

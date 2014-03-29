@@ -39,7 +39,7 @@ namespace EntSys
             lifeSpan = new Global.Timers(32);
             this.force = force;
             this.untargetableList = untargetableList;
-            base.ForceCnstr(null, null);
+            //base.ForceCnstr(null, null);
 
         }
 

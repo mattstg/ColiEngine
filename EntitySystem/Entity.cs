@@ -8,6 +8,15 @@ using Microsoft.Xna.Framework;
 
 namespace EntSys
 {
+    public struct EntCnstr
+    {
+        //public int mass;
+        public ColiSys.Hashtable entShape;
+        public S_XY startOffset;
+
+    }
+
+
     public class Entity
     {
         public struct EventInfo //for body and bodyparts
@@ -19,6 +28,9 @@ namespace EntSys
             public int PointsOfContact;
 
         }
+
+
+
 
         public ActionEvent AE;
         public EventInfo EI;
@@ -42,7 +54,6 @@ namespace EntSys
         }
 
 
-        protected S_XY loc;
        // private S_XY _offset = new S_XY();
         protected Vector2 curForce = new Vector2(0,0);
         protected Vector2 velo;
@@ -92,6 +103,8 @@ namespace EntSys
         {
             //eventaully connect with weight and such
             //F=MA UP IN HERE
+            if (CombinedMass == 0)
+                CombinedMass = 1;
             Vector2 toRet = curForce / CombinedMass;
             velo += toRet;
             curForce.X = 0; curForce.Y = 0; //all force used into velo
@@ -114,21 +127,21 @@ namespace EntSys
 
         protected void ForceCnstr(DNA dna)
         {
+            SetEntShape(dna.entC.entShape);
+            velo = new Vector2(0, 0);
+            offset = dna.entC.startOffset;
+            rawOffSet.X = offset.x;
+            rawOffSet.Y = offset.y;
             Collidables = new VOContainer(this);
-            //size = tsize;
-            //loc = tloc;
+            EI = new EventInfo();           
             destroy = false;
             _DNADecoder(dna);
-            timerOncePerSec = new Global.Timers(1000, 1001);
-            timerOncePerSec.curT = 1000; //start it at ready
-            EI = new EventInfo();
-            //_SetSizeInNodeForm();
+            
         }
 
         private void _DNADecoder(DNA dna)
         {
-            //Need DNA copier
-
+            
             CombinedMass = 10;
             mass = 10;
         }

@@ -22,7 +22,6 @@ namespace EntSys
         
         //body vars
         protected int moveForce;
-        protected int totalMass;
         ///public bool RegisterNewParts; //New parts have been added and need to be registered with the world
         //protected List<BodyPart> bodyParts; //main branching bodyparts from master
         //protected List<AEManager> MasterTransferList;
@@ -36,6 +35,8 @@ namespace EntSys
             ForceCnstr(dna);
             
         }
+
+       
 
         private void _DNADecoder(DNA dna)
         {

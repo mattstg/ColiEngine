@@ -48,7 +48,7 @@ namespace EntSys
 
         }
 
-        public void LinkBody(Body summonerMaster)
+        public void LinkBody(BodyParts.BodyPart summonerMaster)
         {
             master = summonerMaster;
             foreach(AEPack ae in initzAbilities)
@@ -117,14 +117,14 @@ namespace EntSys
         Global.Timers timer;
         long energyStored;
         long energyStoreMax;
-        Body Summoner;
+        BodyParts.BodyPart Summoner;
         /// <summary>
         /// Link to ability that is called. Requires body that is calling it, Vector Magnitude location of aimer,and AEPack surronding it for the energystored
         /// </summary>
-        public Func<Body, Vector2, AEPack, AERetType> Ability;
+        public Func<BodyParts.BodyPart, Vector2, AEPack, AERetType> Ability;
 
 
-        public AEPack(AEPackType type, int[] triggerID, Global.Timers timer, long estore, long emax, Func<Body, Vector2, AEPack, AERetType> ab)
+        public AEPack(AEPackType type, int[] triggerID, Global.Timers timer, long estore, long emax, Func<BodyParts.BodyPart, Vector2, AEPack, AERetType> ab)
         {
             this.type = type;
             this.triggerID = triggerID;
@@ -136,7 +136,7 @@ namespace EntSys
 
         }
 
-        public void LinkBody(Body summonerMaster)
+        public void LinkBody(BodyParts.BodyPart summonerMaster)
         {
             Summoner = summonerMaster;
         }
@@ -153,7 +153,7 @@ namespace EntSys
             energyStored = 0;
             energyStoreMax = 500;
             Ability = _testFunc;
-            Summoner = new Body();
+            Summoner = new BodyParts.BodyPart();
         }
 
         private AERetType _testFunc(Body summoner, Vector2 aimerMag, AEPack thisPack)
@@ -172,7 +172,7 @@ namespace EntSys
         public void ActivateAbility(Vector2 aimer)
         {
             timer.Dec(true);
-            _testFunc(Summoner, aimer, this);
+            Ability(Summoner, aimer,this);
             if (energyStored == energyStoreMax)
                 Console.Out.WriteLine("Released fully charged ability!");
 

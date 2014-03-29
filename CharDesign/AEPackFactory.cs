@@ -4,19 +4,28 @@ using System.Linq;
 using System.Text;
 using EntSys;
 using Microsoft.Xna.Framework;
+using BodyParts;
+
 
 namespace FactSys
 {
     class AEPackFactory
     {
+        DNAFactory dnaFact;
+
+
          private static AEPackFactory instance;
-         private AEPackFactory() { }
+         private AEPackFactory()
+         {
+             dnaFact = DNAFactory.Instance;
+         }
          public static AEPackFactory Instance
         {
             get
             {
                 if (instance == null)
                 {
+                    
                     instance = new AEPackFactory();
                 }
                 return instance;
@@ -32,7 +41,7 @@ namespace FactSys
         /// <returns></returns>
          public AEPack CreateAEPack(int loadoutID)
          {
-             AEPack toRet = new AEPack();
+             AEPack toRet;// = new AEPack();
 
 
              switch (loadoutID)
@@ -46,7 +55,11 @@ namespace FactSys
                  case 2:
                      toRet = new AEPack(AEPackType.timer, new int[] { 0, 0 }, new Global.Timers(5000), 0, 500, _testFunc);
                      break;
+                 case 3:
+                     toRet = new AEPack(AEPackType.timer, new int[] { 0, 0 }, new Global.Timers(500), 0, 500, _TestGrowPartS);
+                     break;
                  default:
+                     return null;
                      break;
                     
 
@@ -54,11 +67,25 @@ namespace FactSys
              return toRet;
          }
 
-         private AERetType _testFunc(Body summoner, Vector2 aimerMag, AEPack thisPack)
+         private AERetType _testFunc(BodyPart summoner, Vector2 aimerMag, AEPack thisPack)
          {
              Console.Out.WriteLine("Ability Summoned!");
              return new AERetType();
          }
+
+         private AERetType _TestGrowPartS(BodyPart summoner, Vector2 aimerMag, AEPack thisPack)
+         {
+             Console.Out.WriteLine("GROW!");
+             DNA dna = dnaFact.GenerateDNA(DNAType.BodyPart,3);
+             BodyPart bp = new BodyPart(dna);
+             summoner.GrowBodyPart(bp,BpDirection.South);
+             
+                      
+            
+             return new AERetType();
+         }
+
+ 
 
          
         

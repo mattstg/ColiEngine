@@ -37,9 +37,10 @@ namespace EntSys
 
         protected void ForceCnstr(DNA dna)
         {
-            aimer = new Vector2(1, 0);
             base.ForceCnstr(dna);
+            aimer = new Vector2(1, 0);            
             _DNADecoder(dna);
+            Master = this; //this layer is allowed to be a master
         }
                 
 
@@ -237,18 +238,13 @@ namespace EntSys
                             List<BodyPart> collidedParts = new List<BodyPart>();
                             List<BodyPart> TESTcollidedParts = new List<BodyPart>();
 
-                            foreach (BodyPart bp in bodyPartList)
-                            {
-                                if (bp != null)
-                                {
-                                    FuncPulse fp = new FuncPulse();
-                                    fp.coliObj = connecter;
-                                    fp.byOffset = new S_XY(0, 0);
-                                    fp.coliParts = TESTcollidedParts;
-                                    bp.SendFuncPulse(FuncPulseType.CheckColiInDir, fp);
-                                    //should fill test collided parts 
-                                }
-                            }
+                            /// /// collecting all coli parts
+                            FuncPulse fp = new FuncPulse();
+                            fp.coliObj = connecter;
+                            fp.byOffset = new S_XY(0, 0);
+                            fp.coliParts = TESTcollidedParts;  ///stored in here
+                            SendPulseToEachBp(FuncPulseType.CheckColiInDir, fp);
+                             /// ///end of part collection
                                 
 
                             if (connecter.Coli(coliBox) || TESTcollidedParts.Count > 0)
@@ -258,18 +254,14 @@ namespace EntSys
 
 
                             bool thisCollided = connecter.Coli(checkHere);
-                            foreach ( BodyPart bp in bodyPartList)
-                            {
-                                if (bp != null)
-                                {
-                                    FuncPulse fp = new FuncPulse();
-                                    fp.coliObj = connecter;
-                                    fp.byOffset = moveDir;
-                                    fp.coliParts = collidedParts;
-                                    bp.SendFuncPulse(FuncPulseType.CheckColiInDir, fp);
-                                    //should fill test collided parts 
-                                }
-                            }
+                            
+                            fp = new FuncPulse();
+                            fp.coliObj = connecter;
+                            fp.byOffset = moveDir;
+                            fp.coliParts = collidedParts;
+                            SendPulseToEachBp(FuncPulseType.CheckColiInDir, fp);
+                            //should fill test collided parts 
+                            
                             if(thisCollided || collidedParts.Count != 0)
                             {
                                 //COLI HAS OCCURED// Since bodyparts and Ent were handled seperatly unfortunatly, do

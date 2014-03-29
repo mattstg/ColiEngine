@@ -25,7 +25,7 @@ namespace BodyParts
     }
 
 
-    public struct BpConstructor
+    public class BpConstructor
     {
        // public S_XY offsetToMaster;
         public ColiSys.Hashtable shape;
@@ -34,7 +34,11 @@ namespace BodyParts
         /// </summary>
         public List<ColiSys.Hashtable> sutureSpots;
         public List<int> regPacks;
+        public bool isTopLevel;
         public int SummonCost;
+        public AEManager aeMang;
+
+        public BpConstructor() { }
     }
 
     public struct BodyPulse
@@ -101,6 +105,7 @@ namespace BodyParts
         {
             FeedbackPulse fp = new FeedbackPulse();
             fp.TotalWeight = v1.TotalWeight + v2.TotalWeight;
+            //combined the rest of the elements! VERY IMPORTANT, or make a list of fb!
            return fp;
 
         }
@@ -133,6 +138,15 @@ namespace BodyParts
 
         }
 
+        public BodyPart(EntSys.DNA dna)
+        {
+            base.ForceCnstr(dna);
+            ForceCnstr(dna);
+
+        }
+
+        public BodyPart()
+        { }
 
 
         /// <summary>
@@ -193,6 +207,7 @@ namespace BodyParts
             this.graphicSkin = graphicSkin;
         }
 
+        /*
         private void Draw()
         {
             ColiSys.Hashtable toDraw = new ColiSys.Hashtable(graphicSkin);
@@ -201,22 +216,42 @@ namespace BodyParts
             base.Draw(toDraw);
             //graphicSkin.MoveTableByOffset(offset);
             //base.Draw(graphicSkin);
-        }
+        }*/
 
-        private void DebugLoad()
-        {
-
-        }
+        
 
         public void ForceCnstr(DNA dna)
         {
+            base.ForceCnstr(dna);
+            ///
+            bpDNA = dna.bpC;
+            //SetEntShape(bpDNA.shape);
+
+            if (dna.bpC.isTopLevel)
+            {
+
+                AE = new ActionEvent(new VagueObject(this)); 
+
+                foreach (int i in bpDNA.regPacks)
+                    AE.RegAbilityPack(i);
+                
+                
+            }
+            // OffsetDifToMaster = bpC.offsetToMaster;
+            SutureHashtables = bpDNA.sutureSpots;
+           // LoadTexture(_LoadDefaultSkin());
+
+            if (dna.bpC.aeMang != null)
+                InsertAEManager(dna.bpC.aeMang);
+
+           
+            //
+
             specType = objSpecificType.BodyPart;
             //OffsetDifToMaster = new S_XY();
             connecters = new List<BodyPartConnection>(){null,null,null,null};
-            AE = new ActionEvent(new VagueObject(this));
-            DebugLoad();
-           // OffsetDifToMaster = new S_XY();
-            base.ForceCnstr(dna);
+            
+
         }
         protected void Update(float rt)
         {
@@ -283,7 +318,7 @@ namespace BodyParts
             }
 
 
-            toRet += _SendPulseToEachBp(funcPulseType, funcPulse);
+            toRet += SendPulseToEachBp(funcPulseType, funcPulse);
 
             return toRet;
         }
@@ -387,22 +422,27 @@ namespace BodyParts
                switch(bpDir)
                 {
                     case BpDirection.North:
-                    
+                       diffOff.y = thisConnectorBox.loc.y -  otherConnectorBox.loc.y + 1; //how much it is moved by
+                       diffOff.x = 0;
                         
                         break;
                     case BpDirection.East:
-                       diffOff = thisConnectorBox.loc + thisConnectorBox.size + 1 - otherConnectorBox.loc; //how much it is moved by
-                        break;
+                       diffOff.x = thisConnectorBox.loc.x -  otherConnectorBox.loc.x - 1; //how much it is moved by
+                       diffOff.y = 0;
+                       break;
                     case BpDirection.South:
+                       diffOff.y = thisConnectorBox.loc.y -  otherConnectorBox.loc.y - 1; //how much it is moved by
+                       diffOff.x = 0;
                         break;
                     case BpDirection.West:
-                        diffOff = thisConnectorBox.loc - otherConnectorBox.size - otherConnectorBox.loc; //how much it is moved by
+                        diffOff.x = thisConnectorBox.loc.x -  otherConnectorBox.loc.x + 1; //how much it is moved by
+                        diffOff.y = 0;
                         break;
                 }
 
-           // otherPart.offset = this.offset + diffOff ;
-               otherPart.offset = new S_XY(10, 10);
-               otherPart.offset = new S_XY(70, 32);
+               otherPart.offset = this.offset + diffOff ;
+               //otherPart.offset = new S_XY(10, 10);
+              // otherPart.offset = new S_XY(70, 32);
               
                otherPart.rawOffSet.X = otherPart.offset.x; //rel to master
                otherPart.rawOffSet.Y = otherPart.offset.y;  //rel to master
@@ -419,7 +459,7 @@ namespace BodyParts
 
         public void GrowBodyPart(BodyPart BP, BpDirection bpDir)
         {
-            if (connecters[(int)bpDir] != null && BP.connecters[((int)bpDir + 2) % 4] != null)
+            if (connecters[(int)bpDir] == null && BP.connecters[((int)bpDir + 2) % 4] == null)
             { //if connect in dir and connector of new part in opp dir are both valid suture spots
 
                 if (true) //if enough energy and no coli
@@ -432,7 +472,7 @@ namespace BodyParts
 
         }
 
-        private FeedbackPulse _SendPulseToEachBp(FuncPulseType funcPulseType, FuncPulse funcPulse)
+        protected FeedbackPulse SendPulseToEachBp(FuncPulseType funcPulseType, FuncPulse funcPulse)
         {
             FeedbackPulse fp = new FeedbackPulse();
             for (int c = 0; c < 4; c++)
@@ -444,7 +484,7 @@ namespace BodyParts
                 }
                 catch (Exception e)
                 {
-                    Console.Out.WriteLine(e.Message);
+                   // Console.Out.WriteLine("Exception: " + e.Message);
                 }
             return fp;
 
@@ -492,14 +532,14 @@ namespace BodyParts
 
         }
 
-        public void GrowPart(BodyPart bpToGrow)
+        /*public void GrowPart(BodyPart bpToGrow)
         {
             float growthCost = bpToGrow.bpDNA.SummonCost;
 
             //Now we have to channel growing it, or have it be a burst cost.
 
 
-        }
+        }*/
 
         private void _SplitEvenlyAndSendPulse(BodyPulse bp)
         {

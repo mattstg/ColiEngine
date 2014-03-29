@@ -18,6 +18,7 @@ namespace ColiSys
     {
         Global.Bus bus = Global.Bus.Instance;
         int boxSize;
+        DNAFactory dnaFact = DNAFactory.Instance;
         Material theGround;
         List<VagueObject> masterList;
         VOContainer bodyPartList;
@@ -39,16 +40,17 @@ namespace ColiSys
             humanList = new List<HumanPlayer>();
             bodyPartList = new VOContainer(this);
             masterList = new List<VagueObject>();
-            theGround = forge.CreateMaterial(0); //Reason created seperatly is for the mouse adding to specificlly this hash table
+            theGround = new Material(dnaFact.GenerateDNA(DNAType.Material,0)); //Reason created seperatly is for the mouse adding to specificlly this hash table
             masterList.Add(new VagueObject(theGround));
-            masterList.Add(new VagueObject(forge.CreateMaterial(1)));
-            HumanPlayer h1 = humanFact.CreateHuman(0);
+            masterList.Add(new VagueObject(new Material(dnaFact.GenerateDNA(DNAType.Material, 1))));
+            HumanPlayer h1 = humanFact.CreateHuman(1);
+            //HumanPlayer h1 = humanFact.CreateHuman(0);
             //HumanPlayer h2 = humanFact.CreateHuman(1);
 
             masterList.Add(new VagueObject(h1));
            // masterList.Add(new VagueObject(h2));
             LinkColiLists(h1);
-          //  LinkColiLists(h2);
+          ////  LinkColiLists(h2);
             humanList.Add(h1);
            // humanList.Add(h2);
 

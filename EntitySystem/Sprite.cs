@@ -11,10 +11,18 @@ using Enums.Node;
 
 namespace EntSys
 {
+    public struct SprCnstr
+    {
+        public Texture2D texture;
+        public Color color;
+
+    }
+
+
     public class Sprite : Entity
     {
 
-
+        
         protected Texture2D t;
         protected Color color;
 
@@ -28,6 +36,8 @@ namespace EntSys
 
         private void _DNADecoder(DNA dna)
         {
+            t = dna.sprC.texture;
+            color = dna.sprC.color;
             //Need DNA copier
             
         }
@@ -39,10 +49,10 @@ namespace EntSys
             color = col;
         }
         
-        protected void ForceCnstr(DNA EntDNA, DNA dna)
+        protected void ForceCnstr(DNA dna)
         {
             //load vars
-            base.ForceCnstr(EntDNA);
+            base.ForceCnstr(dna);
             _DNADecoder(dna);
         }
 

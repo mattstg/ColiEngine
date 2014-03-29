@@ -10,21 +10,22 @@ namespace EntSys
     /// <summary>
     /// The MasterBody Layer lies above the BM, it contains multiple body's and is in charge of managing them
     /// </summary>
-    public class MasterBody : Body
+    public class MasterBody : BodyPart
     {
         /// <summary>
         /// alerts system new parts were added, does calculations appropriatly
         /// </summary>
         public bool RegisterNewParts;
+        protected int totalMass;
         /// <summary>
         /// List of body parts, total of 4 for each direction (NESW), Possible values are NULL!
         /// </summary>
-        protected List<BodyPart> bodyPartList;
+        //protected List<BodyPart> bodyPartList;
         Dictionary<int, List<AEManager>> MasterChannelList;
         protected List<AEManager> MasterTransferList;
 
 
-        public void AddBodyPart(BodyPart bpToAdd, BpDirection dir)
+        /*public void AddBodyPart(BodyPart bpToAdd, BpDirection dir)
         {
             //shouldnt this function be setting master and etc?
             int index = (int)dir;
@@ -33,23 +34,18 @@ namespace EntSys
             
             RegisterNewParts = true;
             _UpdateBodyPartRelatedInfo();
-        }
+        }*/
 
        
-
-       
-
-
-
 
         public MasterBody()
         {
 
-            ForceCnstr(null);
         }
 
         public MasterBody(DNA dna)
         {
+            base.ForceCnstr(dna);
             ForceCnstr(dna);
 
         }
@@ -61,21 +57,13 @@ namespace EntSys
 
         public void _GetCombinedWeight()
         {
-            totalMass = this.mass;
-            foreach (BodyPart bp in bodyPartList)
-            {
-                if (bp != null)
-                {
-                    FuncPulse fp = new FuncPulse();
 
-                    FeedbackPulse result = bp.SendFuncPulse(FuncPulseType.getTotalMass, fp);
-                    totalMass += result.TotalWeight;
-                    //bp.UnlockAllConnections();
-                    //totalMass += bp.getTotalMass();
-                }
-            }
-            //totalMass = this.mass;
-            this.CombinedMass = totalMass;
+
+            totalMass = this.mass;           
+            FuncPulse fp = new FuncPulse();
+            FeedbackPulse result = SendPulseToEachBp(FuncPulseType.getTotalMass, fp);
+            totalMass += result.TotalWeight;            
+            this.CombinedMass = totalMass; //for now okay
             EI.totalMass = totalMass;
 
 
@@ -83,20 +71,8 @@ namespace EntSys
 
         protected void ResetAllBodyPartCWM()
         {
-            foreach (BodyPart bp in bodyPartList)
-            {
-                if (bp != null)
-                {
-                    //bp.UnlockAllConnections();
-                    //bp.Update(rt);
-                    FuncPulse fp = new FuncPulse();
-
-                    bp.SendFuncPulse(FuncPulseType.ResetCVM, fp);
-                }
-            }
-
+            SendPulseToEachBp(FuncPulseType.ResetCVM, new FuncPulse());
         }
-
 
 
         /// <summary>
@@ -122,16 +98,10 @@ namespace EntSys
         public void MoveAllBy(Structs.S_XY modOffset)
         {
             offset += modOffset;
-            foreach (BodyPart bp in bodyPartList)
-            {
-                if (bp != null)
-                {
-                    FuncPulse fp = new FuncPulse();
-                    fp.byOffset = modOffset;
-                    bp.SendFuncPulse(FuncPulseType.MovePartsBy, fp);
-                    // bp.MovePartBy(modOffset); 
-                }
-            }
+            FuncPulse fp = new FuncPulse();
+            fp.byOffset = modOffset;
+            SendPulseToEachBp(FuncPulseType.MovePartsBy, fp);
+                    
         }
 
 
@@ -139,28 +109,21 @@ namespace EntSys
         protected void UpdateBodyParts(float rt)
         {
 
-            foreach (BodyPart bp in bodyPartList)
-            {
-                if (bp != null)
-                {
-                    //bp.UnlockAllConnections();
-                    //bp.Update(rt);
-                    FuncPulse fp = new FuncPulse();
-                    fp.rt = rt;
-                    bp.SendFuncPulse(FuncPulseType.Update, fp);
-                }
-            }
+            FuncPulse fp = new FuncPulse();
+            fp.rt = rt;
+            SendPulseToEachBp(FuncPulseType.Update, fp);
+            
 
         }
 
         public void ForceCnstr(DNA dna)
         {
-
+            base.ForceCnstr(dna);
+            
             RegisterNewParts = false;
-            bodyPartList = new List<BodyPart>(){null,null,null,null};
             MasterTransferList = new List<AEManager>();
             MasterChannelList = new Dictionary<int, List<AEManager>>();
-            base.ForceCnstr(null);
+            _UpdateBodyPartRelatedInfo();
         }
 
 
@@ -182,9 +145,7 @@ namespace EntSys
             List<VagueObject> toRet = new List<VagueObject>();
             FuncPulse fp = new FuncPulse();
             fp.coliParts = new List<BodyPart>();
-            foreach (BodyPart b in bodyPartList)
-                if (b != null)                
-                  b.SendFuncPulse(FuncPulseType.CollectAllParts, fp);
+            SendPulseToEachBp(FuncPulseType.CollectAllParts, fp);
 
 
             //the return coliParts can be used as a list of all parts
@@ -206,20 +167,16 @@ namespace EntSys
         protected List<AEManager> _GetAbilityManagerListsWithID(int id)
         {
             List<AEManager> toRet = new List<AEManager>();
-            foreach (BodyPart bp in bodyPartList)
-            {
-                if (bp != null)
-                {
-                    FuncPulse fp = new FuncPulse();
-                    fp.AbilityManagerList = new List<AEManager>();
-                    fp.Int = id;
-                    fp.Eff = new List<float>();
-                    bp.SendFuncPulse(FuncPulseType.PingForAbilityIDs, fp);
-                    foreach (AEManager ae in fp.AbilityManagerList)
-                        toRet.Add(ae);
+           
+            FuncPulse fp = new FuncPulse();
+            fp.AbilityManagerList = new List<AEManager>();
+            fp.Int = id;
+            fp.Eff = new List<float>();
+            SendPulseToEachBp(FuncPulseType.PingForAbilityIDs, fp);
+            foreach (AEManager ae in fp.AbilityManagerList)
+                toRet.Add(ae);
                     //MasterTransferList now contains all the ones by id it needs
-                }
-            }
+             
             return toRet;
         }
 
@@ -289,16 +246,8 @@ namespace EntSys
 
 
         public void Draw()
-        {
-            foreach (BodyPart bp in bodyPartList)
-            {
-                if (bp != null)
-                {
-                    FuncPulse fp = new FuncPulse();
-                    bp.SendFuncPulse(FuncPulseType.Draw, fp);
-                    //bp.UnlockAllConnections();
-                }
-            }
+        {   
+            SendPulseToEachBp(FuncPulseType.Draw, new FuncPulse());
             base.Draw();//pass draw down to sprite class
         }
 
