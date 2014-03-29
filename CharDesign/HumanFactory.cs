@@ -85,11 +85,11 @@ namespace FactSys
         {
             HumanPlayer toRet = new HumanPlayer(dnaFact.GenerateDNA(DNAType.Human,0));
 
-            BodyPart arml1 = new BodyPart(dnaFact.GenerateDNA(DNAType.BodyPart, 0));
-            BodyPart arml2 = new BodyPart(dnaFact.GenerateDNA(DNAType.BodyPart, 0));
+            BodyPart arml1 = new BodyPart(dnaFact.GenerateDNA(DNAType.BodyPart, 3));
+            BodyPart arml2 = new BodyPart(dnaFact.GenerateDNA(DNAType.BodyPart, 3));
             BodyPart arml3 = new BodyPart(dnaFact.GenerateDNA(DNAType.BodyPart, 3));
-            BodyPart armr1 = new BodyPart(dnaFact.GenerateDNA(DNAType.BodyPart, 0));
-            BodyPart armr2 = new BodyPart(dnaFact.GenerateDNA(DNAType.BodyPart, 0));
+            BodyPart armr1 = new BodyPart(dnaFact.GenerateDNA(DNAType.BodyPart, 3));
+            BodyPart armr2 = new BodyPart(dnaFact.GenerateDNA(DNAType.BodyPart, 3));
             BodyPart armr3 = new BodyPart(dnaFact.GenerateDNA(DNAType.BodyPart, 3));
             toRet.GrowBodyPart(arml1, BpDirection.West);
             arml1.GrowBodyPart(arml2,BpDirection.West);

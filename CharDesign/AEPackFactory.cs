@@ -56,7 +56,7 @@ namespace FactSys
                      toRet = new AEPack(AEPackType.timer, new int[] { 0, 0 }, new Global.Timers(5000), 0, 500, _testFunc);
                      break;
                  case 3:
-                     toRet = new AEPack(AEPackType.timer, new int[] { 0, 0 }, new Global.Timers(500), 0, 500, _TestGrowPartS);
+                     toRet = new AEPack(AEPackType.channel, new int[] { 0, 0 }, new Global.Timers(500), 0, 500, _TestGrowPartS);
                      break;
                  default:
                      return null;

@@ -464,6 +464,7 @@ namespace BodyParts
 
                 if (true) //if enough energy and no coli
                 {
+                    
                     SutureBodyPart(BP, bpDir);
 
 

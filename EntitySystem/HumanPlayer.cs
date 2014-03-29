@@ -79,7 +79,7 @@ namespace EntSys
             acceptedColi.Add(objType.Explosion);
             acceptedColi.Add(objType.Body);
             acceptedSColi.Add(objSpecificType.Human);
-           
+            _DebugSetKeyMap(dna.humanC.debugKeyLoadout);
             _DNADecoder(dna);
             
         }
@@ -125,6 +125,12 @@ namespace EntSys
 
         }
 
+
+
+        /// <summary>
+        /// OLD FUNCTION, PROBABALY CAN DELETE
+        /// </summary>
+        /// <param name="defaultPack"></param>
           public void DebugLoadHuman(int defaultPack) //eventaully will be in dna
         {
 
@@ -197,7 +203,7 @@ namespace EntSys
         {
             switch (playerNum)
             {
-                case 1:
+                case 0:
                     keymap = new keyMap();
                     keymap.jump = Keys.Space;
                     keymap.left = Keys.Left;
@@ -209,7 +215,7 @@ namespace EntSys
                     TriggerKeyMap.Add((int)Keys.O, someTriggers);
                     break;
                     
-                case 2:
+                case 1:
                     keymap = new keyMap();
                     keymap.jump = Keys.W;
                     keymap.left = Keys.A;

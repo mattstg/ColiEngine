@@ -39,7 +39,7 @@ namespace EntSys
         public bool Ping(int triggerID)
         {
             
-            foreach (AEPack aep in timerAbilities)
+            foreach (AEPack aep in channeledAbilities)
                 if(aep.triggerID[0] == triggerID)                
                     return true;
                 
@@ -171,10 +171,16 @@ namespace EntSys
         }
         public void ActivateAbility(Vector2 aimer)
         {
-            timer.Dec(true);
+           
             Ability(Summoner, aimer,this);
             if (energyStored == energyStoreMax)
                 Console.Out.WriteLine("Released fully charged ability!");
+            else
+                Console.Out.WriteLine("Released Ability at " + energyStored);
+
+            timer.Dec(true);  //use all resources
+            energyStored = 0;
+
 
         }
 
