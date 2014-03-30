@@ -58,6 +58,16 @@ namespace FactSys
                     // toRet.initzAbilities.Add(AEPFact.CreateAEPack(1));
                     // toRet.timerAbilities.Add(AEPFact.CreateAEPack(2));
                      toRet.channeledAbilities.Add(AEPFact.CreateAEPack(3));
+                     
+                 
+                     //breakpoint abilities
+                     toRet.channeledAbilities.Add(AEPFact.CreateAEPack(8));
+                     //flight abilities
+                     toRet.channeledAbilities.Add(AEPFact.CreateAEPack(4));
+                     toRet.channeledAbilities.Add(AEPFact.CreateAEPack(5));
+                     toRet.channeledAbilities.Add(AEPFact.CreateAEPack(6));
+                     toRet.channeledAbilities.Add(AEPFact.CreateAEPack(7));
+                     
                      return toRet;
 
 

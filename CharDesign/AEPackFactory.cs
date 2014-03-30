@@ -34,7 +34,8 @@ namespace FactSys
 
 
         /// <summary>
-        /// 0 - channel, 1 - init, 2 - timer, 3 grow part south, 4 basic dir flight, 5 breakpoint
+        /// 0 - channel, 1 - init, 2 - timer, 3 grow part south, 4-7(triggers 4-7) basic dir flight, 8 breakpoint
+        /// 
         /// </summary>
         /// <param name="loadoutID"></param>
         /// <param name="requestingBody"></param>
@@ -59,9 +60,18 @@ namespace FactSys
                      toRet = new AEPack(AEPackType.channel, new int[] { 0, 0 }, new Global.Timers(500), 0, 500,true, _TestGrowPartS);
                      break;
                  case 4: //basic directional flight
-                     toRet = new AEPack(AEPackType.channel, new int[] { 0, 0 }, new Global.Timers(500), 0, 500,true, _TestFlight);
+                     toRet = new AEPack(AEPackType.channel, new int[] { 4, 0 }, new Global.Timers(500), 0, 500, true, _TestFlightUp);
                      break;
-                 case 5: //Adds the BREAKPOINT Trigger, set trigger input to 1
+                 case 5: //basic directional flight
+                     toRet = new AEPack(AEPackType.channel, new int[] { 5, 1 }, new Global.Timers(200), 0, 500, true, _TestFlightRight);
+                     break;
+                 case 6: //basic directional flight
+                     toRet = new AEPack(AEPackType.channel, new int[] { 6, 1 }, new Global.Timers(200), 0, 500, true, _TestFlightDown);
+                     break;
+                 case 7: //basic directional flight
+                     toRet = new AEPack(AEPackType.channel, new int[] { 7, 1 }, new Global.Timers(200), 0, 500, true, _TestFlightLeft);
+                     break;
+                 case 8: //Adds the BREAKPOINT Trigger, set trigger input to 1
                      toRet = new AEPack(AEPackType.channel, new int[] { 1, 1 }, new Global.Timers(200), 0, 1, true, _BreakpointFunc);
                      break;
                  default:
@@ -85,11 +95,7 @@ namespace FactSys
              return new AERetType();
          }
 
-         private AERetType _TestFlight(BodyPart summoner, Vector2 aimerMag, AEPack thisPack)
-         {
-             Console.Out.WriteLine("FLIGHT!");
-             return new AERetType();
-         }
+         
 
          private AERetType _TestGrowPartS(BodyPart summoner, Vector2 aimerMag, AEPack thisPack)
          {
@@ -102,6 +108,37 @@ namespace FactSys
             
              return new AERetType();
          }
+
+        /////////////////////////////////FLIGHT ABILITIES /////////////////////
+      
+         private AERetType _TestFlightUp(BodyPart summoner, Vector2 aimerMag, AEPack thisPack)
+         {
+             //summoner.ApplyForce(Enums.Force.ForceTypes.Internal, new Vector2(0, -50000));
+             summoner.ApplyForce(Enums.Force.ForceTypes.Internal, new Vector2(0, -thisPack.UseEnergy(9999999)));
+             return new AERetType();
+         }
+         private AERetType _TestFlightDown(BodyPart summoner, Vector2 aimerMag, AEPack thisPack)
+         {
+             
+             summoner.ApplyForce(Enums.Force.ForceTypes.Internal, new Vector2(0, thisPack.UseEnergy(9999999)));
+             return new AERetType();
+         }
+         private AERetType _TestFlightLeft(BodyPart summoner, Vector2 aimerMag, AEPack thisPack)
+         {
+             
+             summoner.ApplyForce(Enums.Force.ForceTypes.Internal, new Vector2(-thisPack.UseEnergy(9999999),0));
+             return new AERetType();
+         }
+         private AERetType _TestFlightRight(BodyPart summoner, Vector2 aimerMag, AEPack thisPack)
+         {
+             
+             summoner.ApplyForce(Enums.Force.ForceTypes.Internal, new Vector2(thisPack.UseEnergy(9999999),0));
+             return new AERetType();
+         }
+
+         
+
+        
 
  
 

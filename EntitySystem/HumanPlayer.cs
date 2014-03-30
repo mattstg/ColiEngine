@@ -215,6 +215,10 @@ namespace EntSys
                     TriggerKeyMap.Add((int)Keys.P, someTriggers);
                     TriggerKeyMap.Add((int)Keys.O, someTriggers);
                     TriggerKeyMap.Add((int)Keys.B, breakpointTrigger);
+                    TriggerKeyMap.Add((int)Keys.Up, new List<int>(){4});
+                    TriggerKeyMap.Add((int)Keys.Right, new List<int>() { 5 });
+                    TriggerKeyMap.Add((int)Keys.Down, new List<int>() { 6 });
+                    TriggerKeyMap.Add((int)Keys.Left, new List<int>() { 7 });
                     break;
                     
                 case 1:

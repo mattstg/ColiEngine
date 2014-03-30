@@ -189,6 +189,8 @@ namespace EntSys
 
             foreach(int i in triggers)
             {
+                //RegisterNewParts does not act properly, by the time it reaches here again, it was already consumed
+                //can be fixed by putting reg new part in a struct, with three keys to fully cross out (2 keys)
                /* if (!RegisterNewParts) //to cut down on search time, if no new parts, can double check if already in
                 {//list and save the need to search
                     if (!MasterChannelList.ContainsKey(i))

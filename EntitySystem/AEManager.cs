@@ -123,7 +123,7 @@ namespace EntSys
         AEPackType type;
         public int[] triggerID;
         Global.Timers timer;
-        long energyStored;
+        long energyStored;        
         long energyStoreMax;
         BodyParts.BodyPart Summoner;
         bool channelTriggerWhenFull;
@@ -132,6 +132,28 @@ namespace EntSys
         /// </summary>
         public Func<BodyParts.BodyPart, Vector2, AEPack, AERetType> Ability;
 
+        /// <summary>
+        /// uses energy stored in the AEPack, returns amount up to amount stored, use 99999... if wanna use all
+        /// </summary>
+        /// <param name="amount"></param>
+        /// <returns></returns>
+        public long UseEnergy(long amount)
+        {
+            long toRet;
+            if (amount > energyStored)
+            {
+                toRet = energyStored;
+                energyStored = 0;
+            }
+            else
+            {
+                toRet = amount;
+                energyStored -= amount;
+
+            }
+            return toRet;
+
+        }
 
         public AEPack(AEPackType type, int[] triggerID, Global.Timers timer, long estore, long emax, bool trigfull, Func<BodyParts.BodyPart, Vector2, AEPack, AERetType> ab)
         {
