@@ -211,17 +211,10 @@ namespace ColiSys
         CheckForNewBodyParts();
         //Spliting into 3 checks and allowing for a backup check creates extra fine reactions
         foreach (VagueObject vo in masterList)
-            vo.Update(rt/3);
+            vo.Update(rt);
         foreach (BodyMechanics bm in Update2List)
             bm.Update2();
-        foreach (VagueObject vo in masterList)
-            vo.Update(rt/3);
-        foreach (BodyMechanics bm in Update2List)
-            bm.Update2();
-        foreach (VagueObject vo in masterList)
-            vo.Update(rt/3);
-        foreach (BodyMechanics bm in Update2List)
-            bm.Update2();
+        
 
        /* int safetyNet = 500;
        // while (Update2List.Count > 0)

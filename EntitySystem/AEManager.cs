@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
+using BodyParts;
 
 namespace EntSys
 {
@@ -13,7 +14,7 @@ namespace EntSys
         public List<AEPack> timerAbilities;
         public List<AEPack> coliAbilities;
         float efficiency;
-        Body master;
+        BodyPart master;
 
 
         public AEManager()
@@ -66,6 +67,13 @@ namespace EntSys
             this.efficiency = eff;
         }
 
+
+        /// <summary>
+        /// This stage calculates how much energy can be divided to each AEPack
+        /// </summary>
+        /// <param name="triggerID"></param>
+        /// <param name="energyTransfered"></param>
+        /// <returns></returns>
         public long ChannelAbility(int triggerID, long energyTransfered)
         {
             int count = 0;
@@ -81,7 +89,7 @@ namespace EntSys
             if (count != 0)
             {
                 foreach (AEPack aep in channeledAbilities)
-                    if(aep.triggerID[0] == triggerID)
+                    if (aep.triggerID[0] == triggerID)                                           
                         energyLeftOver += aep.Channel(energyTransfered / count);
 
                 return energyLeftOver;
@@ -118,19 +126,21 @@ namespace EntSys
         long energyStored;
         long energyStoreMax;
         BodyParts.BodyPart Summoner;
+        bool channelTriggerWhenFull;
         /// <summary>
         /// Link to ability that is called. Requires body that is calling it, Vector Magnitude location of aimer,and AEPack surronding it for the energystored
         /// </summary>
         public Func<BodyParts.BodyPart, Vector2, AEPack, AERetType> Ability;
 
 
-        public AEPack(AEPackType type, int[] triggerID, Global.Timers timer, long estore, long emax, Func<BodyParts.BodyPart, Vector2, AEPack, AERetType> ab)
+        public AEPack(AEPackType type, int[] triggerID, Global.Timers timer, long estore, long emax, bool trigfull, Func<BodyParts.BodyPart, Vector2, AEPack, AERetType> ab)
         {
             this.type = type;
             this.triggerID = triggerID;
             this.timer = timer;
             this.energyStored = estore;
             this.energyStoreMax = emax;
+            this.channelTriggerWhenFull = trigfull;
             
             Ability = ab;
 
@@ -190,15 +200,25 @@ namespace EntSys
         {
 
             energyStored += EnergyTransfered;
+
+
+            
+            //Console.Out.Write(energyStored);
+
             if (energyStoreMax < energyStored)
             {
                 long toRet = energyStored - energyStoreMax;
                 energyStored = energyStoreMax;
                 Console.Out.WriteLine("FULLY CHARGED!");
+                if (channelTriggerWhenFull)
+                {
+                    Console.Out.WriteLine("and firing!!");
+                    ActivateAbility(Summoner.aimer);
+                }
                 return toRet;
 
             }
-            Console.Out.WriteLine("CHARGING " + energyStored + " / " + energyStoreMax);
+            //Console.Out.WriteLine("CHARGING " + energyStored + " / " + energyStoreMax);
             return 0;
         }
 

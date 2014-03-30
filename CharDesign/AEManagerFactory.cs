@@ -41,17 +41,22 @@ namespace FactSys
              switch (loadOut)
              {
                  case 0:
-                     toRet.channeledAbilities.Add(AEPFact.CreateAEPack(3));
-                     toRet.initzAbilities.Add(AEPFact.CreateAEPack(1));
-                     toRet.timerAbilities.Add(AEPFact.CreateAEPack(2));
+                     //toRet.channeledAbilities.Add(AEPFact.CreateAEPack(3));
+                    // toRet.channeledAbilities.Add(AEPFact.CreateAEPack(5));
+                     toRet.channeledAbilities.Add(AEPFact.CreateAEPack(0));
+                    // toRet.channeledAbilities.Add(AEPFact.CreateAEPack(4));
+                    // toRet.initzAbilities.Add(AEPFact.CreateAEPack(1));
+                    // toRet.timerAbilities.Add(AEPFact.CreateAEPack(2));
+                     
                      //toRet.channeledAbilities.Add(AEPFact.CreateAEPack(0));
                      return toRet;
 
 
                  case 1:
+                    // toRet.channeledAbilities.Add(AEPFact.CreateAEPack(5));
                      toRet.channeledAbilities.Add(AEPFact.CreateAEPack(0));
-                     toRet.initzAbilities.Add(AEPFact.CreateAEPack(1));
-                     toRet.timerAbilities.Add(AEPFact.CreateAEPack(2));
+                    // toRet.initzAbilities.Add(AEPFact.CreateAEPack(1));
+                    // toRet.timerAbilities.Add(AEPFact.CreateAEPack(2));
                      toRet.channeledAbilities.Add(AEPFact.CreateAEPack(3));
                      return toRet;
 

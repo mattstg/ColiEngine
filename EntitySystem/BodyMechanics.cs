@@ -11,7 +11,7 @@ namespace EntSys
 {
     public class BodyMechanics : MasterBody
     {
-        public Vector2 aimer;
+        
         bool firstUpdate = true;
         Global.Bus bus = Global.Bus.Instance;
         private PhysSys.Physics phys = PhysSys.Physics.Instance;

@@ -171,6 +171,8 @@ namespace EntSys
             FuncPulse fp = new FuncPulse();
             fp.AbilityManagerList = new List<AEManager>();
             fp.Int = id;
+            
+
             fp.Eff = new List<float>();
             SendPulseToEachBp(FuncPulseType.PingForAbilityIDs, fp);
             foreach (AEManager ae in fp.AbilityManagerList)
@@ -187,14 +189,33 @@ namespace EntSys
 
             foreach(int i in triggers)
             {
-                if (!MasterChannelList.ContainsKey(i))
-                {
-                    List<AEManager> t = _GetAbilityManagerListsWithID(i);
-                    if(t != null && t.Count > 0)
-                        MasterChannelList.Add(i, t);
+               /* if (!RegisterNewParts) //to cut down on search time, if no new parts, can double check if already in
+                {//list and save the need to search
+                    if (!MasterChannelList.ContainsKey(i))
+                    {
+                        List<AEManager> t = _GetAbilityManagerListsWithID(i);
+                        if (t != null && t.Count > 0)
+                            MasterChannelList.Add(i, t);
 
+                    }
                 }
+                else
+                { //new parts could have been added anywhere, re-add to the list*/
+                   List<AEManager> t = _GetAbilityManagerListsWithID(i);
+                   if (t != null && t.Count > 0)
+                       if(!MasterChannelList.ContainsKey(i))
+                          MasterChannelList.Add(i, t);
+                       else
+                       {
+                           MasterChannelList.Remove(i);
+                           MasterChannelList.Add(i,t);
+
+                       }
+
+                //}
+
             }
+            
 
             foreach (KeyValuePair<int, List<AEManager>> entry in MasterChannelList)
             {
@@ -215,16 +236,26 @@ namespace EntSys
 
         }
 
+
+
+        /// <summary>
+        /// Channels all abilities by dividing available channel and sending it to each AEManager evenly (each bp evenly since 1-1 ratio)
+        /// THE CHANNEL RATE IS IN MILLISECONDS to prevent loss of info dividing the rt.
+        /// </summary>
+        /// <param name="rt"></param>
         protected void ChannelAbilities(float rt)
         {
             if (MasterChannelList == null || MasterChannelList.Count == 0)
                 return;
 
-            int totalChannelRate = 10;
-            int totalEnergy = 100;
-            int chnlRate;
+            long totalChannelRate = 1000;
+            long totalEnergy = 1000;
+            long chnlRate;
 
-            chnlRate = (int)((totalChannelRate * rt) / MasterChannelList.Count);
+            if (totalEnergy < totalChannelRate)
+                chnlRate = totalEnergy;
+            else
+                chnlRate = (int)((totalChannelRate * rt) / MasterChannelList.Count);
 
             List<AEManager> toChnl = new List<AEManager>();
             foreach (List<AEManager> aeL in MasterChannelList.Values)
@@ -237,10 +268,16 @@ namespace EntSys
             chnlRate = totalChannelRate / toChnl.Count;
             //WARNING MORE ABILITIES THAN CHANNEL RAtE WILL MEAN NO TRANSFER AT ALL
             //WARNING MULTIPLE TRIGGERS TO ONE SPELL WILL...WELL EXTRA CHANNEL IT? same total tho... 
+            long returnedEnergy = 0;
+            
             foreach (AEManager ae in toChnl)
                 foreach (int i in MasterChannelList.Keys)
-                    ae.ChannelAbility(i, chnlRate);
+                    returnedEnergy = ae.ChannelAbility(i, chnlRate);
 
+          //  if (returnedEnergy > 0)
+           //     Console.Out.WriteLine("EnergyReturn");
+
+            totalEnergy = returnedEnergy - chnlRate;
 
         }
 

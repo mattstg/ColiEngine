@@ -210,9 +210,11 @@ namespace EntSys
                     keymap.right = Keys.Right;
                     keymap.down = Keys.Down;
                     keymap.up = Keys.Up;
-                    List<int> someTriggers = new List<int>(){0,1,2};                    
+                    List<int> someTriggers = new List<int>(){0,2};
+                    List<int> breakpointTrigger = new List<int>() {1};  
                     TriggerKeyMap.Add((int)Keys.P, someTriggers);
                     TriggerKeyMap.Add((int)Keys.O, someTriggers);
+                    TriggerKeyMap.Add((int)Keys.B, breakpointTrigger);
                     break;
                     
                 case 1:

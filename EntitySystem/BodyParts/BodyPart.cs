@@ -12,6 +12,24 @@ using Structs;
 
 namespace BodyParts
 {
+    ///INSTRUCTIONS!
+    
+    /// Adding FuncPulse<summary>
+    /// add it to the FuncPulse struct
+    /// add a comment describing what you need
+    /// go to SendFuncPulse
+    /// add the case in the gaint switch
+    /// use funcPulse.VALUESYOUWANT
+    /// be sure in the comment to state which values you need
+    /// funcPulse just gets filled, so you can use the info inside after the pulse is done
+    /// 
+    /// 
+    /// </summary>
+
+
+
+
+
     /// <summary>
     /// Body part direction, NESW 0,1,2,3
     /// </summary>
@@ -75,7 +93,9 @@ namespace BodyParts
         /// <summary>nomnomnomn calls draw for all parts </summary>
         Draw,
         /// <summary> ask to fill a given list-AEW- type by id, Fill fp with Eff=new,AbilityManagerList=new, Int=ID  </summary>
-        PingForAbilityIDs
+        PingForAbilityIDs,
+        /// <summary> All bp aimers if not locked will be set to fp.Vector (required) </summary>
+        UpdateAllAimers
 
     }
 
@@ -93,6 +113,7 @@ namespace BodyParts
         public List<AEManager> AbilityManagerList;
         public int Int;
         public List<float> Eff;
+        public Vector2 Vector;
 
 
     }
@@ -120,6 +141,8 @@ namespace BodyParts
         public BpConstructor bpDNA;
        // S_XY OffsetDifToMaster;
         AEManager AbilityManager;
+        public Vector2 aimer;
+        public bool aimerLocked = false;
         ColiSys.Hashtable graphicSkin;
         
        
@@ -256,6 +279,8 @@ namespace BodyParts
         protected void Update(float rt)
         {
             //This should upgrade physical things on body part
+            aimer = new Vector2(0, 0);                                                                       ////   //REMOVE LATER
+
             Master.ApplyForce(Enums.Force.ForceTypes.Coli, curForce);
             Master.ApplyForceToVelo(); //any forces applied to bodypart should be moved up to master
             curForce = new Vector2(0,0);
@@ -311,6 +336,9 @@ namespace BodyParts
                 case FuncPulseType.PingForAbilityIDs:
                     AddEfficencyRatingToList(funcPulse.Eff);
                     _RespondToAbilityManagerPing(funcPulse.Int, funcPulse.AbilityManagerList, funcPulse.Eff);
+                    break;
+                case FuncPulseType.UpdateAllAimers:
+                    aimer = funcPulse.Vector; 
                     break;
                 default:
                     Console.Out.WriteLine("error, unhandled funcPulseType");
@@ -449,10 +477,13 @@ namespace BodyParts
                int index = (int)bpDir;
                connecters[index] = bpc;
                Master._UpdateBodyPartRelatedInfo();
+               Master.RegisterNewParts = true;
            } else {
                 //missing specific connectors in each direction, fails
 
             }
+
+            
 
             //otherPart.AddBPConnecter(bp); needed if want two way list (in future, needs fixing)
         }
@@ -464,12 +495,13 @@ namespace BodyParts
 
                 if (true) //if enough energy and no coli
                 {
-                    
+
                     SutureBodyPart(BP, bpDir);
 
 
                 }
             }
+            
 
         }
 
