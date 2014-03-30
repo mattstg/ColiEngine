@@ -505,6 +505,25 @@ namespace BodyParts
 
         }
 
+        /// <summary>
+        /// Disconnect bodypart, if Master, retrieve all below and set new master, add self to bus
+        /// otherwise, kill all below.
+        /// </summary>
+        public void Disconnect()
+        {
+
+
+
+
+
+        }
+
+        public void DestroyPart()
+        {
+
+
+        }
+
         protected FeedbackPulse SendPulseToEachBp(FuncPulseType funcPulseType, FuncPulse funcPulse)
         {
             FeedbackPulse fp = new FeedbackPulse();
