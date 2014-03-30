@@ -35,7 +35,7 @@ namespace FactSys
 
         /// <summary>
         /// 0 - channel, 1 - init, 2 - timer, 3 grow part south, 4-7(triggers 4-7) basic dir flight, 8 breakpoint
-        /// 
+        /// 9(1) - GrowMaster
         /// </summary>
         /// <param name="loadoutID"></param>
         /// <param name="requestingBody"></param>
@@ -74,6 +74,9 @@ namespace FactSys
                  case 8: //Adds the BREAKPOINT Trigger, set trigger input to 1
                      toRet = new AEPack(AEPackType.channel, new int[] { 1, 1 }, new Global.Timers(200), 0, 1, true, _BreakpointFunc);
                      break;
+                 case 9: //Grows master bodypart
+                     toRet = new AEPack(AEPackType.channel, new int[] { 1, 1 }, new Global.Timers(200), 0, 1, true, _TestGrowMasterPart);
+                     break;
                  default:
                      return null;
                      break;
@@ -92,6 +95,18 @@ namespace FactSys
          private AERetType _BreakpointFunc(BodyPart summoner, Vector2 aimerMag, AEPack thisPack)
          {
              Console.Out.WriteLine("Breakpoint in code forced, Line 84 in AEPackFactory.cs");
+             return new AERetType();
+         }
+
+         private AERetType _TestGrowMasterPart(BodyPart summoner, Vector2 aimerMag, AEPack thisPack)
+         {
+             Console.Out.WriteLine("GROW!");
+             DNA dna = dnaFact.GenerateDNA(DNAType.BodyPart, 3);
+             MasterBody bp = new MasterBody(dna);
+             summoner.GrowBodyPart(bp, BpDirection.South);
+
+
+
              return new AERetType();
          }
 

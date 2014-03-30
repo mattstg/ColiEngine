@@ -57,8 +57,8 @@ namespace FactSys
                      toRet.channeledAbilities.Add(AEPFact.CreateAEPack(0));
                     // toRet.initzAbilities.Add(AEPFact.CreateAEPack(1));
                     // toRet.timerAbilities.Add(AEPFact.CreateAEPack(2));
-                     toRet.channeledAbilities.Add(AEPFact.CreateAEPack(3));
-                     
+                     //toRet.channeledAbilities.Add(AEPFact.CreateAEPack(3));
+                     toRet.channeledAbilities.Add(AEPFact.CreateAEPack(9));
                  
                      //breakpoint abilities
                      toRet.channeledAbilities.Add(AEPFact.CreateAEPack(8));
